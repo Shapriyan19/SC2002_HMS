@@ -1,5 +1,5 @@
-package medical;
-
-public class PrescriptionStatus {
-    
+public enum PrescriptionStatus {
+    PENDING,
+    DISPENSED,
+    CANCELED
 }
