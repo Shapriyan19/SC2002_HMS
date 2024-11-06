@@ -1,38 +1,35 @@
 package inventory;
 
 public class MedicationOrder {
-    private String orderId;
-    private String medicationId;
-    private int quantityOrdered;
+    private int orderID;
+    private int medicationID;
+    private int quantity;
+    private String status; // e.g., PENDING, DISPENSED
 
-    public MedicationOrder(String orderId, String medicationId, int quantityOrdered) {
-        this.orderId = orderId;
-        this.medicationId = medicationId;
-        this.quantityOrdered = quantityOrdered;
+    public MedicationOrder(int orderID, int medicationID, int quantity, String status) {
+        this.orderID = orderID;
+        this.medicationID = medicationID;
+        this.quantity = quantity;
+        this.status = status;
     }
 
-    // Getters and Setters
-    public String getOrderId() {
-        return orderId;
+    public int getOrderID() {
+        return orderID;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public int getMedicationID() {
+        return medicationID;
     }
 
-    public String getMedicationId() {
-        return medicationId;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setMedicationId(String medicationId) {
-        this.medicationId = medicationId;
+    public String getStatus() {
+        return status;
     }
 
-    public int getQuantityOrdered() {
-        return quantityOrdered;
-    }
-
-    public void setQuantityOrdered(int quantityOrdered) {
-        this.quantityOrdered = quantityOrdered;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

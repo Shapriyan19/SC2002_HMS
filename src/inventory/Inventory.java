@@ -1,38 +1,34 @@
 package inventory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Inventory {
-    private List<InventoryItem> items;
+    private Map<Integer, Medication> medications;
 
     public Inventory() {
-        this.items = new ArrayList<>();
+        this.medications = new HashMap<>();
     }
 
-    // Method to add an item to inventory
-    public void addItem(InventoryItem item) {
-        items.add(item);
+    public void addMedication(Medication medication) {
+        medications.put(medication.getMedicationID(), medication);
     }
 
-    // Method to update inventory quantity
-    public void updateItemQuantity(String medicationId, int quantity) {
-        for (InventoryItem item : items) {
-            if (item.getMedicationId().equals(medicationId)) {
-                item.setQuantity(quantity);
-                break;
-            }
+    public void removeMedication(int medicationId) {
+        medications.remove(medicationId);
+    }
+
+    public void updateStockLevel(int medicationId, int newStockLevel) {
+        if (medications.containsKey(medicationId)) {
+            medications.get(medicationId).setStockLevel(newStockLevel);
         }
     }
 
-    // Method to check and generate alerts
-    public List<String> checkInventoryAlerts() {
-        List<String> alerts = new ArrayList<>();
-        for (InventoryItem item : items) {
-            if (item.isLowOnStock()) {
-                alerts.add("Low stock alert for " + item.getName() + ": " + item.getQuantity() + " remaining.");
-            }
-        }
-        return alerts;
+    public Medication getMedication(int medicationId) {
+        return medications.get(medicationId);
+    }
+
+    public Map<Integer, Medication> getAllMedications() {
+        return medications;
     }
 }

@@ -1,38 +1,31 @@
 package inventory;
 
-public class Medication {
-    private String medicationId;
+public class Medication implements InventoryItem {
+    private int medicationID;
     private String name;
-    private String description;
+    private int stockLevel;
 
-    public Medication(String medicationId, String name, String description) {
-        this.medicationId = medicationId;
+    public Medication(int medicationID, String name, int stockLevel) {
+        this.medicationID = medicationID;
         this.name = name;
-        this.description = description;
+        this.stockLevel = stockLevel;
     }
 
-    // Getters and Setters
-    public String getMedicationId() {
-        return medicationId;
+    @Override
+    public int getStockLevel() {
+        return stockLevel;
     }
 
-    public void setMedicationId(String medicationId) {
-        this.medicationId = medicationId;
+    @Override
+    public void setStockLevel(int newStockLevel) {
+        this.stockLevel = newStockLevel;
+    }
+
+    public int getMedicationID() {
+        return medicationID;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
