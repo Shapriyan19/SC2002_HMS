@@ -1,5 +1,8 @@
 package appoinment;
 
-public class AppointmentStatus {
-    
+public enum AppointmentStatus {
+    CONFIRMED,
+    CANCELLED,
+    COMPLETED,
+    PENDING
 }
