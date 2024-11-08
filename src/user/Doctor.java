@@ -105,12 +105,29 @@ public class Doctor extends User {
         System.out.println("---- End of Medical Record ----");
     }
 
-    
 
-    // Method to update a patient's medical record
-    public void updatePatientRecord(String patientID, String diagnosis, String treatment) {
-        System.out.println("Updating medical record for patient ID: " + patientID);
-        // Implement logic to update patient's medical record with diagnosis and treatment
+    public void updatePatientRecord(MedicalRecord medicalRecord, Diagnosis newDiagnosis, Treatment newTreatment, Prescription newPrescription) {
+        System.out.println("Updating medical record for patient ID: " + medicalRecord.getPatientID());
+
+        // Add new diagnosis to the medical record
+        if (newDiagnosis != null) {
+            medicalRecord.addDiagnosis(newDiagnosis);
+            System.out.println("Added diagnosis: " + newDiagnosis);
+        }
+
+        // Add new treatment to the medical record
+        if (newTreatment != null) {
+            medicalRecord.addTreatment(newTreatment);
+            System.out.println("Added treatment plan: " + newTreatment);
+        }
+
+        // Add new prescription to the medical record
+        if (newPrescription != null) {
+            medicalRecord.addPrescription(newPrescription);
+            System.out.println("Added prescription: " + newPrescription);
+        }
+
+        System.out.println("Medical record updated successfully.");
     }
 
     // Method to view the doctor's personal schedule
