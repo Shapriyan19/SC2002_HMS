@@ -45,20 +45,52 @@ public class Administrator extends User {
     // Method to view medication inventory
     public void viewMedicationInventory() {
         System.out.println("Viewing medication inventory:");
-        // Implement logic to retrieve and display medication inventory
+        Map<Integer, Medication> medications = inventory.getAllMedications();
+        for (Medication medication : medications.values()) {
+            System.out.println("Medication ID: " + medication.getMedicationID() + ", Name: " + medication.getName() +", Stock Level: " + medication.getStockLevel());
+        }
     }
 
     // Method to manage medication inventory
-    public void manageMedicationInventory(String medicationID, String action, int quantity) {
-        System.out.println("Managing medication inventory for Medication ID: " + medicationID);
-        System.out.println("Action: " + action + ", Quantity: " + quantity);
-        // Implement logic to add, update, or remove medication from the inventory based on the action
+    public void manageMedicationInventory(int medicationID, String action, int quantity) {
+        Medication medication = inventory.getMedication(medicationID);
+        if (medication == null) {
+            System.out.println("Medication with ID " + medicationID + " not found.");
+            return;
+        }
+        switch (action.toLowerCase()) {
+            case "add":
+                inventory.updateStockLevel(medicationID, medication.getStockLevel() + quantity);
+                System.out.println("Added " + quantity + " units to Medication ID: " + medicationID);
+                break;
+            case "remove":
+                int newStockLevel = medication.getStockLevel() - quantity;
+                if (newStockLevel < 0) {
+                    System.out.println("Cannot remove " + quantity + " units. Insufficient stock.");
+                } else {
+                    inventory.updateStockLevel(medicationID, newStockLevel);
+                    System.out.println("Removed " + quantity + " units from Medication ID: " + medicationID);
+                }
+                break;
+            case "update":
+                inventory.updateStockLevel(medicationID, quantity);
+                System.out.println("Updated stock level of Medication ID " + medicationID + " to " + quantity);
+                break;
+            default:
+                System.out.println("Invalid action. Please choose 'add', 'remove', or 'update'.");
+        }
     }
 
     // Method to approve replenishment requests
-    public void approveReplenishmentRequest(String requestID) {
-        System.out.println("Approving replenishment request with ID: " + requestID);
-        // Implement logic to approve a medication replenishment request
+    public void approveReplenishmentRequest(MedicationOrder order) {
+        if (order.getStatus().equalsIgnoreCase("PENDING")) {
+            inventory.updateStockLevel(order.getMedicationID(), 
+                inventory.getMedication(order.getMedicationID()).getStockLevel() + order.getQuantity());
+            order.setStatus("DISPENSED");
+            System.out.println("Approved and processed replenishment request ID: " + order.getOrderID());
+        } else {
+            System.out.println("Replenishment request ID: " + order.getOrderID() + " is already " + order.getStatus());
+        }
     }
 
     // Login method implementation

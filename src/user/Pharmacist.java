@@ -3,19 +3,26 @@ package user;
 import java.util.HashMap;
 import java.util.Map;
 
+import inventory.Inventory;
+import inventory.Medication;
+import inventory.InventoryAlert;
+import inventory.MedicationOrder;
+import medical.Prescription;
+import medical.PrescriptionStatus;
+
 public class Pharmacist extends User {
 
     // Instance variables
     private String pharmacistID;
     private String name;
-    private Map<String, Integer> inventory; // Inventory of medications with quantities
+    private Inventory inventory; // Inventory of medications with quantities
 
     // Constructor
     public Pharmacist(String userID, String password, Role role, String pharmacistID, String name) {
         super(userID, password, role);
         this.pharmacistID = pharmacistID;
         this.name = name;
-        this.inventory = new HashMap<>(); // Initialize inventory with an empty list
+        this.inventory = inventory; // Initialize inventory with an empty list
     }
 
     // Method to view the outcomes of appointments
@@ -25,16 +32,24 @@ public class Pharmacist extends User {
     }
 
     // Method to update the status of a prescription
-    public void updatePrescriptionStatus(String prescriptionID, String newStatus) {
+    public void updatePrescriptionStatus(int prescriptionID, PrescriptionStatus newStatus) {
         System.out.println("Updating status of prescription ID: " + prescriptionID + " to " + newStatus);
-        // Implement logic to update prescription status (e.g., to "dispensed")
+        // Here, retrieve the Prescription from the inventory or other data source
+        Prescription prescription = inventory.getPrescription(prescriptionID);
+        if (prescription != null) {
+            prescription.setStatus(newStatus);
+            System.out.println("Prescription ID " + prescriptionID + " status updated to: " + newStatus);
+        } else {
+            System.out.println("Prescription ID " + prescriptionID + " not found.");
+        }
     }
 
     // Method to view the current inventory of medications
     public void viewMedicationInventory() {
         System.out.println("Medication Inventory:");
-        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
-            System.out.println("Medication: " + entry.getKey() + ", Quantity: " + entry.getValue());
+        Map<Integer, Medication> medications = inventory.getAllMedications();
+        for (Medication medication : medications.values()) {
+            System.out.println("Medication: " + medication.getName() + ", ID: " + medication.getMedicationID() + ", Stock Level: " + medication.getStockLevel());
         }
     }
 
