@@ -1,18 +1,26 @@
-ppackage user;
+package user;
+
+import inventory.Inventory;
+import inventory.Medication;
+import inventory.MedicationOrder;
 
 import java.util.List;
+import java.util.Map;
+
 
 public class Administrator extends User {
 
     // Instance variables
     private String adminID;
     private String name;
+    private Inventory inventory;
 
     // Constructor
-    public Administrator(String userID, String password, Role role, String adminID, String name) {
+    public Administrator(String userID, String password, Role role, String adminID, String name, Inventory inventory) {
         super(userID, password, role);
         this.adminID = adminID;
         this.name = name;
+        this.inventory=inventory;
     }
 
     // Method to manage hospital staff
