@@ -1,3 +1,5 @@
+package medical;
+
 public class VitalSign {
     private String signName;
     private double value;

@@ -3,6 +3,13 @@ package user;
 import java.util.ArrayList;
 import java.util.List;
 
+//accessing medical record (associating medical records with patient)
+import medical.MedicalRecord;
+import medical.Prescription;
+import medical.Diagnosis;
+import medical.LabTest;
+import medical.Treatment;
+
 public class Patient extends User {
 
     // Attributes
@@ -13,7 +20,7 @@ public class Patient extends User {
     private String bloodType;
     private double phoneNumber; // phone number
     private String email;
-    private List<String> medicalHistory; // Past diagnoses & treatments
+    private MedicalRecord medicalRecord; // Past diagnoses & treatments
     private List<String> appointmentHistory;
 
     // Constructor
@@ -27,16 +34,45 @@ public class Patient extends User {
         this.bloodType = bloodType;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.medicalHistory = new ArrayList<>();
+        this.medicalRecord = new MedicalRecord(patientID); //medical records
         this.appointmentHistory = new ArrayList<>();
     }
 
-    // Method to view medical records
-    public void viewMedicalRecord() {
-        System.out.println("Medical History for Patient ID: " + patientID);
-        for (String record : medicalHistory) {
-            System.out.println(record);
+     // Method to view full medical record details
+     public void viewMedicalRecord() {
+        System.out.println("---- Medical Record for Patient ----");
+        System.out.println("Patient ID: " + patientID);
+        System.out.println("Name: " + name);
+        System.out.println("Date of Birth: " + dateOfBirth);
+        System.out.println("Gender: " + gender);
+        System.out.println("Blood Type: " + bloodType);
+        System.out.println("Contact Information:");
+        System.out.println("    Phone Number: " + phoneNumber);
+        System.out.println("    Email: " + email);
+
+        // Display Diagnoses
+        System.out.println("\nDiagnoses:");
+        for (Diagnosis diagnosis : medicalRecord.getDiagnoses()) {
+            System.out.println(diagnosis); // Assumes Diagnosis has a proper toString() method
         }
+
+        // Display Lab Tests
+        System.out.println("\nLab Tests:");
+        for (LabTest labTest : medicalRecord.getLabTests()) {
+            System.out.println(labTest); // remove if patient does not need to know lab
+    
+        // Display Treatments
+        System.out.println("\nTreatments:");
+        for (Treatment treatment : medicalRecord.getTreatments()) {
+            System.out.println(treatment); // Uses Treatment's toString() method
+        }
+
+        System.out.println("\nPrescriptions:");
+        for (Prescription prescription : medicalRecord.getPrescriptions()) {
+            System.out.println(prescription); // remove if patient does not need to know prescription
+        }
+
+        System.out.println("---- End of Medical Record ----");
     }
 
     // Method to update personal information
@@ -127,6 +163,10 @@ public class Patient extends User {
     }
 
     // Getters and Setters (if needed)
+
+    public MedicalRecord getMedicalRecord() {
+        return this.medicalRecord;
+    }
     public String getPatientID() {
         return patientID;
     }
@@ -153,10 +193,6 @@ public class Patient extends User {
 
     public String getEmail() {
         return email;
-    }
-
-    public List<String> getMedicalHistory() {
-        return medicalHistory;
     }
 
     public List<String> getAppointmentHistory() {

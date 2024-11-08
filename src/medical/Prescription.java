@@ -1,3 +1,5 @@
+package medical;
+
 public class Prescription {
     private String medicationName;
     private int dosage;

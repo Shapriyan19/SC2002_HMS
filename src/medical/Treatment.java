@@ -1,3 +1,5 @@
+package medical;
+
 public class Treatment {
     private String treatmentName;
     private String startDate;
