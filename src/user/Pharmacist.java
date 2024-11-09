@@ -1,12 +1,9 @@
 package user;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import inventory.Inventory;
 import inventory.Medication;
-import inventory.InventoryAlert;
-import inventory.MedicationOrder;
 import medical.Prescription;
 import medical.PrescriptionStatus;
 
@@ -18,11 +15,11 @@ public class Pharmacist extends User {
     private Inventory inventory; // Inventory of medications with quantities
 
     // Constructor
-    public Pharmacist(String userID, String password, Role role, String pharmacistID, String name) {
+    public Pharmacist(String userID, String password, Role role, String pharmacistID, String name, Inventory inventory) {
         super(userID, password, role);
         this.pharmacistID = pharmacistID;
         this.name = name;
-        this.inventory = inventory; // Initialize inventory with an empty list
+        this.inventory = inventory; // Initialize inventory with the provided instance
     }
 
     // Method to view the outcomes of appointments
@@ -32,15 +29,14 @@ public class Pharmacist extends User {
     }
 
     // Method to update the status of a prescription
-    public void updatePrescriptionStatus(int prescriptionID, PrescriptionStatus newStatus) {
-        System.out.println("Updating status of prescription ID: " + prescriptionID + " to " + newStatus);
-        // Here, retrieve the Prescription from the inventory or other data source
-        Prescription prescription = inventory.getPrescription(prescriptionID);
+    public void updatePrescriptionStatus(Prescription prescription, PrescriptionStatus newStatus) {
+        System.out.println("Updating status of prescription ID: " + prescription.getPrescriptionID() + " to " + newStatus);
         if (prescription != null) {
             prescription.setStatus(newStatus);
-            System.out.println("Prescription ID " + prescriptionID + " status updated to: " + newStatus);
-        } else {
-            System.out.println("Prescription ID " + prescriptionID + " not found.");
+            System.out.println("Prescription ID " + prescription.getPrescriptionID() + " status updated to: " + newStatus);
+        } 
+        else {
+            System.out.println("Prescription not found.");
         }
     }
 
@@ -68,8 +64,9 @@ public class Pharmacist extends User {
             return true;
         } else {
             System.out.println("Login failed: Incorrect password.");
-            return false;}
+            return false;
         }
+    }
 
     @Override
     public boolean changePassword(String currentPassword, String newPassword) {
@@ -93,7 +90,6 @@ public class Pharmacist extends User {
         }
     }
 
-    
     @Override
     public void logout() {
         System.out.println("Logging out Pharmacist: " + name);
@@ -108,14 +104,13 @@ public class Pharmacist extends User {
         return name;
     }
 
-    public Map<String, Integer> getInventory() {
+    public Inventory getInventory() {
         return inventory;
     }
 
     // Method to add medication to inventory
     public void addMedicationToInventory(String medicationName, int quantity) {
-        inventory.put(medicationName, quantity);
+        inventory.addMedication(new Medication(medicationName, quantity)); // Assuming Medication constructor takes name and stock level
         System.out.println("Added medication to inventory: " + medicationName + " (Quantity: " + quantity + ")");
     }
 }
-

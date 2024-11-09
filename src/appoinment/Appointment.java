@@ -35,8 +35,16 @@ public class Appointment {
         return date;
     }
 
+    public void setDate(Date date){
+        this.date=date;
+    }
+
     public TimeSlot getTimeSlot() {
         return timeSlot;
+    }
+
+    public void setTimeSlot(TimeSlot timeSlot){
+        this.timeSlot=timeSlot;
     }
 
     public AppointmentStatus getStatus() {

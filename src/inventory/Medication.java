@@ -1,24 +1,17 @@
 package inventory;
 
-public class Medication implements InventoryItem {
+public class Medication {
+
+    private static int idCounter = 1; // Static counter for generating unique medication IDs
     private int medicationID;
     private String name;
     private int stockLevel;
 
-    public Medication(int medicationID, String name, int stockLevel) {
-        this.medicationID = medicationID;
+    // Constructor that accepts only name and stockLevel
+    public Medication(String name, int stockLevel) {
+        this.medicationID = idCounter++; // Assign a unique ID and increment the counter
         this.name = name;
         this.stockLevel = stockLevel;
-    }
-
-    @Override
-    public int getStockLevel() {
-        return stockLevel;
-    }
-
-    @Override
-    public void setStockLevel(int newStockLevel) {
-        this.stockLevel = newStockLevel;
     }
 
     public int getMedicationID() {
@@ -27,5 +20,13 @@ public class Medication implements InventoryItem {
 
     public String getName() {
         return name;
+    }
+
+    public int getStockLevel() {
+        return stockLevel;
+    }
+
+    public void setStockLevel(int stockLevel) {
+        this.stockLevel = stockLevel;
     }
 }

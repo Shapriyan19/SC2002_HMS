@@ -73,6 +73,7 @@ public class Patient extends User {
         }
 
         System.out.println("---- End of Medical Record ----");
+        }
     }
 
     // Method to update personal information

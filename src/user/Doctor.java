@@ -97,7 +97,7 @@ public class Doctor extends User {
         }
 
         // Display Prescriptions
-        System.out.println("\nPrescriptions:")
+        System.out.println("\nPrescriptions:");
         for (Prescription prescription : medicalRecord.getPrescriptions()) {
             System.out.println(prescription); // Assumes Prescription has a proper toString() method
         }
