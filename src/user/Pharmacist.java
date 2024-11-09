@@ -1,5 +1,6 @@
 package user;
 
+import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 import inventory.Inventory;
@@ -14,14 +15,34 @@ public class Pharmacist extends User {
     private String name;
     private Inventory inventory; // Inventory of medications with quantities
     private Map<Integer, Prescription> prescriptions; // Collection of prescriptions managed by this pharmacist
+    private String gender;
+    private int age;
 
     // Constructor
-    public Pharmacist(String userID, String password, Role role, String pharmacistID, String name, Inventory inventory) {
+    public Pharmacist(String userID, String password, Role role, String pharmacistID, String name, Inventory inventory, String gender, int age) {
         super(userID, password, role);
         this.pharmacistID = pharmacistID;
         this.name = name;
         this.inventory = inventory; // Initialize inventory with the provided instance
         this.prescriptions = new HashMap<>(); // Initialize the prescriptions map
+        this.gender=gender;
+        this.age=age;
+    }
+
+    // Method to export inventory to CSV
+    public void exportInventoryToCSV(String filePath) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+            writer.println("MedicationID,Name,StockLevel,LowStockAlertLevel");
+            for (Medication medication : inventory.getAllMedications().values()) {
+                writer.println(medication.getMedicationID() + "," 
+                               + medication.getName() + "," 
+                               + medication.getStockLevel() + "," 
+                               + medication.getLowStockLevel());
+            }
+            System.out.println("Inventory successfully exported to CSV file: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error exporting inventory to CSV: " + e.getMessage());
+        }
     }
 
     // Method to view the outcomes of appointments
@@ -36,7 +57,8 @@ public class Pharmacist extends User {
         if (prescription != null) {
             prescription.setStatus(newStatus);
             System.out.println("Prescription ID " + prescription.getPrescriptionID() + " status updated to: " + newStatus);
-        } else {
+        } 
+        else {
             System.out.println("Prescription not found.");
         }
     }
@@ -109,6 +131,14 @@ public class Pharmacist extends User {
         return inventory;
     }
 
+    public String getGender(){
+        return gender;
+    }
+
+    public int getAge(){
+        return age;
+    }
+
     // Method to add a prescription to the pharmacist's list
     public void addPrescription(Prescription prescription) {
         prescriptions.put(prescription.getPrescriptionID(), prescription);
@@ -140,8 +170,8 @@ public class Pharmacist extends User {
     }
 
     // Method to add medication to inventory
-    public void addMedicationToInventory(String medicationName, int quantity) {
-        inventory.addMedication(new Medication(medicationName, quantity)); // Assuming Medication constructor takes name and stock level
-        System.out.println("Added medication to inventory: " + medicationName + " (Quantity: " + quantity + ")");
+    public void addMedicationToInventory(String medicationName, int quantity, int lowStockLevelAlert) {
+        inventory.addMedication(new Medication(medicationName, quantity,lowStockLevelAlert)); // Assuming Medication constructor takes name and stock level
+        System.out.println("Added medication to inventory: " + medicationName + " (Quantity: " + quantity + ")"+" (Low Stock Alert Level: "+lowStockLevelAlert+")");
     }
 }

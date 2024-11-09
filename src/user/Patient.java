@@ -1,5 +1,8 @@
 package user;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +41,31 @@ public class Patient extends User {
         this.appointmentHistory = new ArrayList<>();
     }
 
-     // Method to view full medical record details
-     public void viewMedicalRecord() {
+    // Method to update personal information and update the Patient_List.csv
+    public void updatePersonalInformation(String name, double phoneNumber, String email) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        System.out.println("Personal information updated.");
+        
+        // Update Patient_List.csv with the new information
+        updatePatientListCSV();
+    }
+
+    // Method to update the Patient_List.csv
+    private void updatePatientListCSV() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/Patient_List.csv", true))) {
+            // Write the updated patient information to the file
+            String patientData = String.join(",", patientID, name, dateOfBirth, gender, bloodType,
+                    String.valueOf(phoneNumber), email) + "\n";
+            writer.append(patientData);
+        } catch (IOException e) {
+            System.out.println("Error updating the Patient_List.csv file: " + e.getMessage());
+        }
+    }
+
+    // Method to view full medical record details
+    public void viewMedicalRecord() {
         System.out.println("---- Medical Record for Patient ----");
         System.out.println("Patient ID: " + patientID);
         System.out.println("Name: " + name);
@@ -60,7 +86,8 @@ public class Patient extends User {
         System.out.println("\nLab Tests:");
         for (LabTest labTest : medicalRecord.getLabTests()) {
             System.out.println(labTest); // remove if patient does not need to know lab
-    
+        }
+
         // Display Treatments
         System.out.println("\nTreatments:");
         for (Treatment treatment : medicalRecord.getTreatments()) {
@@ -73,15 +100,6 @@ public class Patient extends User {
         }
 
         System.out.println("---- End of Medical Record ----");
-        }
-    }
-
-    // Method to update personal information
-    public void updatePersonalInformation(String name, double phoneNumber, String email) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        System.out.println("Personal information updated.");
     }
 
     // Method to view available appointments
@@ -132,8 +150,9 @@ public class Patient extends User {
             return true;
         } else {
             System.out.println("Login failed: Incorrect password.");
-            return false;}
+            return false;
         }
+    }
 
     @Override
     public boolean changePassword(String currentPassword, String newPassword) {
@@ -157,7 +176,6 @@ public class Patient extends User {
         }
     }
 
-    
     @Override
     public void logout() {
         System.out.println("Logging out patient: " + name);
@@ -168,6 +186,7 @@ public class Patient extends User {
     public MedicalRecord getMedicalRecord() {
         return this.medicalRecord;
     }
+
     public String getPatientID() {
         return patientID;
     }
@@ -200,4 +219,3 @@ public class Patient extends User {
         return appointmentHistory;
     }
 }
-

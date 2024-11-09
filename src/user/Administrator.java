@@ -4,6 +4,9 @@ import inventory.Inventory;
 import inventory.Medication;
 import inventory.MedicationOrder;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 
@@ -13,13 +16,18 @@ public class Administrator extends User {
     private String adminID;
     private String name;
     private Inventory inventory;
+    private String gender;
+    private int age;
+    
 
     // Constructor
-    public Administrator(String userID, String password, Role role, String adminID, String name, Inventory inventory) {
+    public Administrator(String userID, String password, Role role, String adminID, String name, Inventory inventory, String gender, int age) {
         super(userID, password, role);
         this.adminID = adminID;
         this.name = name;
         this.inventory=inventory;
+        this.gender=gender;
+        this.age=age;
     }
 
     // Method to manage hospital staff
@@ -125,7 +133,22 @@ public class Administrator extends User {
             return false;
         }
     }
-
+    
+    // Method to export inventory to CSV
+    public void exportInventoryToCSV(String filePath) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+            writer.println("MedicationID,Name,StockLevel,LowStockAlertLevel");
+            for (Medication medication : inventory.getAllMedications().values()) {
+                writer.println(medication.getMedicationID() + "," 
+                               + medication.getName() + "," 
+                               + medication.getStockLevel() + "," 
+                               + medication.getLowStockLevelAlert());
+            }
+            System.out.println("Inventory successfully exported to CSV file: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error exporting inventory to CSV: " + e.getMessage());
+        }
+    }
     
     @Override
     public void logout() {
@@ -139,6 +162,14 @@ public class Administrator extends User {
 
     public String getName() {
         return name;
+    }
+
+    public String getGender(){
+        return gender;
+    }
+
+    public int getAge(){
+        return age;
     }
 }
 

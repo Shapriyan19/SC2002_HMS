@@ -6,12 +6,14 @@ public class Medication {
     private int medicationID;
     private String name;
     private int stockLevel;
+    private int lowStockLevelAlert;
 
     // Constructor that accepts only name and stockLevel
-    public Medication(String name, int stockLevel) {
+    public Medication(String name, int stockLevel, int lowStockLevelAlert) {
         this.medicationID = idCounter++; // Assign a unique ID and increment the counter
         this.name = name;
         this.stockLevel = stockLevel;
+        this.lowStockLevelAlert=lowStockLevelAlert;
     }
 
     public int getMedicationID() {
@@ -28,5 +30,9 @@ public class Medication {
 
     public void setStockLevel(int stockLevel) {
         this.stockLevel = stockLevel;
+    }
+
+    public int getLowStockLevelAlert(){
+        return lowStockLevelAlert;
     }
 }
