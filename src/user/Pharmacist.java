@@ -1,7 +1,7 @@
 package user;
 
 import java.util.Map;
-
+import java.util.HashMap;
 import inventory.Inventory;
 import inventory.Medication;
 import medical.Prescription;
@@ -13,6 +13,7 @@ public class Pharmacist extends User {
     private String pharmacistID;
     private String name;
     private Inventory inventory; // Inventory of medications with quantities
+    private Map<Integer, Prescription> prescriptions; // Collection of prescriptions managed by this pharmacist
 
     // Constructor
     public Pharmacist(String userID, String password, Role role, String pharmacistID, String name, Inventory inventory) {
@@ -20,6 +21,7 @@ public class Pharmacist extends User {
         this.pharmacistID = pharmacistID;
         this.name = name;
         this.inventory = inventory; // Initialize inventory with the provided instance
+        this.prescriptions = new HashMap<>(); // Initialize the prescriptions map
     }
 
     // Method to view the outcomes of appointments
@@ -34,8 +36,7 @@ public class Pharmacist extends User {
         if (prescription != null) {
             prescription.setStatus(newStatus);
             System.out.println("Prescription ID " + prescription.getPrescriptionID() + " status updated to: " + newStatus);
-        } 
-        else {
+        } else {
             System.out.println("Prescription not found.");
         }
     }
@@ -106,6 +107,36 @@ public class Pharmacist extends User {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    // Method to add a prescription to the pharmacist's list
+    public void addPrescription(Prescription prescription) {
+        prescriptions.put(prescription.getPrescriptionID(), prescription);
+        // System.out.println("Prescription added for patient: " + prescription.getPatientName()); need to add 
+    }
+
+    // Method to remove a prescription from the pharmacist's list
+    public void removePrescription(int prescriptionID) {
+        if (prescriptions.containsKey(prescriptionID)) {
+            prescriptions.remove(prescriptionID);
+            System.out.println("Prescription with ID " + prescriptionID + " removed.");
+        } else {
+            System.out.println("Prescription ID " + prescriptionID + " not found.");
+        }
+    }
+
+    // Method to view all prescriptions managed by the pharmacist
+    public void viewAllPrescriptions() {
+        System.out.println("Viewing all prescriptions managed by Pharmacist " + name + ":");
+        for (Prescription prescription : prescriptions.values()) {
+            // System.out.println("Prescription ID: " + prescription.getPrescriptionID() + ", Patient: " + prescription.getPatientName() + ", Status: " + prescription.getStatus()); need to use this
+            System.out.println("Prescription ID: " + prescription.getPrescriptionID() + ", Status: " + prescription.getStatus());
+        }
+    }
+
+    // Method to get a specific prescription by ID
+    public Prescription getPrescription(int prescriptionID) {
+        return prescriptions.get(prescriptionID);
     }
 
     // Method to add medication to inventory

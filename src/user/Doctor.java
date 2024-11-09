@@ -8,7 +8,6 @@ import medical.Diagnosis;
 import medical.LabTest;
 import medical.Prescription;
 import medical.Treatment;
-import medical.PrescriptionStatus;
 
 public class Doctor extends User {
 
