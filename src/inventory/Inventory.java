@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-public class Inventory {
+public class Inventory implements InventoryItem {
 
     // A map to hold medications with their medication ID as key
     private Map<Integer, Medication> medications;

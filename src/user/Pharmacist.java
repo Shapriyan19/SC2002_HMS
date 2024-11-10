@@ -37,7 +37,7 @@ public class Pharmacist extends User {
                 writer.println(medication.getMedicationID() + "," 
                                + medication.getName() + "," 
                                + medication.getStockLevel() + "," 
-                               + medication.getLowStockLevel());
+                               + medication.getLowStockLevelAlert());
             }
             System.out.println("Inventory successfully exported to CSV file: " + filePath);
         } catch (IOException e) {

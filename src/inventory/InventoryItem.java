@@ -1,6 +1,13 @@
 package inventory;
+import java.util.Map;
 
 public interface InventoryItem {
-    int getStockLevel();
-    void setStockLevel(int newStockLevel);
+    public void addMedication(Medication medication);
+    public void removeMedication(int medicationId);
+    public void updateStockLevel(int medication, int newStockLevel);
+    public Medication getMedication(int medicationId);
+    public Map<Integer,Medication> getAllMedications();
+    // public void checkLowStockLevel(Medication medication);
+    public void viewLowStockMedications();
+    
 }
