@@ -1,28 +1,29 @@
+package medical;
 import java.util.ArrayList;
 
 public class MedicalRecord {
     private String hospitalID;
-    private String patientID;
-    private String name;
-    private String dateOfBirth;
-    private String gender;
-    private String contactNumber;
-    private String emailAddress;
-    private String bloodType;
+    // private String patientID;
+    // private String name;
+    // private String dateOfBirth;
+    // private String gender;
+    // private String contactNumber;
+    // private String emailAddress;
+    // private String bloodType;
     private ArrayList<Diagnosis> diagnoses;
     private ArrayList<LabTest> labTests;
     private ArrayList<Prescription> prescriptions;
     private ArrayList<Treatment> treatments;
 
-    public MedicalRecord(String hospitalID, String patientID, String name, String dateOfBirth, String gender, String contactNumber, String emailAddress, String bloodType) {
+    public MedicalRecord(String hospitalID) {
         this.hospitalID = hospitalID;
-        this.patientID = patientID;
-        this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.contactNumber = contactNumber;
-        this.emailAddress = emailAddress;
-        this.bloodType = bloodType;
+        // this.patientID = patientID;
+        // this.name = name;
+        // this.dateOfBirth = dateOfBirth;
+        // this.gender = gender;
+        // this.contactNumber = contactNumber;
+        // this.emailAddress = emailAddress;
+        // this.bloodType = bloodType;
         this.diagnoses = new ArrayList<>();
         this.labTests = new ArrayList<>();
         this.prescriptions = new ArrayList<>();
@@ -30,22 +31,22 @@ public class MedicalRecord {
     }
 
     // Getters for Basic Information - Only Patient and Doctor should have access to this data
-    public String getPatientID() { return patientID; }
-    public String getName() { return name; }
-    public String getDateOfBirth() { return dateOfBirth; }
-    public String getGender() { return gender; }
-    public String getContactNumber() { return contactNumber; }
-    public String getEmailAddress() { return emailAddress; }
-    public String getBloodType() { return bloodType; }
+    public String getPatientID() { return hospitalID; }
+    // public String getName() { return name; }
+    // public String getDateOfBirth() { return dateOfBirth; }
+    // public String getGender() { return gender; }
+    // public String getContactNumber() { return contactNumber; }
+    // public String getEmailAddress() { return emailAddress; }
+    // public String getBloodType() { return bloodType; }
 
     // Setters for Non-Medical Information - Only accessible by Patient
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
+    // public void setContactNumber(String contactNumber) {
+    //     this.contactNumber = contactNumber;
+    // }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
+    // public void setEmailAddress(String emailAddress) {
+    //     this.emailAddress = emailAddress;
+    // }
 
     // Diagnosis Management - Only Doctor can add
     public ArrayList<Diagnosis> getDiagnoses() {
