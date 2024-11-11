@@ -1,8 +1,8 @@
 package user;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+// import java.io.BufferedWriter;
+// import java.io.FileWriter;
+// import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ import medical.Treatment;
 public class Patient extends User {
 
     // Attributes
-    private String patientID;
+    // private String patientID;    to be removed
     private String name;
     private String dateOfBirth;
     private String gender;
@@ -27,17 +27,17 @@ public class Patient extends User {
     private List<String> appointmentHistory;
 
     // Constructor
-    public Patient(String userID, String password, Role role, String patientID, String name, 
+    public Patient(String HospitalID, String password, Role role, String name, 
                    String dateOfBirth, String gender, String bloodType, double phoneNumber, String email) {
-        super(userID, password, role);
-        this.patientID = patientID;
+        super(HospitalID, password, role);
+        // this.patientID = patientID; to be removed
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.bloodType = bloodType;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.medicalRecord = new MedicalRecord(patientID); //medical records
+        this.medicalRecord = new MedicalRecord(HospitalID); //medical records
         this.appointmentHistory = new ArrayList<>();
     }
 
@@ -49,25 +49,29 @@ public class Patient extends User {
         System.out.println("Personal information updated.");
         
         // Update Patient_List.csv with the new information
-        updatePatientListCSV();
+        // updatePatientListCSV();
     }
 
     // Method to update the Patient_List.csv
-    private void updatePatientListCSV() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/Patient_List.csv", true))) {
-            // Write the updated patient information to the file
-            String patientData = String.join(",", patientID, name, dateOfBirth, gender, bloodType,
-                    String.valueOf(phoneNumber), email) + "\n";
-            writer.append(patientData);
-        } catch (IOException e) {
-            System.out.println("Error updating the Patient_List.csv file: " + e.getMessage());
-        }
+    // private void updatePatientListCSV() {
+    //     try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/Patient_List.csv", true))) {
+    //         // Write the updated patient information to the file
+    //         String patientData = String.join(",", HospitalID, name, dateOfBirth, gender, bloodType,
+    //                 String.valueOf(phoneNumber), email) + "\n";
+    //         writer.append(patientData);
+    //     } catch (IOException e) {
+    //         System.out.println("Error updating the Patient_List.csv file: " + e.getMessage());
+    //     }
+    // }
+
+    public void updateCSV(){
+        //implementation
     }
 
     // Method to view full medical record details
     public void viewMedicalRecord() {
         System.out.println("---- Medical Record for Patient ----");
-        System.out.println("Patient ID: " + patientID);
+        System.out.println("Patient ID: " + HospitalID);
         System.out.println("Name: " + name);
         System.out.println("Date of Birth: " + dateOfBirth);
         System.out.println("Gender: " + gender);
@@ -146,7 +150,7 @@ public class Patient extends User {
     public boolean login(String enteredPassword) {
         if (this.password.equals(enteredPassword)) {
             this.isLoggedIn = true;
-            System.out.println("Login successful for user: " + userID);
+            System.out.println("Login successful for user: " + HospitalID);
             return true;
         } else {
             System.out.println("Login failed: Incorrect password.");
@@ -185,10 +189,6 @@ public class Patient extends User {
 
     public MedicalRecord getMedicalRecord() {
         return this.medicalRecord;
-    }
-
-    public String getPatientID() {
-        return patientID;
     }
 
     public String getName() {

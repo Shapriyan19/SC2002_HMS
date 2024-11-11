@@ -11,7 +11,7 @@ import medical.PrescriptionStatus;
 public class Pharmacist extends User {
 
     // Instance variables
-    private String pharmacistID;
+    // private String pharmacistID; to be removed
     private String name;
     private Inventory inventory; // Inventory of medications with quantities
     private Map<Integer, Prescription> prescriptions; // Collection of prescriptions managed by this pharmacist
@@ -19,9 +19,9 @@ public class Pharmacist extends User {
     private int age;
 
     // Constructor
-    public Pharmacist(String userID, String password, Role role, String pharmacistID, String name, Inventory inventory, String gender, int age) {
-        super(userID, password, role);
-        this.pharmacistID = pharmacistID;
+    public Pharmacist(String HospitalID, String password, Role role, String name, Inventory inventory, String gender, int age) {
+        super(HospitalID, password, role);
+        // this.pharmacistID = pharmacistID;    to be removed
         this.name = name;
         this.inventory = inventory; // Initialize inventory with the provided instance
         this.prescriptions = new HashMap<>(); // Initialize the prescriptions map
@@ -83,7 +83,7 @@ public class Pharmacist extends User {
     public boolean login(String enteredPassword) {
         if (this.password.equals(enteredPassword)) {
             this.isLoggedIn = true;
-            System.out.println("Login successful for user: " + userID);
+            System.out.println("Login successful for user: " + HospitalID);
             return true;
         } else {
             System.out.println("Login failed: Incorrect password.");
@@ -119,9 +119,6 @@ public class Pharmacist extends User {
     }
 
     // Getters and Setters (if needed)
-    public String getPharmacistID() {
-        return pharmacistID;
-    }
 
     public String getName() {
         return name;
@@ -137,6 +134,10 @@ public class Pharmacist extends User {
 
     public int getAge(){
         return age;
+    }
+
+    public void updateCSV(){
+        //implementation
     }
 
     // Method to add a prescription to the pharmacist's list

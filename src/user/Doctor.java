@@ -13,7 +13,7 @@ import medical.Treatment;
 public class Doctor extends User {
 
     // Instance variables
-    private String doctorID;
+    // private String doctorID; to be removed
     private String name;
     private String specialisation;
     private List<String> schedule;
@@ -22,10 +22,10 @@ public class Doctor extends User {
     private int age;
     
     // Constructor
-    public Doctor(String userID, String password, Role role, String doctorID, String name, 
+    public Doctor(String HospitalID, String password, Role role, String name, 
                   String specialisation, String gender, int age) {
-        super(userID, password, role);
-        this.doctorID = doctorID;
+        super(HospitalID, password, role);
+        // this.doctorID = doctorID;    to be removed
         this.name = name;
         this.specialisation = specialisation;
         this.schedule = new ArrayList<>();
@@ -36,12 +36,12 @@ public class Doctor extends User {
 
     public void addPatient(Patient patient) {
         patientList.add(patient);
-        System.out.println("Added patient with ID: " + patient.getPatientID());
+        System.out.println("Added patient with ID: " + patient.getHospitalID());
     }
 
     private Patient getPatientById(String patientID) {
         for (Patient patient : patientList) {
-            if (patient.getPatientID().equals(patientID)) {
+            if (patient.getHospitalID().equals(patientID)) {
                 return patient;
             }
         }
@@ -154,7 +154,7 @@ public class Doctor extends User {
     public boolean login(String enteredPassword) {
         if (this.password.equals(enteredPassword)) {
             this.isLoggedIn = true;
-            System.out.println("Login successful for user: " + userID);
+            System.out.println("Login successful for user: " + HospitalID);
             return true;
         } else {
             System.out.println("Login failed: Incorrect password.");
@@ -194,7 +194,7 @@ public class Doctor extends User {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("Staff_List.csv", true));
             writer.append("\n");
-            writer.append(userID + "," + password + "," + role + "," + doctorID + "," + name + "," + specialisation + "," + gender + "," + age);
+            writer.append(HospitalID + "," + password + "," + role + "," + HospitalID + "," + name + "," + specialisation + "," + gender + "," + age);
             writer.close();
             System.out.println("Doctor data updated in Staff_List.csv.");
         } catch (IOException e) {
@@ -204,7 +204,7 @@ public class Doctor extends User {
 
     // Getters and setters
     public String getDoctorID() {
-        return doctorID; 
+        return HospitalID; 
     }
     
     public String getName() { 

@@ -13,7 +13,7 @@ import java.util.Map;
 public class Administrator extends User {
 
     // Instance variables
-    private String adminID;
+    // private String adminID;  to be removed
     private String name;
     private Inventory inventory;
     private String gender;
@@ -21,9 +21,9 @@ public class Administrator extends User {
     
 
     // Constructor
-    public Administrator(String userID, String password, Role role, String adminID, String name, Inventory inventory, String gender, int age) {
-        super(userID, password, role);
-        this.adminID = adminID;
+    public Administrator(String HospitalID, String password, Role role, String name, Inventory inventory, String gender, int age) {
+        super(HospitalID, password, role);
+        // this.adminID = adminID;  to be removed
         this.name = name;
         this.inventory=inventory;
         this.gender=gender;
@@ -31,8 +31,8 @@ public class Administrator extends User {
     }
 
     // Method to manage hospital staff
-    public void manageHospitalStaff(String staffID, String action) {
-        System.out.println("Managing hospital staff with ID: " + staffID);
+    public void manageHospitalStaff(String HospitalID, String action) {
+        System.out.println("Managing hospital staff with ID: " + HospitalID);
         System.out.println("Action: " + action);
         // Implement logic to add, update, or remove hospital staff based on the action
     }
@@ -105,7 +105,7 @@ public class Administrator extends User {
     public boolean login(String enteredPassword) {
         if (this.password.equals(enteredPassword)) {
             this.isLoggedIn = true;
-            System.out.println("Login successful for user: " + userID);
+            System.out.println("Login successful for user: " + HospitalID);
             return true;
         } else {
             System.out.println("Login failed: Incorrect password.");
@@ -149,6 +149,10 @@ public class Administrator extends User {
             System.out.println("Error exporting inventory to CSV: " + e.getMessage());
         }
     }
+
+    public void updateCSV(){
+        //implemetation
+    }
     
     @Override
     public void logout() {
@@ -156,9 +160,6 @@ public class Administrator extends User {
     }
 
     // Getters
-    public String getAdminID() {
-        return adminID;
-    }
 
     public String getName() {
         return name;
