@@ -188,7 +188,7 @@ public class Inventory implements InventoryItem {
     }
 
     private void loadMedicationsFromCSV() {
-        try (BufferedReader br = Files.newBufferedReader(Paths.get("data/Medicine_List.csv"))) {
+        try (BufferedReader br = Files.newBufferedReader(Paths.get(CSV_FILE_PATH))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
@@ -207,7 +207,7 @@ public class Inventory implements InventoryItem {
     }
 
     private void updateCSV() {
-        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("data/Medicine_List.csv"))) {
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(CSV_FILE_PATH))) {
             for (Medication medication : medications.values()) {
                 String line = String.join(",",
                     String.valueOf(medication.getMedicationID()),
