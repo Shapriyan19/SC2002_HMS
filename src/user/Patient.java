@@ -1,5 +1,8 @@
 package user;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 // import java.io.BufferedWriter;
 // import java.io.FileWriter;
 // import java.io.IOException;
@@ -65,7 +68,16 @@ public class Patient extends User {
     // }
 
     public void updateCSV(){
-        //implementation
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Patient_List.csv", true));
+            writer.append("\n");
+            writer.append(HospitalID + "," + name + "," + dateOfBirth + "," + gender + "," + bloodType + ","
+                    + phoneNumber + "," + email);
+            writer.close();
+            System.out.println("Patient data updated in Patient_List.csv.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to view full medical record details
