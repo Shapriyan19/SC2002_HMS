@@ -137,7 +137,15 @@ public class Pharmacist extends User {
     }
 
     public void updateCSV(){
-        //implementation
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Staff_List.csv", true));
+            writer.append("\n");
+            writer.append(HospitalID + "," + name + "," + role + "," + gender + "," + age + "," + password);
+            writer.close();
+            System.out.println("Pharmacist data updated in Staff_List.csv.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to add a prescription to the pharmacist's list
