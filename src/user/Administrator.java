@@ -4,6 +4,7 @@ import inventory.Inventory;
 import inventory.Medication;
 import inventory.MedicationOrder;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -151,7 +152,15 @@ public class Administrator extends User {
     }
 
     public void updateCSV(){
-        //implemetation
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Staff_List.csv", true));
+            writer.append("\n");
+            writer.append(HospitalID + "," + name + "," + role + "," + gender + "," + age + "," + password);
+            writer.close();
+            System.out.println("Administrator data updated in Staff_List.csv.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
