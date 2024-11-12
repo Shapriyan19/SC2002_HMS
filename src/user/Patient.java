@@ -3,36 +3,34 @@ package user;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-// import java.io.BufferedWriter;
-// import java.io.FileWriter;
-// import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 //accessing medical record (associating medical records with patient)
-import medical.MedicalRecord;
-import medical.Prescription;
-import medical.Diagnosis;
-import medical.LabTest;
-import medical.Treatment;
+// import medical.MedicalRecord;
+// import medical.Prescription;
+// import medical.Diagnosis;
+// import medical.LabTest;
+// import medical.Treatment;
 
 public class Patient extends User {
 
+    private static List<Patient> patientsList = new ArrayList<>(); // Store all patients
     // Attributes
     // private String patientID;    to be removed
     private String name;
     private String dateOfBirth;
     private String gender;
     private String bloodType;
-    private double phoneNumber; // phone number
+    private long phoneNumber; // phone number
     private String email;
-    private MedicalRecord medicalRecord; // Past diagnoses & treatments
-    private List<String> appointmentHistory;
+    // private MedicalRecord medicalRecord; // Past diagnoses & treatments //to be checked
+    // private List<String> appointmentHistory; //to be checked
 
     // Constructor
-    public Patient(String HospitalID, String password, Role role, String name, 
-                   String dateOfBirth, String gender, String bloodType, double phoneNumber, String email) {
-        super(HospitalID, password, role);
+    public Patient(Role role, String name, 
+                   String dateOfBirth, String gender, String bloodType, long phoneNumber, String email) {
+        super(generateNewHospitalID(role), role);
         // this.patientID = patientID; to be removed
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -40,39 +38,39 @@ public class Patient extends User {
         this.bloodType = bloodType;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.medicalRecord = new MedicalRecord(HospitalID); //medical records
-        this.appointmentHistory = new ArrayList<>();
+        // this.medicalRecord = new MedicalRecord(HospitalID); //medical records
+        // this.appointmentHistory = new ArrayList<>();
+        patientsList.add(this); //add new patient to list
+        updateCSV(); 
     }
 
-    // Method to update personal information and update the Patient_List.csv
-    public void updatePersonalInformation(String name, double phoneNumber, String email) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        System.out.println("Personal information updated.");
-        
-        // Update Patient_List.csv with the new information
-        // updatePatientListCSV();
+    public void updateDOB(String dateOfBirth){
+        this.dateOfBirth=dateOfBirth;
+        System.out.println("Patient Date of Birth updated");
+        updateCSV();
     }
 
-    // Method to update the Patient_List.csv
-    // private void updatePatientListCSV() {
-    //     try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/Patient_List.csv", true))) {
-    //         // Write the updated patient information to the file
-    //         String patientData = String.join(",", HospitalID, name, dateOfBirth, gender, bloodType,
-    //                 String.valueOf(phoneNumber), email) + "\n";
-    //         writer.append(patientData);
-    //     } catch (IOException e) {
-    //         System.out.println("Error updating the Patient_List.csv file: " + e.getMessage());
-    //     }
-    // }
+    public void updateNumber(long phoneNumber){
+        this.phoneNumber=phoneNumber;
+        System.out.println("Patient Phone Number updated.");
+        updateCSV();
+    }
 
-    public void updateCSV(){
+    public void updateEmail(String email){
+        this.email=email;
+        System.out.println("Patient Email Address updated.");
+        updateCSV();
+    }
+
+    public static void updateCSV() {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("Patient_List.csv", true));
-            writer.append("\n");
-            writer.append(HospitalID + "," + name + "," + dateOfBirth + "," + gender + "," + bloodType + ","
-                    + phoneNumber + "," + email);
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Data/Patient_List.csv"));
+            writer.write("Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email");
+            writer.newLine();
+            for (Patient patient : patientsList) {
+                writer.write(patient.toCSVFormat());
+                writer.newLine();
+            }
             writer.close();
             System.out.println("Patient data updated in Patient_List.csv.");
         } catch (IOException e) {
@@ -80,82 +78,87 @@ public class Patient extends User {
         }
     }
 
+    private String toCSVFormat() {
+        return HospitalID + "," + name + ","+ password + "," + dateOfBirth + "," + gender + "," + bloodType + ","
+                + phoneNumber + "," + email;
+    }
+
     // Method to view full medical record details
-    public void viewMedicalRecord() {
-        System.out.println("---- Medical Record for Patient ----");
-        System.out.println("Patient ID: " + HospitalID);
-        System.out.println("Name: " + name);
-        System.out.println("Date of Birth: " + dateOfBirth);
-        System.out.println("Gender: " + gender);
-        System.out.println("Blood Type: " + bloodType);
-        System.out.println("Contact Information:");
-        System.out.println("    Phone Number: " + phoneNumber);
-        System.out.println("    Email: " + email);
+    // public void viewMedicalRecord() {
+    //     System.out.println("---- Medical Record for Patient ----");
+    //     System.out.println("Patient ID: " + HospitalID);
+    //     System.out.println("Name: " + name);
+    //     System.out.println("Date of Birth: " + dateOfBirth);
+    //     System.out.println("Gender: " + gender);
+    //     System.out.println("Blood Type: " + bloodType);
+    //     System.out.println("Contact Information:");
+    //     System.out.println("    Phone Number: " + phoneNumber);
+    //     System.out.println("    Email: " + email);
 
-        // Display Diagnoses
-        System.out.println("\nDiagnoses:");
-        for (Diagnosis diagnosis : medicalRecord.getDiagnoses()) {
-            System.out.println(diagnosis); // Assumes Diagnosis has a proper toString() method
-        }
+    //     // Display Diagnoses
+    //     System.out.println("\nDiagnoses:");
+    //     for (Diagnosis diagnosis : medicalRecord.getDiagnoses()) {
+    //         System.out.println(diagnosis); // Assumes Diagnosis has a proper toString() method
+    //     }
 
-        // Display Lab Tests
-        System.out.println("\nLab Tests:");
-        for (LabTest labTest : medicalRecord.getLabTests()) {
-            System.out.println(labTest); // remove if patient does not need to know lab
-        }
+    //     // Display Lab Tests
+    //     System.out.println("\nLab Tests:");
+    //     for (LabTest labTest : medicalRecord.getLabTests()) {
+    //         System.out.println(labTest); // remove if patient does not need to know lab
+    //     }
 
-        // Display Treatments
-        System.out.println("\nTreatments:");
-        for (Treatment treatment : medicalRecord.getTreatments()) {
-            System.out.println(treatment); // Uses Treatment's toString() method
-        }
+    //     // Display Treatments
+    //     System.out.println("\nTreatments:");
+    //     for (Treatment treatment : medicalRecord.getTreatments()) {
+    //         System.out.println(treatment); // Uses Treatment's toString() method
+    //     }
 
-        System.out.println("\nPrescriptions:");
-        for (Prescription prescription : medicalRecord.getPrescriptions()) {
-            System.out.println(prescription); // remove if patient does not need to know prescription
-        }
+    //     System.out.println("\nPrescriptions:");
+    //     for (Prescription prescription : medicalRecord.getPrescriptions()) {
+    //         System.out.println(prescription); // remove if patient does not need to know prescription
+    //     }
 
-        System.out.println("---- End of Medical Record ----");
-    }
+    //     System.out.println("---- End of Medical Record ----");
+    // }
 
-    // Method to view available appointments
-    public void viewAvailableAppointments() {
-        // Placeholder: Logic to retrieve and display available appointments
-        System.out.println("Displaying available appointments.");
-    }
+    // // Method to view available appointments
+    // public void viewAvailableAppointments() {
+    //     // Placeholder: Logic to retrieve and display available appointments
+    //     System.out.println("Displaying available appointments.");
+    // }
 
-    // Method to schedule an appointment
-    public void scheduleAppointment(String appointmentDetails) {
-        appointmentHistory.add(appointmentDetails);
-        System.out.println("Appointment scheduled: " + appointmentDetails);
-    }
+    // // Method to schedule an appointment
+    // public void scheduleAppointment(String appointmentDetails) {
+    //     appointmentHistory.add(appointmentDetails);
+    //     System.out.println("Appointment scheduled: " + appointmentDetails);
+    // }
 
-    // Method to reschedule an appointment
-    public void rescheduleAppointment(String oldAppointment, String newAppointmentDetails) {
-        appointmentHistory.remove(oldAppointment);
-        appointmentHistory.add(newAppointmentDetails);
-        System.out.println("Appointment rescheduled to: " + newAppointmentDetails);
-    }
+    // // Method to reschedule an appointment
+    // public void rescheduleAppointment(String oldAppointment, String newAppointmentDetails) {
+    //     appointmentHistory.remove(oldAppointment);
+    //     appointmentHistory.add(newAppointmentDetails);
+    //     System.out.println("Appointment rescheduled to: " + newAppointmentDetails);
+    // }
 
-    // Method to cancel an appointment
-    public void cancelAppointment(String appointmentDetails) {
-        appointmentHistory.remove(appointmentDetails);
-        System.out.println("Appointment canceled: " + appointmentDetails);
-    }
+    // // Method to cancel an appointment
+    // public void cancelAppointment(String appointmentDetails) {
+    //     appointmentHistory.remove(appointmentDetails);
+    //     System.out.println("Appointment canceled: " + appointmentDetails);
+    // }
 
-    // Method to view scheduled appointments
-    public void viewScheduledAppointments() {
-        System.out.println("Scheduled Appointments:");
-        for (String appointment : appointmentHistory) {
-            System.out.println(appointment);
-        }
-    }
+    // // Method to view scheduled appointments
+    // public void viewScheduledAppointments() {
+    //     System.out.println("Scheduled Appointments:");
+    //     for (String appointment : appointmentHistory) {
+    //         System.out.println(appointment);
+    //     }
+    // }
 
-    // Method to view past appointment outcome records
-    public void viewPastAppointmentOutcomeRecords() {
-        // Placeholder: Logic to retrieve and display past appointment outcomes
-        System.out.println("Displaying past appointment outcome records.");
-    }
+    // // Method to view past appointment outcome records
+    // public void viewPastAppointmentOutcomeRecords() {
+    //     // Placeholder: Logic to retrieve and display past appointment outcomes
+    //     System.out.println("Displaying past appointment outcome records.");
+    // }
 
     // Override logout method from User class
     @Override
@@ -181,6 +184,7 @@ public class Patient extends User {
             if (newPassword.length() >= 8) { // Basic validation for password length
                 setPassword(newPassword);
                 System.out.println("Password changed successfully for Patient: " + name);
+                updateCSV();
                 return true;
             } else {
                 System.out.println("New password must be at least 8 characters long.");
@@ -195,13 +199,14 @@ public class Patient extends User {
     @Override
     public void logout() {
         System.out.println("Logging out patient: " + name);
+        this.isLoggedIn = false;
     }
 
     // Getters and Setters (if needed)
 
-    public MedicalRecord getMedicalRecord() {
-        return this.medicalRecord;
-    }
+    // public MedicalRecord getMedicalRecord() {
+    //     return this.medicalRecord;
+    // }
 
     public String getName() {
         return name;
@@ -227,7 +232,7 @@ public class Patient extends User {
         return email;
     }
 
-    public List<String> getAppointmentHistory() {
-        return appointmentHistory;
-    }
+    // public List<String> getAppointmentHistory() {
+    //     return appointmentHistory;
+    // }
 }

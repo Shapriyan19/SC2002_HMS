@@ -1,0 +1,10 @@
+Staff ID,Name,Password,Role,Specialty/Department,Gender,Age
+
+PH0000,Dr. Adam Clark,newpassword123,PHARMACIST,Male,40
+PH0001,Dr. Emily Stone,password,PHARMACIST,Female,35
+AD0000,Alice,newpassword123,ADMINISTRATOR,Female,35
+AD0001,Bob,password,ADMINISTRATOR,Male,42
+AD0002,Charlie,password,ADMINISTRATOR,Non-binary,28
+DC0000,Dr. Alice,newpassword123,DOCTOR,Female,35
+DC0001,Dr. Bob,password,DOCTOR,Male,42
+DC0002,Dr. Charlie,password,DOCTOR,Non-binary,28

@@ -2,7 +2,7 @@ package user;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
+// import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +16,9 @@ public abstract class User {
     protected boolean isLoggedIn;
 
     // Constructor
-    public User(String HospitalID, String password, Role role) {
+    public User(String HospitalID, Role role) {
         this.HospitalID = HospitalID;
-        this.password = password;
+        this.password = "password";
         this.role = role;
         this.isLoggedIn = false;  // Default value
     }
@@ -38,7 +38,6 @@ public abstract class User {
     public abstract boolean login(String enteredPassword);
     public abstract void logout();
     public abstract boolean changePassword(String currentPassword, String newPassword);
-    public abstract void updateCSV();
 
     // Getters & Setters
     public String getHospitalID() {
@@ -60,11 +59,11 @@ public abstract class User {
     // Static method to check if the HospitalID is unique across both Staff and Patient lists
     public static boolean isHospitalIDUnique(String hospitalID) {
         // Check Staff List
-        if (!isIDUniqueInFile("Staff_List.csv", hospitalID)) {
+        if (!isIDUniqueInFile("Data/Staff_List.csv", hospitalID)) {
             return false;  // ID already exists in Staff list
         }
         // Check Patient List
-        if (!isIDUniqueInFile("Patient_List.csv", hospitalID)) {
+        if (!isIDUniqueInFile("Data/Patient_List.csv", hospitalID)) {
             return false;  // ID already exists in Patient list
         }
         return true;  // ID is unique across both lists
@@ -124,11 +123,11 @@ public abstract class User {
     }
 
     // Method to save a user to the appropriate CSV file (Staff or Patient)
-    public static void saveUser(String filePath, String hospitalID, String password, String role) {
-        try (FileWriter writer = new FileWriter(filePath, true)) {
-            writer.write(hospitalID + "," + password + "," + role + "\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // public static void saveUser(String filePath, String hospitalID, String password, String role) {
+    //     try (FileWriter writer = new FileWriter(filePath, true)) {
+    //         writer.write(hospitalID + "," + password + "," + role + "\n");
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 }
