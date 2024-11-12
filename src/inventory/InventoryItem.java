@@ -1,3 +1,4 @@
+package inventory;
 public interface InventoryItem {
     String getName();
     void setName(String name);

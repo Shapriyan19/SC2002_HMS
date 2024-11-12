@@ -1,4 +1,4 @@
-package appoinment;
+package appointment;
 
 
 public interface Schedulable {

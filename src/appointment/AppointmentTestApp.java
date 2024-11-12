@@ -1,4 +1,4 @@
-package appoinment;
+package appointment;
 
 import user.Patient;
 import user.Doctor;

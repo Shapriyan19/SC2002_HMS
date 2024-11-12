@@ -1,4 +1,4 @@
-package appoinment;
+package appointment;
 
 public enum AppointmentStatus {
     PENDING,      // Default status

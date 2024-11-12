@@ -1,4 +1,4 @@
-package appoinment;
+package appointment;
 
 public class TimeSlot {
     private String startTime;

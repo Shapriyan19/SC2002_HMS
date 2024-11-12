@@ -1,4 +1,4 @@
-package appoinment;
+package appointment;
 
 public class AppointmentScheduler implements Schedulable {
     private Appointment appointment;
