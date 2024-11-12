@@ -34,6 +34,15 @@ public class Pharmacist extends User {
         updateCSV();
     }
 
+    //Constructor to get from CSV files
+    public Pharmacist(String hospitalID,String name,String password,Role role,String gender,int age){
+        super(hospitalID, role,password);
+        this.name=name;
+        this.gender=gender;
+        this.age=age;
+        pharmacistsList.add(this);
+    }
+
     // Method to export inventory to CSV
     // public void exportInventoryToCSV(String filePath) {
     //     try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
@@ -133,6 +142,10 @@ public class Pharmacist extends User {
     // public Inventory getInventory() {
     //     return inventory;
     // }
+
+    public static List<Pharmacist> getPharmacistsList(){
+        return pharmacistsList;
+    }
 
     public String getGender(){
         return gender;

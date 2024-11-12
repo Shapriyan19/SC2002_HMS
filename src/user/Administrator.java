@@ -39,6 +39,15 @@ public class Administrator extends User {
         updateCSV();
     }
 
+    //Constructor to get from CSV File
+    public Administrator(String hospitalID,String name,String password,Role role,String gender,int age){
+        super(hospitalID, role,password);
+        this.name=name;
+        this.gender=gender;
+        this.age=age;
+        administratorList.add(this);
+    }
+
     // Method to manage hospital staff
     // public void manageHospitalStaff(String HospitalID, String action) {
     //     System.out.println("Managing hospital staff with ID: " + HospitalID);
@@ -219,7 +228,11 @@ public class Administrator extends User {
     public void logout() {
         System.out.println("Logging out patient: " + name);
     }
+    
 
+    public static List<Administrator> getAdministratorsList(){
+        return administratorList;
+    }
     // Getters
 
     public String getName() {

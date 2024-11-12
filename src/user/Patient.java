@@ -44,6 +44,18 @@ public class Patient extends User {
         updateCSV(); 
     }
 
+    //Constructor to get from CSV files
+    public Patient(String hospitalID,String name,String password,String dateOfBirth, String gender, String bloodType, long phoneNumber, String email, Role role ){
+        super(hospitalID, role, password);
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.bloodType = bloodType;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        patientsList.add(this);
+    }
+
     public void updateDOB(String dateOfBirth){
         this.dateOfBirth=dateOfBirth;
         System.out.println("Patient Date of Birth updated");
@@ -207,6 +219,10 @@ public class Patient extends User {
     // public MedicalRecord getMedicalRecord() {
     //     return this.medicalRecord;
     // }
+
+    public static List<Patient> getPatientsList(){
+        return patientsList;
+    }
 
     public String getName() {
         return name;

@@ -36,6 +36,15 @@ public class Doctor extends User {
         updateCSV();
     }
 
+    //Constructor to get from CSV Files
+    public Doctor(String hospitalID,String name,String password,Role role,String gender,int age){
+        super(hospitalID, role,password);
+        this.name=name;
+        this.gender=gender;
+        this.age=age;
+        doctorsList.add(this);
+    }
+
     // public void addPatient(Patient patient) {
     //     patientList.add(patient);
     //     System.out.println("Added patient with ID: " + patient.getHospitalID());
@@ -228,7 +237,7 @@ public class Doctor extends User {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             if (!isHeaderWritten) {
                 // Write header if it hasn't been written yet
-                writer.write("Staff ID,Name,Password,Role,Specialty/Department,Gender,Age");
+                writer.write("Staff ID,Name,Password,Role,Gender,Age");
                 writer.newLine();
             }
     
@@ -247,6 +256,31 @@ public class Doctor extends User {
         return HospitalID + "," + name + ","+ password + "," + role + "," + gender + "," + age;
     }
 
+    public static void loadDoctorsFromCSV() {
+        File file = new File("Data/Staff_List.csv");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            boolean isFirstLine = true; // Skip header
+            while ((line = reader.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] data = line.split(",");
+                if (data.length == 6) { // Assuming 6 columns as per your header
+                    Role role = Role.valueOf(data[3]); // Assuming Role can be parsed from a String
+                    Doctor doctor = new Doctor(role, data[1], data[4], Integer.parseInt(data[5]));
+                    doctor.setPassword(data[2]); // Set password separately if needed
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static List<Doctor> getDoctorsList() {
+        return doctorsList;
+    }
     // Getters and setters
     public String getDoctorID() {
         return HospitalID; 

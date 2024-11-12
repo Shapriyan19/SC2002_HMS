@@ -1,5 +1,4 @@
-Staff ID,Name,Password,Role,Specialty/Department,Gender,Age
-
+Staff ID,Name,Password,Role,Gender,Age
 PH0000,Dr. Adam Clark,newpassword123,PHARMACIST,Male,40
 PH0001,Dr. Emily Stone,password,PHARMACIST,Female,35
 AD0000,Alice,newpassword123,ADMINISTRATOR,Female,35

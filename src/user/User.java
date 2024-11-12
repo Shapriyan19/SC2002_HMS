@@ -23,6 +23,14 @@ public abstract class User {
         this.isLoggedIn = false;  // Default value
     }
 
+    //Constructor to get from CSV File
+    public User(String HospitalID, Role role, String password){
+        this.HospitalID=HospitalID;
+        this.password=password;
+        this.role=role;
+        this.isLoggedIn=false;
+    }
+
     // Static counter map for each role
     private static final Map<Role, Integer> idCounters = new HashMap<>();
 
