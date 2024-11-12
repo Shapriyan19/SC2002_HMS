@@ -1,0 +1,4 @@
+medicationName,stockLevel,lowStockLevelAlert,price
+Aspirin,200,30,5.99
+Paracetamol,150,20,9.99
+Ibuprofen,30,10,15.5
