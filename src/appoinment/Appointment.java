@@ -1,4 +1,5 @@
 package appoinment;
+
 import user.Patient;
 import user.Doctor;
 
@@ -20,6 +21,14 @@ public class Appointment {
         this.timeSlot = timeSlot;
     }
 
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
     public void confirmAppointment() {
         this.status = AppointmentStatus.CONFIRMED;
     }
@@ -38,13 +47,27 @@ public class Appointment {
     }
 
     // Getters and setters for the appointment fields
-    public int getAppointmentID() { return appointmentID; }
-    public AppointmentStatus getStatus() { return status; }
-    public String getDate() { return date; }
-    public TimeSlot getTimeSlot() { return timeSlot; }
-    public Patient getPatient() { return patient; }
-    public Doctor getDoctor() { return doctor; }
+    public int getAppointmentID() {
+        return appointmentID;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public TimeSlot getTimeSlot() {
+        return timeSlot;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
 }
+
 
 //old code
 // public class Appointment {

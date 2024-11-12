@@ -20,9 +20,20 @@ public class TimeSlot {
     }
 
     // Getters
-    public String getStartTime() { return startTime; }
-    public String getEndTime() { return endTime; }
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "From: " + startTime + " To: " + endTime;
+    }
 }
+
 
 //old code
 // public class TimeSlot {
