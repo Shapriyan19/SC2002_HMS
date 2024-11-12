@@ -1,25 +1,50 @@
 package appoinment;
 
 public class TimeSlot {
-
     private String startTime;
     private String endTime;
+    private boolean isAvailable;
 
     public TimeSlot(String startTime, String endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
+        this.isAvailable = true; // Default to available
     }
 
-    public String getStartTime() {
-        return startTime;
+    public void setAvailability(boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
-    @Override
-    public String toString() {
-        return startTime + " - " + endTime;
-    }
+    // Getters
+    public String getStartTime() { return startTime; }
+    public String getEndTime() { return endTime; }
 }
+
+//old code
+// public class TimeSlot {
+
+//     private String startTime;
+//     private String endTime;
+
+//     public TimeSlot(String startTime, String endTime) {
+//         this.startTime = startTime;
+//         this.endTime = endTime;
+//     }
+
+//     public String getStartTime() {
+//         return startTime;
+//     }
+
+//     public String getEndTime() {
+//         return endTime;
+//     }
+
+//     @Override
+//     public String toString() {
+//         return startTime + " - " + endTime;
+//     }
+// }
