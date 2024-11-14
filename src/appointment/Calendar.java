@@ -6,21 +6,67 @@ import java.util.List;
 public class Calendar {
     private String month;
     private List<Appointment> appointments;
+    private List<TimeSlot> availableTimeSlots;
 
     public Calendar(String month) {
         this.month = month;
         this.appointments = new ArrayList<>();
+        this.availableTimeSlots = new ArrayList<>();
+        initializeTimeSlots(); // Initialize default time slots
     }
 
+    private void initializeTimeSlots() {
+        // Create time slots from 9:00 AM to 9:00 PM in 30-minute intervals
+        for (int hour = 9; hour <= 21; hour++) {
+            for (int minute = 0; minute < 60; minute += 30) {
+                String startTime = String.format("%02d:%02d", hour, minute);
+                String endTime = String.format("%02d:%02d", hour, minute + 30);
+                TimeSlot timeSlot = new TimeSlot(startTime, endTime);
+                availableTimeSlots.add(timeSlot);
+            }
+        }
+    }
+
+    
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
     }
 
-    // Filter appointments by month
+    //Method to get appointments for a specific date
+    public List<Appointment> getAppointmentsForDate(String date) {
+        List<Appointment> appointmentsOnDate = new ArrayList<>();
+        for (Appointment app : appointments) {
+            if (app.getDate().equals(date)) {
+                appointmentsOnDate.add(app);
+            }
+        }
+        return appointmentsOnDate;
+    }
+
+    // Method to get available time slots for a specific date
+    public List<TimeSlot> getAvailableTimeSlotsForDate(String date) {
+        List<TimeSlot> availableSlots = new ArrayList<>();
+        // Check which time slots are still available on the given date
+        for (TimeSlot timeSlot : availableTimeSlots) {
+            boolean isBooked = false;
+            for (Appointment app : appointments) {
+                if (app.getDate().equals(date) && app.getTimeSlot().equals(timeSlot) && app.getStatus() == AppointmentStatus.PENDING) {
+                    isBooked = true;
+                    break;
+                }
+            }
+            if (!isBooked) {
+                availableSlots.add(timeSlot);
+            }
+        }
+        return availableSlots;
+    }
+
+
+    // Existing method to get appointments by month
     public List<Appointment> getAppointmentsForMonth() {
         List<Appointment> appointmentsInMonth = new ArrayList<>();
         for (Appointment app : appointments) {
-            // Assume Appointment has a getDate() method that returns the appointment's month (in "MM" format)
             if (app.getDate().startsWith(month)) {
                 appointmentsInMonth.add(app);
             }
@@ -49,6 +95,7 @@ public class Calendar {
         }
     }
 }
+
 
 
 

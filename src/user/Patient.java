@@ -5,7 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+//accessing appointment package
+import appointment.*;
 //accessing medical record (associating medical records with patient)
 // import medical.MedicalRecord;
 // import medical.Prescription;
@@ -24,6 +25,8 @@ public class Patient extends User {
     private String bloodType;
     private long phoneNumber; // phone number
     private String email;
+    private List<Appointment>appointments;
+    private Calendar calendar;
     // private MedicalRecord medicalRecord; // Past diagnoses & treatments //to be checked
     // private List<String> appointmentHistory; //to be checked
 
@@ -38,6 +41,8 @@ public class Patient extends User {
         this.bloodType = bloodType;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.appointments=new ArrayList<>();
+        this.calendar=new Calendar("November");  // Initialize with a default or specific month
         // this.medicalRecord = new MedicalRecord(HospitalID); //medical records
         // this.appointmentHistory = new ArrayList<>();
         patientsList.add(this); //add new patient to list
@@ -53,6 +58,7 @@ public class Patient extends User {
         this.bloodType = bloodType;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.appointments=new ArrayList<>();
         patientsList.add(this);
     }
 
@@ -93,6 +99,184 @@ public class Patient extends User {
     private String toCSVFormat() {
         return HospitalID + "," + name + ","+ password + "," + dateOfBirth + "," + gender + "," + bloodType + ","
                 + phoneNumber + "," + email;
+    }
+
+    //methods to book appointment
+    // 1. View Available Appointment Slots with Doctors
+    public void viewAvailableAppointments(Doctor doctor, String date) {
+        List<TimeSlot> availableSlots = doctor.getAvailableTimeSlots(date);
+        if (availableSlots.isEmpty()) {
+            System.out.println("No available time slots for " + doctor.getName() + " on " + date);
+        } else {
+            System.out.println("Available time slots with " + doctor.getName() + " on " + date + ":");
+            for (TimeSlot slot : availableSlots) {
+                System.out.println(slot);
+            }
+        }
+    }
+
+    // 2. Schedule Appointments
+    public void scheduleAppointment(Doctor doctor, String date, TimeSlot timeSlot) {
+        if (doctor.isSlotAvailable(date, timeSlot)) {
+            Appointment newAppointment = new Appointment(this, doctor, date, timeSlot);
+            calendar.addAppointment(newAppointment); // Use calendar instance
+            appointments.add(newAppointment); // Add to patient's appointments list
+            System.out.println("Appointment scheduled with Dr. " + doctor.getName() + " on " + date + " at " + timeSlot);
+        } else {
+            System.out.println("The selected time slot is already taken. Please choose another slot.");
+        }
+    }
+
+    // 3. Reschedule Appointments
+    public void rescheduleAppointment(Appointment appointment, String newDate, TimeSlot newTimeSlot) {
+        if (appointment.getStatus() != AppointmentStatus.PENDING) {
+            System.out.println("Cannot reschedule. Appointment is already " + appointment.getStatus());
+            return;
+        }
+
+        // Check if the new time slot is available with the doctor
+        if (appointment.getDoctor().isSlotAvailable(newDate, newTimeSlot)) {
+            // Remove the current appointment from the calendar
+            calendar.getAppointmentsForDate(appointment.getDate()).remove(appointment);
+
+            // Update the appointment details
+            appointment.setDate(newDate);
+            appointment.setTimeSlot(newTimeSlot);
+            appointment.setStatus(AppointmentStatus.PENDING);  // Reset to pending if rescheduled
+
+            // Add the updated appointment back to the calendar
+            calendar.addAppointment(appointment);
+
+            System.out.println("Appointment rescheduled to " + newDate + " at " + newTimeSlot);
+        } else {
+            System.out.println("The new time slot is unavailable. Please choose a different slot.");
+        }
+    }
+
+    // 4. Cancel Appointments
+    public void cancelAppointment(Appointment appointment) {
+        if (appointment.getStatus() == AppointmentStatus.PENDING) {
+            appointment.setStatus(AppointmentStatus.CANCELLED);
+
+            // Remove the appointment from the calendar for the specific date
+            calendar.getAppointmentsForDate(appointment.getDate()).remove(appointment);
+
+            // Also remove from the patient's list of appointments
+            appointments.remove(appointment);
+
+            System.out.println("Appointment with Dr. " + appointment.getDoctor().getName() + " on " 
+                            + appointment.getDate() + " has been canceled.");
+        } else {
+            System.out.println("Appointment cannot be canceled as it is already " + appointment.getStatus());
+        }
+    }
+
+    // 5. View Appointment Status
+    public void viewScheduledAppointments() {
+        System.out.println("Scheduled appointments for " + name + ":");
+        for (Appointment appointment : appointments) {
+            System.out.println("Appointment ID: " + appointment.getAppointmentID() + " | Date: " 
+                            + appointment.getDate() + " | Time Slot: " + appointment.getTimeSlot() 
+                            + " | Status: " + appointment.getStatus());
+        }
+    }
+
+    // 6. View appointments for a specific date
+    public void viewAppointmentsForDate(String date) {
+        List<Appointment> appointmentsOnDate = calendar.getAppointmentsForDate(date);
+        if (appointmentsOnDate.isEmpty()) {
+            System.out.println("No appointments scheduled for " + date);
+        } else {
+            for (Appointment app : appointmentsOnDate) {
+                System.out.println("Appointment ID: " + app.getAppointmentID() + " | Status: " + app.getStatus());
+            }
+        }
+    }
+
+    // 7. View Appointment Outcome Records
+    // public void viewAppointmentOutcomeRecords() {
+    //     System.out.println("Appointment Outcome Records for " + name + ":");
+    //     for (Appointment appointment : appointments) {
+    //         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+    //             System.out.println("Appointment ID: " + appointment.getAppointmentID() + " | Outcome: " + appointment.getOutcome());
+    //         }
+    //     }
+    // }
+
+    // Override logout method from User class
+    @Override
+    public boolean login(String enteredPassword) {
+        if (this.password.equals(enteredPassword)) {
+            this.isLoggedIn = true;
+            System.out.println("Login successful for user: " + HospitalID);
+            return true;
+        } else {
+            System.out.println("Login failed: Incorrect password.");
+            return false;
+        }
+    }
+
+    @Override
+    public boolean changePassword(String currentPassword, String newPassword) {
+        if (!isLoggedIn) {
+            System.out.println("Change password failed: Patient is not logged in.");
+            return false;
+        }
+
+        if (this.getPassword().equals(currentPassword)) {
+            if (newPassword.length() >= 8) { // Basic validation for password length
+                setPassword(newPassword);
+                System.out.println("Password changed successfully for Patient: " + name);
+                updateCSV();
+                return true;
+            } else {
+                System.out.println("New password must be at least 8 characters long.");
+                return false;
+            }
+        } else {
+            System.out.println("Change password failed: Current password is incorrect.");
+            return false;
+        }
+    }
+
+    @Override
+    public void logout() {
+        System.out.println("Logging out patient: " + name);
+        this.isLoggedIn = false;
+    }
+
+
+    //getters
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public static List<Patient> getPatientsList(){
+        return patientsList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getBloodType() {
+        return bloodType;
+    }
+
+    public double getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     // Method to view full medical record details
@@ -172,81 +356,13 @@ public class Patient extends User {
     //     System.out.println("Displaying past appointment outcome records.");
     // }
 
-    // Override logout method from User class
-    @Override
-    public boolean login(String enteredPassword) {
-        if (this.password.equals(enteredPassword)) {
-            this.isLoggedIn = true;
-            System.out.println("Login successful for user: " + HospitalID);
-            return true;
-        } else {
-            System.out.println("Login failed: Incorrect password.");
-            return false;
-        }
-    }
-
-    @Override
-    public boolean changePassword(String currentPassword, String newPassword) {
-        if (!isLoggedIn) {
-            System.out.println("Change password failed: Patient is not logged in.");
-            return false;
-        }
-
-        if (this.getPassword().equals(currentPassword)) {
-            if (newPassword.length() >= 8) { // Basic validation for password length
-                setPassword(newPassword);
-                System.out.println("Password changed successfully for Patient: " + name);
-                updateCSV();
-                return true;
-            } else {
-                System.out.println("New password must be at least 8 characters long.");
-                return false;
-            }
-        } else {
-            System.out.println("Change password failed: Current password is incorrect.");
-            return false;
-        }
-    }
-
-    @Override
-    public void logout() {
-        System.out.println("Logging out patient: " + name);
-        this.isLoggedIn = false;
-    }
+    
 
     // Getters and Setters (if needed)
 
     // public MedicalRecord getMedicalRecord() {
     //     return this.medicalRecord;
     // }
-
-    public static List<Patient> getPatientsList(){
-        return patientsList;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getBloodType() {
-        return bloodType;
-    }
-
-    public double getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 
     // public List<String> getAppointmentHistory() {
     //     return appointmentHistory;

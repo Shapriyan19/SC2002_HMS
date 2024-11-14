@@ -1,4 +1,4 @@
 Staff ID,Name,Password,Role,Gender,Age
 
-DC0000,Nick,password,DOCTOR,Male,32
-DC0001,Lim,password,DOCTOR,Male,33
+DC0000,Dr. John,password,DOCTOR,Male,35
+DC0001,Dr. Alice,password,DOCTOR,Female,40

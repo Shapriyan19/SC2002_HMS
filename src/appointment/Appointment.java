@@ -1,6 +1,9 @@
 package appointment;
 
 import user.Patient;
+
+import java.util.ArrayList;
+
 import user.Doctor;
 
 public class Appointment {
@@ -16,7 +19,7 @@ public class Appointment {
         this.appointmentID = ++appointmentCounter;
         this.patient = patient;
         this.doctor = doctor;
-        this.status = AppointmentStatus.PENDING; // Default status
+        this.status = AppointmentStatus.PENDING;
         this.date = date;
         this.timeSlot = timeSlot;
     }
@@ -34,19 +37,28 @@ public class Appointment {
     }
 
     public void cancelAppointment() {
-        this.status = AppointmentStatus.CANCELED;
-        timeSlot.setAvailability(true); // Release the time slot
+        this.status = AppointmentStatus.CANCELLED;
+        timeSlot.setAvailability(true);
     }
 
     public void rescheduleAppointment(String newDate, TimeSlot newTimeSlot) {
         this.date = newDate;
-        this.timeSlot.setAvailability(true); // Release the old slot
+        this.timeSlot.setAvailability(true);
         this.timeSlot = newTimeSlot;
         this.status = AppointmentStatus.RESCHEDULED;
-        newTimeSlot.setAvailability(false); // Book the new slot
+        newTimeSlot.setAvailability(false);
     }
 
-    // Getters and setters for the appointment fields
+    // New setters for date and timeSlot
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTimeSlot(TimeSlot timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    // Getters
     public int getAppointmentID() {
         return appointmentID;
     }
@@ -67,6 +79,8 @@ public class Appointment {
         return doctor;
     }
 }
+
+
 
 
 //old code

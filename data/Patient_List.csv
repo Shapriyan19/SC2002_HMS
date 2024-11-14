@@ -1,3 +1,2 @@
 Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email
-PA0000,Jack,password,21-03-2004,Male,A+,1234567890,abc@gmail.com
-PA0001,Dan,password,23-03-2004,Male,B+,12345672390,xyz@gmail.com
+PA0000,John Doe,password,01/01/1985,Male,O+,1234567890,johndoe@example.com

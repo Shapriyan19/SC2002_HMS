@@ -12,7 +12,7 @@ public class AppointmentScheduler implements Schedulable {
         // Check if the time slot is available for scheduling
         if (appointment.getTimeSlot().isAvailable()) {
             // Set the appointment status to scheduled
-            appointment.setStatus(AppointmentStatus.SCHEDULED);
+            appointment.setStatus(AppointmentStatus.PENDING);
             // Mark the time slot as not available anymore
             appointment.getTimeSlot().setAvailability(false);
             System.out.println("Appointment scheduled for patient: " + appointment.getPatient().getName() + " on " + appointment.getTimeSlot().toString());
@@ -41,7 +41,7 @@ public class AppointmentScheduler implements Schedulable {
     @Override
     public void cancelAppointment() {
         // Set the status to canceled
-        appointment.setStatus(AppointmentStatus.CANCELED);
+        appointment.setStatus(AppointmentStatus.CANCELLED);
         // Mark the time slot as available again
         appointment.getTimeSlot().setAvailability(true);
         System.out.println("Appointment canceled for patient: " + appointment.getPatient().getName() + " on " + appointment.getTimeSlot().toString());
