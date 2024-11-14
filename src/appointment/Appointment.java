@@ -3,6 +3,7 @@ package appointment;
 import user.Patient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import user.Doctor;
 
@@ -14,6 +15,7 @@ public class Appointment {
     private AppointmentStatus status;
     private String date;
     private TimeSlot timeSlot;
+    private AppointmentOutcomeRecord outcomeRecord;
 
     public Appointment(Patient patient, Doctor doctor, String date, TimeSlot timeSlot) {
         this.appointmentID = ++appointmentCounter;
@@ -77,6 +79,28 @@ public class Appointment {
 
     public Doctor getDoctor() {
         return doctor;
+    }
+
+    public void completeAppointment(String serviceType, List<MedicationRecord> prescribedMedications, String consultationNotes) {
+        if (this.status == AppointmentStatus.CONFIRMED) {
+            this.status = AppointmentStatus.COMPLETED;
+            setOutcomeRecord(serviceType, prescribedMedications, consultationNotes);
+            System.out.println("Appointment completed and outcome recorded.");
+        } else {
+            System.out.println("Appointment must be confirmed before completing.");
+        }
+    }
+
+    public void setOutcomeRecord(String serviceType, List<MedicationRecord> prescribedMedications, String consultationNotes) {
+        if (this.status == AppointmentStatus.COMPLETED) {
+            this.outcomeRecord = new AppointmentOutcomeRecord(this.date, serviceType, prescribedMedications, consultationNotes);
+        } else {
+            System.out.println("Appointment must be completed before adding an outcome record.");
+        }
+    }
+
+    public AppointmentOutcomeRecord getOutcomeRecord() {
+        return outcomeRecord;
     }
 }
 
