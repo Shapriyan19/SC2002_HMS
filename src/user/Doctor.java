@@ -1,9 +1,9 @@
 package user;
 
-import java.util.ArrayList;
-import java.util.List;
 import appointment.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 // import java.nio.file.*;
 // import medical.MedicalRecord;
 // import medical.Diagnosis;
@@ -49,6 +49,11 @@ public class Doctor extends User {
     }
 
     //methods for appointments 
+
+    public List<Appointment> getAppointments() {
+        return calendar.getAppointmentsForMonth();
+    }
+
     // Function to view available time slots for a specific date
     public List<TimeSlot> getAvailableTimeSlots(String date) {
         return calendar.getAvailableTimeSlotsForDate(date);
@@ -96,16 +101,33 @@ public class Doctor extends User {
     }
 
     // Function to view all appointments for the doctor in the current month
-    public void viewAppointmentsForMonth() {
-        List<Appointment> appointments = calendar.getAppointmentsForMonth();
-        if (appointments.isEmpty()) {
-            System.out.println("No appointments for this month.");
+    // public void viewAppointmentsForMonth() {
+    //     List<Appointment> appointments = calendar.getAppointmentsForMonth();
+    //     if (appointments.isEmpty()) {
+    //         System.out.println("No appointments for this month.");
+    //     } else {
+    //         for (Appointment app : appointments) {
+    //             System.out.println("Appointment ID: " + app.getAppointmentID() + " | Patient: " + app.getPatient().getName() + " | Status: " + app.getStatus());
+    //         }
+    //     }
+    // }
+
+    public void displayAppointments() {
+        List<Appointment> doctorAppointments = calendar.getAppointmentsForDoctor(this);
+        if (doctorAppointments.isEmpty()) {
+            System.out.println("No appointments scheduled for Dr. " + this.name);
         } else {
-            for (Appointment app : appointments) {
-                System.out.println("Appointment ID: " + app.getAppointmentID() + " | Patient: " + app.getPatient().getName() + " | Status: " + app.getStatus());
+            System.out.println("Appointments for Dr. " + this.name + ":");
+            for (Appointment app : doctorAppointments) {
+                System.out.println("Appointment ID: " + app.getAppointmentID() +
+                                " | Patient: " + app.getPatient().getName() +
+                                " | Date: " + app.getDate() +
+                                " | Time: " + app.getTimeSlot().toString() +
+                                " | Status: " + app.getStatus());
             }
         }
     }
+
 
     // Function to check the status of an appointment by its ID
     public void checkAppointmentStatus(int appointmentID) {

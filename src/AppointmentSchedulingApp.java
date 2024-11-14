@@ -1,47 +1,34 @@
-import user.*;
 import appointment.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Scanner;
+import user.*;
 
 public class AppointmentSchedulingApp {
     public static void main(String[] args) {
-        // Create sample patients and doctors
-        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "1990-05-15", "Male", "A+", 1234567890, "john@example.com");
-        Doctor doctor1 = new Doctor(Role.DOCTOR, "Dr. Jane Smith", "Female", 45);
-        Doctor doctor2 = new Doctor(Role.DOCTOR, "Dr. Michael Johnson", "Male", 52);
+        // Create a doctor
+        Doctor doctor = new Doctor(Role.DOCTOR, "John Doe", "M", 45);
+        
+        // Create a patient
+        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890, "johndoe@example.com");
+        Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890, "johndoe@example.com");
+        
+        // Create a calendar for the doctor
+        appointment.Calendar calendar = doctor.getCalendar();
 
-        // Create sample appointments
-        Appointment appointment1 = new Appointment(patient1, doctor1, "2023-05-01", new TimeSlot("10:00", "10:30"));
-        Appointment appointment2 = new Appointment(patient1, doctor2, "2023-05-15", new TimeSlot("14:00", "14:30"));
+        // Create time slots
+        TimeSlot timeSlot1 = new TimeSlot("09:00", "09:30");
+        TimeSlot timeSlot2 = new TimeSlot("10:00", "10:30");
+        TimeSlot timeSlot3 = new TimeSlot("11:00", "11:30");
 
-        // Schedule the appointments
-        AppointmentScheduler scheduler1 = new AppointmentScheduler(appointment1);
-        scheduler1.scheduleAppointment();
+        // Create and add appointments to the calendar
+        Appointment appointment1 = new Appointment(patient1, doctor, "2023-11-01", timeSlot1);
+        Appointment appointment2 = new Appointment(patient2, doctor, "2023-11-01", timeSlot2);
+        Appointment appointment3 = new Appointment(patient1, doctor, "2023-11-02", timeSlot3);
 
-        AppointmentScheduler scheduler2 = new AppointmentScheduler(appointment2);
-        scheduler2.scheduleAppointment();
+        calendar.addAppointment(appointment1);
+        calendar.addAppointment(appointment2);
+        calendar.addAppointment(appointment3);
 
-        // Display available appointments for the patient
-        patient1.viewScheduledAppointments();
-
-        // Display appointments for the doctors
-        doctor1.viewAppointmentsForMonth();
-        doctor2.viewAppointmentsForMonth();
-
-        // Test rescheduling an appointment
-        System.out.println("\nRescheduling appointment...");
-        scheduler1.rescheduleAppointment();
-
-        // Test canceling an appointment
-        System.out.println("\nCanceling appointment...");
-        scheduler2.cancelAppointment();
-
-        // Display updated appointments
-        patient1.viewScheduledAppointments();
-        doctor1.viewAppointmentsForMonth();
-        doctor2.viewAppointmentsForMonth();
+        // Display the doctor's appointments
+        System.out.println("Doctor's Appointments for November:");
+        doctor.displayAppointments();
     }
 }

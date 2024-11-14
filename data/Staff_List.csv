@@ -1,4 +1,3 @@
 Staff ID,Name,Password,Role,Gender,Age
 
-DC0000,Dr. Jane Smith,password,DOCTOR,Female,45
-DC0001,Dr. Michael Johnson,password,DOCTOR,Male,52
+DC0000,John Doe,password,DOCTOR,M,45

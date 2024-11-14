@@ -1,13 +1,11 @@
 package appointment;
 
-import user.Patient;
-import user.Doctor;
-
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import user.Doctor;
 
 public class Calendar {
     private YearMonth yearMonth;
@@ -89,4 +87,15 @@ public class Calendar {
             }
         }
     }
+
+    public List<Appointment> getAppointmentsForDoctor(Doctor doctor) {
+        List<Appointment> doctorAppointments = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            if (appointment.getDoctor().equals(doctor)) {
+                doctorAppointments.add(appointment);
+            }
+        }
+        return doctorAppointments;
+    }
+
 }
