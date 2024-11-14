@@ -1,5 +1,11 @@
 package appointment;
 
+import user.Patient;
+import user.Doctor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppointmentScheduler implements Schedulable {
     private Appointment appointment;
 
@@ -24,7 +30,7 @@ public class AppointmentScheduler implements Schedulable {
     @Override
     public void rescheduleAppointment() {
         // Check if the new time slot is available for rescheduling
-        if (appointment.getTimeSlot().isAvailable()) {
+        if (appointment.getDoctor().isSlotAvailable(appointment.getDate(), appointment.getTimeSlot())) {
             // Release the old time slot
             appointment.getTimeSlot().setAvailability(true);
             // Set the new time slot

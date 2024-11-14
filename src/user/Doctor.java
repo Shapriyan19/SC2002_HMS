@@ -263,7 +263,7 @@ public class Doctor extends User {
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
-
+}
     // public String getSpecialisation() { 
     //     return specialisation; 
     // }
@@ -396,6 +396,3 @@ public class Doctor extends User {
     //     System.out.println("Prescribed Medication: " + medicationName + " (Status: " + medicationStatus + ")");
     //     System.out.println("Consultation Notes: " + consultationNotes);
     // }
-
-    
-}
