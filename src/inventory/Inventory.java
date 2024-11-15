@@ -14,24 +14,28 @@ public class Inventory {
     }
 
     // Add a new medication to the inventory
-    public void addMedication(Medication medication) {
+    public boolean addMedication(Medication medication) {
         if (medication != null && !medications.containsKey(medication.getName())) {
             medications.put(medication.getName(), medication);
             System.out.println("Added medication: " + medication.getName());
             updateCSV();
+            return true;
         } else {
             System.out.println("Medication already exists or is invalid.");
+            return false;
         }
     }
 
     // Remove a medication from the inventory by its name
-    public void removeMedication(String medicationName) {
+    public boolean removeMedication(String medicationName) {
         if (medications.containsKey(medicationName)) {
             medications.remove(medicationName);
             System.out.println("Removed medication with name: " + medicationName);
             updateCSV();
+            return true;
         } else {
             System.out.println("Medication with name " + medicationName + " not found.");
+            return false;
         }
     }
 

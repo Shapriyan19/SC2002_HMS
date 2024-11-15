@@ -278,6 +278,7 @@ public class Patient extends User {
     public String getEmail() {
         return email;
     }
+
 }
     // Method to view full medical record details
     // public void viewMedicalRecord() {

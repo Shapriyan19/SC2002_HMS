@@ -55,7 +55,7 @@ public class Administrator extends User {
         }
     }
 
-
+    //viewappointment details
     
     public void viewHospitalStaff() {
         System.out.println("Hospital Staff List:");
@@ -83,6 +83,7 @@ public class Administrator extends User {
     }
 
     // Method to manage Doctor staff (add, update, or remove)
+// Method to manage Doctor staff (add, update, or remove)
     public void manageHospitalDoctor(String action, Doctor doctor) {
         switch (action.toLowerCase()) {
             case "add":
@@ -97,10 +98,9 @@ public class Administrator extends User {
             default:
                 System.out.println("Invalid action. Please use 'add', 'update', or 'remove'.");
         }
-        updateCSV(); // Update CSV after any modification
     }
 
-    // Method to manage Administrator staff (add, update, or remove)
+// Method to manage Administrator staff (add, update, or remove)
     public void manageHospitalAdministrator(String action, Administrator administrator) {
         switch (action.toLowerCase()) {
             case "add":
@@ -115,10 +115,9 @@ public class Administrator extends User {
             default:
                 System.out.println("Invalid action. Please use 'add', 'update', or 'remove'.");
         }
-        updateCSV(); // Update CSV after any modification
     }
 
-    // Method to manage Pharmacist staff (add, update, or remove)
+// Method to manage Pharmacist staff (add, update, or remove)
     public void manageHospitalPharmacist(String action, Pharmacist pharmacist) {
         switch (action.toLowerCase()) {
             case "add":
@@ -133,7 +132,6 @@ public class Administrator extends User {
             default:
                 System.out.println("Invalid action. Please use 'add', 'update', or 'remove'.");
         }
-        updateCSV(); // Update CSV after any modification
     }
 
     // Add, Update, and Remove methods for Doctor
@@ -144,20 +142,29 @@ public class Administrator extends User {
         } else {
             System.out.println("Doctor already exists.");
         }
+        updateCSV();
     }
 
     private void updateDoctor(Doctor updatedDoctor) {
+        // Find existing doctor by ID
         Doctor existingDoctor = findDoctorById(updatedDoctor.getHospitalID());
         if (existingDoctor != null) {
+            // Update details
             existingDoctor.setName(updatedDoctor.getName());
             existingDoctor.setPassword(updatedDoctor.getPassword());
             existingDoctor.setGender(updatedDoctor.getGender());
             existingDoctor.setAge(updatedDoctor.getAge());
             System.out.println("Updated Doctor: " + existingDoctor.getName() + ", ID: " + existingDoctor.getHospitalID());
+    
+            // Remove any duplicates with the same ID but different attributes
+            Doctor.getDoctorsList().removeIf(doctor -> 
+                doctor.getHospitalID().equals(updatedDoctor.getHospitalID()) && doctor != existingDoctor);
         } else {
             System.out.println("Doctor with ID " + updatedDoctor.getHospitalID() + " not found.");
         }
+        updateCSV(); // Update CSV after modification
     }
+    
 
     private void removeDoctor(String doctorID) {
         Doctor doctor = findDoctorById(doctorID);
@@ -167,6 +174,7 @@ public class Administrator extends User {
         } else {
             System.out.println("Doctor with ID " + doctorID + " not found.");
         }
+        updateCSV();
     }
 
     // Add, Update, and Remove methods for Administrator
@@ -177,20 +185,29 @@ public class Administrator extends User {
         } else {
             System.out.println("Administrator already exists.");
         }
+        updateCSV();
     }
 
     private void updateAdministrator(Administrator updatedAdministrator) {
+        // Find existing administrator by ID
         Administrator existingAdministrator = findAdministratorById(updatedAdministrator.getHospitalID());
         if (existingAdministrator != null) {
+            // Update details
             existingAdministrator.setName(updatedAdministrator.getName());
             existingAdministrator.setPassword(updatedAdministrator.getPassword());
             existingAdministrator.setGender(updatedAdministrator.getGender());
             existingAdministrator.setAge(updatedAdministrator.getAge());
             System.out.println("Updated Administrator: " + existingAdministrator.getName() + ", ID: " + existingAdministrator.getHospitalID());
+    
+            // Remove any duplicates with the same ID but different attributes
+            Administrator.getAdministratorsList().removeIf(admin -> 
+                admin.getHospitalID().equals(updatedAdministrator.getHospitalID()) && admin != existingAdministrator);
         } else {
             System.out.println("Administrator with ID " + updatedAdministrator.getHospitalID() + " not found.");
         }
+        updateCSV(); // Update the CSV file after modification
     }
+    
 
     private void removeAdministrator(String administratorID) {
         Administrator administrator = findAdministratorById(administratorID);
@@ -200,6 +217,7 @@ public class Administrator extends User {
         } else {
             System.out.println("Administrator with ID " + administratorID + " not found.");
         }
+        updateCSV();
     }
 
     // Add, Update, and Remove methods for Pharmacist
@@ -210,20 +228,28 @@ public class Administrator extends User {
         } else {
             System.out.println("Pharmacist already exists.");
         }
+        updateCSV();
     }
-
     private void updatePharmacist(Pharmacist updatedPharmacist) {
+        // Find existing pharmacist by ID
         Pharmacist existingPharmacist = findPharmacistById(updatedPharmacist.getHospitalID());
         if (existingPharmacist != null) {
+            // Update details
             existingPharmacist.setName(updatedPharmacist.getName());
             existingPharmacist.setPassword(updatedPharmacist.getPassword());
             existingPharmacist.setGender(updatedPharmacist.getGender());
             existingPharmacist.setAge(updatedPharmacist.getAge());
             System.out.println("Updated Pharmacist: " + existingPharmacist.getName() + ", ID: " + existingPharmacist.getHospitalID());
+    
+            // Remove any duplicates with the same ID but different attributes
+            Pharmacist.getPharmacistsList().removeIf(pharmacist -> 
+                pharmacist.getHospitalID().equals(updatedPharmacist.getHospitalID()) && pharmacist != existingPharmacist);
         } else {
             System.out.println("Pharmacist with ID " + updatedPharmacist.getHospitalID() + " not found.");
         }
+        updateCSV(); // Update the CSV file after modification
     }
+
 
     private void removePharmacist(String pharmacistID) {
         Pharmacist pharmacist = findPharmacistById(pharmacistID);
@@ -233,7 +259,9 @@ public class Administrator extends User {
         } else {
             System.out.println("Pharmacist with ID " + pharmacistID + " not found.");
         }
+        updateCSV();
     }
+
 
     // Helper methods to find staff by ID in each category
     private Doctor findDoctorById(String id) {
@@ -317,14 +345,7 @@ public class Administrator extends User {
                 staff.getGender(),
                 String.valueOf(staff.getAge()));
     }
-}
 
-
-    // Method to view appointment details
-    // public void viewAppointmentDetails() {
-    //     System.out.println("Viewing appointment details:");
-    //     // Implement logic to retrieve and display appointment details
-    // }
 
     // Metzhod to view medication inventory
     public void viewMedicationInventory() {
@@ -380,66 +401,22 @@ public class Administrator extends User {
         }
     }
 
-    public void approveReplenishmentRequest(MedicationOrder order) {
-        // Retrieve medication by name
-        Medication medication = inventory.getAllMedications().get(order.getMedicationame());
+    public void approveReplenishmentRequest(String medicationName, int requestedQuantity) {
+        Medication medication = inventory.getAllMedications().get(medicationName);
 
         if (medication != null) {
-            // Update the stock level by adding the requested quantity
-            int newStockLevel = medication.getStockLevel() + order.getQuantity();
-            inventory.updateStockLevel(order.getMedicationame(), newStockLevel);
-
-            // Mark the order as approved
-            order.setStatus("APPROVED");
-
-            System.out.println("Replenishment request approved for " + order.getMedicationame() +
-                    ". Quantity added: " + order.getQuantity() + ". New stock level: " + newStockLevel);
+            // Update stock level with the requested quantity
+            int newStockLevel = medication.getStockLevel() + requestedQuantity;
+            inventory.updateStockLevel(medicationName, newStockLevel);
+            System.out.println("Replenishment request approved:");
+            System.out.println("Medication: " + medicationName);
+            System.out.println("Requested Quantity: " + requestedQuantity);
+            System.out.println("New Stock Level: " + newStockLevel);
         } else {
-            System.out.println("Medication " + order.getMedicationame() + " does not exist in the inventory.");
+            System.out.println("Medication " + medicationName + " not found in the inventory.");
         }
     }
 
-    // Method to manage medication inventory
-    // public void manageMedicationInventory(int medicationID, String action, int quantity) {
-    //     Medication medication = inventory.getMedication(medicationID);
-    //     if (medication == null) {
-    //         System.out.println("Medication with ID " + medicationID + " not found.");
-    //         return;
-    //     }
-    //     switch (action.toLowerCase()) {
-    //         case "add":
-    //             inventory.updateStockLevel(medicationID, medication.getStockLevel() + quantity);
-    //             System.out.println("Added " + quantity + " units to Medication ID: " + medicationID);
-    //             break;
-    //         case "remove":
-    //             int newStockLevel = medication.getStockLevel() - quantity;
-    //             if (newStockLevel < 0) {
-    //                 System.out.println("Cannot remove " + quantity + " units. Insufficient stock.");
-    //             } else {
-    //                 inventory.updateStockLevel(medicationID, newStockLevel);
-    //                 System.out.println("Removed " + quantity + " units from Medication ID: " + medicationID);
-    //             }
-    //             break;
-    //         case "update":
-    //             inventory.updateStockLevel(medicationID, quantity);
-    //             System.out.println("Updated stock level of Medication ID " + medicationID + " to " + quantity);
-    //             break;
-    //         default:
-    //             System.out.println("Invalid action. Please choose 'add', 'remove', or 'update'.");
-    //     }
-    // }
-
-    // Method to approve replenishment requests
-    // public void approveReplenishmentRequest(MedicationOrder order) {
-    //     if (order.getStatus().equalsIgnoreCase("PENDING")) {
-    //         inventory.updateStockLevel(order.getMedicationID(), 
-    //             inventory.getMedication(order.getMedicationID()).getStockLevel() + order.getQuantity());
-    //         order.setStatus("DISPENSED");
-    //         System.out.println("Approved and processed replenishment request ID: " + order.getOrderID());
-    //     } else {
-    //         System.out.println("Replenishment request ID: " + order.getOrderID() + " is already " + order.getStatus());
-    //     }
-    // }
 
     // Login method implementation
     @Override
@@ -476,22 +453,6 @@ public class Administrator extends User {
         }
     }
     
-    // Method to export inventory to CSV
-    // public void exportInventoryToCSV(String filePath) {
-    //     try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
-    //         writer.println("MedicationID,Name,StockLevel,LowStockAlertLevel");
-    //         for (Medication medication : inventory.getAllMedications().values()) {
-    //             writer.println(medication.getMedicationID() + "," 
-    //                            + medication.getName() + "," 
-    //                            + medication.getStockLevel() + "," 
-    //                            + medication.getLowStockLevelAlert());
-    //         }
-    //         System.out.println("Inventory successfully exported to CSV file: " + filePath);
-    //     } catch (IOException e) {
-    //         System.out.println("Error exporting inventory to CSV: " + e.getMessage());
-    //     }
-    // }
-    
     @Override
     public void logout() {
         System.out.println("Logging out patient: " + name);
@@ -526,6 +487,10 @@ public class Administrator extends User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void setHospitalID(String HospitalID) {
+        this.HospitalID = HospitalID;
     }
 
 }
