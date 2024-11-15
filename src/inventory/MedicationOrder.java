@@ -2,13 +2,13 @@ package inventory;
 
 public class MedicationOrder {
     private String orderID;
-    private int medicationID;
+    private String name;
     private int quantity;
     private String status;
 
-    public MedicationOrder(String orderID, int medicationID, int quantity, String status) {
+    public MedicationOrder(String orderID, String name, int quantity, String status) {
         this.orderID = orderID;
-        this.medicationID = medicationID;
+        this.name= name;
         this.quantity = quantity;
         this.status = status;
     }
@@ -21,12 +21,12 @@ public class MedicationOrder {
         this.orderID = orderID;
     }
 
-    public int getMedicationID() {
-        return medicationID;
+    public String getMedicationame() {, 
+        return name;
     }
 
-    public void setMedicationID(int medicationID) {
-        this.medicationID = medicationID;
+    public void setMedicationname(String name) {
+        this.name= name;
     }
 
     public int getQuantity() {

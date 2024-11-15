@@ -155,6 +155,20 @@ public class Pharmacist extends User {
         return age;
     }
 
+        // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+
     public void updateCSV() {
         File file = new File("Data/Staff_List.csv");
         List<String> lines = new ArrayList<>();

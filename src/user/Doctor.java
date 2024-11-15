@@ -309,6 +309,20 @@ public class Doctor extends User {
         return age; 
     }
 
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+
     // public void addPatient(int patientID) {
     //     patientList.add(patientID);
     //     System.out.println("Added patient with ID: " + patientID);
