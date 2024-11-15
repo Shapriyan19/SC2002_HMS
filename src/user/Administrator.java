@@ -398,48 +398,6 @@ public class Administrator extends User {
         }
     }
 
-    // Method to manage medication inventory
-    // public void manageMedicationInventory(int medicationID, String action, int quantity) {
-    //     Medication medication = inventory.getMedication(medicationID);
-    //     if (medication == null) {
-    //         System.out.println("Medication with ID " + medicationID + " not found.");
-    //         return;
-    //     }
-    //     switch (action.toLowerCase()) {
-    //         case "add":
-    //             inventory.updateStockLevel(medicationID, medication.getStockLevel() + quantity);
-    //             System.out.println("Added " + quantity + " units to Medication ID: " + medicationID);
-    //             break;
-    //         case "remove":
-    //             int newStockLevel = medication.getStockLevel() - quantity;
-    //             if (newStockLevel < 0) {
-    //                 System.out.println("Cannot remove " + quantity + " units. Insufficient stock.");
-    //             } else {
-    //                 inventory.updateStockLevel(medicationID, newStockLevel);
-    //                 System.out.println("Removed " + quantity + " units from Medication ID: " + medicationID);
-    //             }
-    //             break;
-    //         case "update":
-    //             inventory.updateStockLevel(medicationID, quantity);
-    //             System.out.println("Updated stock level of Medication ID " + medicationID + " to " + quantity);
-    //             break;
-    //         default:
-    //             System.out.println("Invalid action. Please choose 'add', 'remove', or 'update'.");
-    //     }
-    // }
-
-    // Method to approve replenishment requests
-    // public void approveReplenishmentRequest(MedicationOrder order) {
-    //     if (order.getStatus().equalsIgnoreCase("PENDING")) {
-    //         inventory.updateStockLevel(order.getMedicationID(), 
-    //             inventory.getMedication(order.getMedicationID()).getStockLevel() + order.getQuantity());
-    //         order.setStatus("DISPENSED");
-    //         System.out.println("Approved and processed replenishment request ID: " + order.getOrderID());
-    //     } else {
-    //         System.out.println("Replenishment request ID: " + order.getOrderID() + " is already " + order.getStatus());
-    //     }
-    // }
-
     // Login method implementation
     @Override
     public boolean login(String enteredPassword) {
@@ -527,5 +485,46 @@ public class Administrator extends User {
         this.age = age;
     }
 
-}
+} 
+    // Method to manage medication inventory
+    // public void manageMedicationInventory(int medicationID, String action, int quantity) {
+    //     Medication medication = inventory.getMedication(medicationID);
+    //     if (medication == null) {
+    //         System.out.println("Medication with ID " + medicationID + " not found.");
+    //         return;
+    //     }
+    //     switch (action.toLowerCase()) {
+    //         case "add":
+    //             inventory.updateStockLevel(medicationID, medication.getStockLevel() + quantity);
+    //             System.out.println("Added " + quantity + " units to Medication ID: " + medicationID);
+    //             break;
+    //         case "remove":
+    //             int newStockLevel = medication.getStockLevel() - quantity;
+    //             if (newStockLevel < 0) {
+    //                 System.out.println("Cannot remove " + quantity + " units. Insufficient stock.");
+    //             } else {
+    //                 inventory.updateStockLevel(medicationID, newStockLevel);
+    //                 System.out.println("Removed " + quantity + " units from Medication ID: " + medicationID);
+    //             }
+    //             break;
+    //         case "update":
+    //             inventory.updateStockLevel(medicationID, quantity);
+    //             System.out.println("Updated stock level of Medication ID " + medicationID + " to " + quantity);
+    //             break;
+    //         default:
+    //             System.out.println("Invalid action. Please choose 'add', 'remove', or 'update'.");
+    //     }
+    // }
+
+    // Method to approve replenishment requests
+    // public void approveReplenishmentRequest(MedicationOrder order) {
+    //     if (order.getStatus().equalsIgnoreCase("PENDING")) {
+    //         inventory.updateStockLevel(order.getMedicationID(), 
+    //             inventory.getMedication(order.getMedicationID()).getStockLevel() + order.getQuantity());
+    //         order.setStatus("DISPENSED");
+    //         System.out.println("Approved and processed replenishment request ID: " + order.getOrderID());
+    //     } else {
+    //         System.out.println("Replenishment request ID: " + order.getOrderID() + " is already " + order.getStatus());
+    //     }
+    // }
 
