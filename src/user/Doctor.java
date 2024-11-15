@@ -285,7 +285,6 @@ public class Doctor extends User {
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
-}
     // public String getSpecialisation() { 
     //     return specialisation; 
     // }
@@ -310,7 +309,7 @@ public class Doctor extends User {
     public void setAge(int age) {
         this.age = age;
     }
-
+}
 
     // public void addPatient(int patientID) {
     //     patientList.add(patientID);

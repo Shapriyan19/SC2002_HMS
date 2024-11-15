@@ -317,7 +317,6 @@ public class Administrator extends User {
                 staff.getGender(),
                 String.valueOf(staff.getAge()));
     }
-}
 
 
     // Method to view appointment details

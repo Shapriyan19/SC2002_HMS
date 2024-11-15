@@ -21,7 +21,7 @@ public class MedicationOrder {
         this.orderID = orderID;
     }
 
-    public String getMedicationame() {, 
+    public String getMedicationame() { 
         return name;
     }
 
