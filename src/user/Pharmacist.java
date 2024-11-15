@@ -243,7 +243,7 @@ public class Pharmacist extends User {
     }
 
 
-    public void updateCSV() {
+    private void updateCSV() {
         File file = new File("Data/Staff_List.csv");
         List<String> lines = new ArrayList<>();
         boolean isNew = true;
@@ -251,38 +251,42 @@ public class Pharmacist extends User {
     
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
+            
+            // Read existing lines in the CSV file
             while ((line = reader.readLine()) != null) {
-                // Check if header is already written
+                // Write header only once
                 if (line.startsWith("Staff ID")) {
                     if (!isHeaderWritten) {
-                        lines.add(line); // Write header only once
+                        lines.add(line); // Add header to lines
                         isHeaderWritten = true;
                     }
                 } else if (line.startsWith(HospitalID + ",")) {
-                    // Check if the record exists (by matching HospitalID)
+                    // Check if the record already exists (based on staffId)
                     isNew = false;
-                    lines.add(toCSVFormat()); // Update the existing record
+                    lines.add(toCSVFormat()); // Update the existing record with new values
                 } else {
-                    lines.add(line); // Keep old records intact
+                    // Keep all the old records intact
+                    lines.add(line);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error reading the CSV file: " + e.getMessage());
         }
     
-        // If the record doesn't exist, add it as a new one
+        // If the record is new, add it to the list
         if (isNew) {
             lines.add(toCSVFormat());
         }
     
-        // Write the updated data back to the file
+        // Write all lines back to the CSV file, including any updates
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             if (!isHeaderWritten) {
-                // Write header if it hasn't been written yet
+                // Write the header if it hasn't been written yet
                 writer.write("Staff ID,Name,Password,Role,Specialty/Department,Gender,Age");
                 writer.newLine();
             }
     
+            // Write all the lines to the CSV
             for (String line : lines) {
                 writer.write(line);
                 writer.newLine();
@@ -290,12 +294,12 @@ public class Pharmacist extends User {
     
             System.out.println("Staff data updated in Staff_List.csv.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing the CSV file: " + e.getMessage());
         }
     }
-
+    
     private String toCSVFormat() {
-        return HospitalID + "," + name + ","+ password + "," + role + "," + gender + "," + age;
+        return HospitalID + "," + name + "," + password + "," + role + "," + gender + "," + age;
     }
 }
 

@@ -50,10 +50,12 @@ public class ApplicationTestCase {
         System.out.println("\nInventory after attempting to remove non-existent medication:");
         displayInventory(inventory);
         checkCSVUpdated();
-
+        Medication abc = new Medication("abc", 80, 15, 12.50);
+        inventory.addMedication(abc);
         // View medications with stock levels below threshold
         System.out.println("\nViewing medications with low stock levels:");
         inventory.viewLowStockMedications();
+
     }
 
     // Utility method to display current inventory
