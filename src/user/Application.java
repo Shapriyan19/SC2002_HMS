@@ -1,4 +1,4 @@
-
+package user;
 import user.Administrator;
 import user.Doctor;
 import user.Pharmacist;
@@ -139,7 +139,4 @@ public class Application {
         Application app = new Application();
         app.mainMenu();
     }
-}
- {
-    
 }

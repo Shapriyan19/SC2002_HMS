@@ -77,7 +77,7 @@ public class App {
         admin1.logout();
 
         // Test the updateCSV method which writes to the CSV file
-        admin1.updateCSV();
+        //admin1.updateCSV();
 
         // Add more administrators for testing
         Administrator admin3 = new Administrator(Role.ADMINISTRATOR, "Charlie", "Non-binary", 28);

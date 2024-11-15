@@ -2,11 +2,13 @@ package medical;
 
 public class Prescription {
     private String medicationName;
+    private int dosage;
     private PrescriptionStatus status;
 
     public Prescription(int prescriptionID,String medicationName, int dosage) {
         this.medicationName = medicationName;
         this.status = PrescriptionStatus.PENDING;
+        this.dosage=dosage;
     }
     
     
