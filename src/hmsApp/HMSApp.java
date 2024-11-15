@@ -14,6 +14,7 @@ public class HMSApp {
 
     // Run the hospital management system application
     public void run() {
+        DataLoader.loadAllData();
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
