@@ -66,18 +66,6 @@ public class Inventory {
         }
     }
 
-    // // Approve replenishment requests for medications by its name
-    // public void approveReplenishment(String medicationName, int quantity) {
-    //     Medication medication = medications.get(medicationName);
-    //     if (medication != null && medication.isReplenishmentRequested()) {
-    //         medication.approveReplenishment(quantity);
-    //         System.out.println("Replenishment of " + quantity + " units approved for " + medication.getName());
-    //         updateCSV();
-    //     } else {
-    //         System.out.println("No replenishment request found for medication with name " + medicationName);
-    //     }
-    // }
-
     // View medications that are below their low stock alert level
     public void viewLowStockMedications() {
         System.out.println("Medications with Low Stock:");
