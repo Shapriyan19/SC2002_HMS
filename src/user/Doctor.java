@@ -1,14 +1,15 @@
 package user;
 
+import appointment.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
 // import java.nio.file.*;
-import medical.MedicalRecord;
-import medical.Diagnosis;
-import medical.LabTest;
-import medical.Prescription;
-import medical.Treatment;
+// import medical.MedicalRecord;
+// import medical.Diagnosis;
+// import medical.LabTest;
+// import medical.Prescription;
+// import medical.Treatment;
 
 public class Doctor extends User {
 
@@ -21,6 +22,7 @@ public class Doctor extends User {
     // private List<Patient> patientList;
     private String gender;
     private int age;
+    private Calendar calendar; //Doctor's calendar to manage appointments
     
     // Constructor
     public Doctor(Role role, String name, String gender, int age) {
@@ -32,6 +34,7 @@ public class Doctor extends User {
         // this.patientList = new ArrayList<>();
         this.gender = gender;
         this.age = age;
+        this.calendar = new Calendar("November");
         doctorsList.add(this);
         updateCSV();
     }
@@ -45,121 +48,98 @@ public class Doctor extends User {
         doctorsList.add(this);
     }
 
-    // public void addPatient(Patient patient) {
-    //     patientList.add(patient);
-    //     System.out.println("Added patient with ID: " + patient.getHospitalID());
-    // }
+    //methods for appointments 
 
-    // private Patient getPatientById(String patientID) {
-    //     for (Patient patient : patientList) {
-    //         if (patient.getHospitalID().equals(patientID)) {
-    //             return patient;
+    public List<Appointment> getAppointments() {
+        return calendar.getAppointmentsForMonth();
+    }
+
+    // Function to view available time slots for a specific date
+    public List<TimeSlot> getAvailableTimeSlots(String date) {
+        return calendar.getAvailableTimeSlotsForDate(date);
+    }
+
+     // Check if a particular time slot is available on a specific date
+     public boolean isSlotAvailable(String date, TimeSlot timeSlot) {
+        List<TimeSlot> availableSlots = calendar.getAvailableTimeSlotsForDate(date);
+        for (TimeSlot slot : availableSlots) {
+            if (slot.getStartTime().equals(timeSlot.getStartTime()) && slot.getEndTime().equals(timeSlot.getEndTime())) {
+                return true; // Slot is available
+            }
+        }
+        return false; // Slot is not available
+    }
+
+     // Function to confirm an appointment
+    public void confirmAppointment(Appointment appointment) {
+        if (appointment.getStatus() == AppointmentStatus.PENDING) {
+            appointment.confirmAppointment();
+            System.out.println("Appointment confirmed for patient: " + appointment.getPatient().getName() + " on " + appointment.getDate());
+        } else {
+            System.out.println("Cannot confirm appointment. Status: " + appointment.getStatus());
+        }
+    }
+
+    // Function to cancel an appointment
+    public void cancelAppointment(Appointment appointment) {
+        if (appointment.getStatus() == AppointmentStatus.PENDING) {
+            appointment.cancelAppointment();
+            System.out.println("Appointment canceled for patient: " + appointment.getPatient().getName() + " on " + appointment.getDate());
+        } else {
+            System.out.println("Cannot cancel appointment. Status: " + appointment.getStatus());
+        }
+    }
+
+    // Function to reschedule an appointment
+    public void rescheduleAppointment(Appointment appointment, String newDate, TimeSlot newTimeSlot) {
+        if (appointment.getStatus() == AppointmentStatus.PENDING || appointment.getStatus() == AppointmentStatus.RESCHEDULED) {
+            appointment.rescheduleAppointment(newDate, newTimeSlot);
+            System.out.println("Appointment rescheduled for patient: " + appointment.getPatient().getName() + " to " + newTimeSlot.toString() + " on " + newDate);
+        } else {
+            System.out.println("Cannot reschedule appointment. Status: " + appointment.getStatus());
+        }
+    }
+
+    // Function to view all appointments for the doctor in the current month
+    // public void viewAppointmentsForMonth() {
+    //     List<Appointment> appointments = calendar.getAppointmentsForMonth();
+    //     if (appointments.isEmpty()) {
+    //         System.out.println("No appointments for this month.");
+    //     } else {
+    //         for (Appointment app : appointments) {
+    //             System.out.println("Appointment ID: " + app.getAppointmentID() + " | Patient: " + app.getPatient().getName() + " | Status: " + app.getStatus());
     //         }
     //     }
-    //     System.out.println("Patient with ID " + patientID + " not found.");
-    //     return null;
     // }
 
-    // private MedicalRecord getMedicalRecordByPatient(Patient patient) {
-    //     if (patient != null) {
-    //         return patient.getMedicalRecord();
-    //     }
-    //     System.out.println("No medical record found for the provided patient.");
-    //     return null;
-    // }
+    public void displayAppointments() {
+        List<Appointment> doctorAppointments = calendar.getAppointmentsForDoctor(this);
+        if (doctorAppointments.isEmpty()) {
+            System.out.println("No appointments scheduled for Dr. " + this.name);
+        } else {
+            System.out.println("Appointments for Dr. " + this.name + ":");
+            for (Appointment app : doctorAppointments) {
+                System.out.println("Appointment ID: " + app.getAppointmentID() +
+                                " | Patient: " + app.getPatient().getName() +
+                                " | Date: " + app.getDate() +
+                                " | Time: " + app.getTimeSlot().toString() +
+                                " | Status: " + app.getStatus());
+            }
+        }
+    }
 
-    // public void viewPatientRecord(String patientID) {
-    //     Patient patient = getPatientById(patientID);
-    //     if (patient == null) return;
 
-    //     MedicalRecord medicalRecord = getMedicalRecordByPatient(patient);
-    //     System.out.println("---- Medical Record for Patient ----");
-    //     System.out.println("Patient ID: " + patientID);
-    //     System.out.println("Name: " + patient.getName());
-    //     System.out.println("Date of Birth: " + patient.getDateOfBirth());
-    //     System.out.println("Gender: " + patient.getGender());
-    //     System.out.println("Blood Type: " + patient.getBloodType());
-    //     System.out.println("Contact Information:");
-    //     System.out.println("    Phone Number: " + patient.getPhoneNumber());
-    //     System.out.println("    Email: " + patient.getEmail());
-
-    //     // Display Diagnoses
-    //     System.out.println("\nDiagnoses:");
-    //     for (Diagnosis diagnosis : medicalRecord.getDiagnoses()) {
-    //         System.out.println(diagnosis);
-    //     }
-
-    //     // Display Lab Tests
-    //     System.out.println("\nLab Tests:");
-    //     for (LabTest labTest : medicalRecord.getLabTests()) {
-    //         System.out.println(labTest);
-    //     }
-
-    //     // Display Treatments
-    //     System.out.println("\nTreatments:");
-    //     for (Treatment treatment : medicalRecord.getTreatments()) {
-    //         System.out.println(treatment);
-    //     }
-
-    //     // Display Prescriptions
-    //     System.out.println("\nPrescriptions:");
-    //     for (Prescription prescription : medicalRecord.getPrescriptions()) {
-    //         System.out.println(prescription);
-    //     }
-    //     System.out.println("---- End of Medical Record ----");
-    // }
-
-    // public void updatePatientRecord(MedicalRecord medicalRecord, Diagnosis newDiagnosis, Treatment newTreatment, Prescription newPrescription) {
-    //     System.out.println("Updating medical record for patient ID: " + medicalRecord.getPatientID());
-
-    //     if (newDiagnosis != null) {
-    //         medicalRecord.addDiagnosis(newDiagnosis);
-    //         System.out.println("Added diagnosis: " + newDiagnosis);
-    //     }
-
-    //     if (newTreatment != null) {
-    //         medicalRecord.addTreatment(newTreatment);
-    //         System.out.println("Added treatment plan: " + newTreatment);
-    //     }
-
-    //     if (newPrescription != null) {
-    //         medicalRecord.addPrescription(newPrescription);
-    //         System.out.println("Added prescription: " + newPrescription);
-    //     }
-    //     System.out.println("Medical record updated successfully.");
-    // }
-
-    // public void viewPersonalSchedule() {
-    //     System.out.println("Doctor's Schedule:");
-    //     for (String slot : schedule) {
-    //         System.out.println(slot);
-    //     }
-    // }
-
-    // public void setAvailabilityForAppointment(String timeSlot) {
-    //     schedule.add(timeSlot);
-    //     System.out.println("Availability set for: " + timeSlot);
-    // }
-
-    // public void acceptAppointment(String appointmentID) {
-    //     System.out.println("Accepted appointment with ID: " + appointmentID);
-    // }
-
-    // public void declineAppointment(String appointmentID) {
-    //     System.out.println("Declined appointment with ID: " + appointmentID);
-    // }
-
-    // public void viewUpcomingAppointments() {
-    //     System.out.println("Upcoming Appointments:");
-    // }
-
-    // public void recordAppointmentOutcome(String appointmentID, String date, String serviceType, String medicationName, String medicationStatus, String consultationNotes) {
-    //     System.out.println("Recording outcome for appointment ID: " + appointmentID);
-    //     System.out.println("Date: " + date);
-    //     System.out.println("Service Type: " + serviceType);
-    //     System.out.println("Prescribed Medication: " + medicationName + " (Status: " + medicationStatus + ")");
-    //     System.out.println("Consultation Notes: " + consultationNotes);
-    // }
+    // Function to check the status of an appointment by its ID
+    public void checkAppointmentStatus(int appointmentID) {
+        List<Appointment> appointments = calendar.getAppointmentsForMonth();
+        for (Appointment app : appointments) {
+            if (app.getAppointmentID() == appointmentID) {
+                System.out.println("Appointment ID: " + appointmentID + " | Status: " + app.getStatus());
+                return;
+            }
+        }
+        System.out.println("Appointment ID not found.");
+    }
 
     @Override
     public boolean login(String enteredPassword) {
@@ -289,6 +269,23 @@ public class Doctor extends User {
     public String getName() { 
         return name; 
     }
+    
+    public String getGender() { 
+        return gender; 
+    }
+    
+    public int getAge() { 
+        return age; 
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
+}
     // public String getSpecialisation() { 
     //     return specialisation; 
     // }
@@ -300,14 +297,6 @@ public class Doctor extends User {
     // public List<Patient> getPatientList() { 
     //     return patientList; 
     // }
-    
-    public String getGender() { 
-        return gender; 
-    }
-    
-    public int getAge() { 
-        return age; 
-    }
 
     // Setters
     public void setName(String name) {
@@ -327,4 +316,119 @@ public class Doctor extends User {
     //     patientList.add(patientID);
     //     System.out.println("Added patient with ID: " + patientID);
     // }
-}
+
+    // public void addPatient(Patient patient) {
+    //     patientList.add(patient);
+    //     System.out.println("Added patient with ID: " + patient.getHospitalID());
+    // }
+
+    // private Patient getPatientById(String patientID) {
+    //     for (Patient patient : patientList) {
+    //         if (patient.getHospitalID().equals(patientID)) {
+    //             return patient;
+    //         }
+    //     }
+    //     System.out.println("Patient with ID " + patientID + " not found.");
+    //     return null;
+    // }
+
+    // private MedicalRecord getMedicalRecordByPatient(Patient patient) {
+    //     if (patient != null) {
+    //         return patient.getMedicalRecord();
+    //     }
+    //     System.out.println("No medical record found for the provided patient.");
+    //     return null;
+    // }
+
+    // public void viewPatientRecord(String patientID) {
+    //     Patient patient = getPatientById(patientID);
+    //     if (patient == null) return;
+
+    //     MedicalRecord medicalRecord = getMedicalRecordByPatient(patient);
+    //     System.out.println("---- Medical Record for Patient ----");
+    //     System.out.println("Patient ID: " + patientID);
+    //     System.out.println("Name: " + patient.getName());
+    //     System.out.println("Date of Birth: " + patient.getDateOfBirth());
+    //     System.out.println("Gender: " + patient.getGender());
+    //     System.out.println("Blood Type: " + patient.getBloodType());
+    //     System.out.println("Contact Information:");
+    //     System.out.println("    Phone Number: " + patient.getPhoneNumber());
+    //     System.out.println("    Email: " + patient.getEmail());
+
+    //     // Display Diagnoses
+    //     System.out.println("\nDiagnoses:");
+    //     for (Diagnosis diagnosis : medicalRecord.getDiagnoses()) {
+    //         System.out.println(diagnosis);
+    //     }
+
+    //     // Display Lab Tests
+    //     System.out.println("\nLab Tests:");
+    //     for (LabTest labTest : medicalRecord.getLabTests()) {
+    //         System.out.println(labTest);
+    //     }
+
+    //     // Display Treatments
+    //     System.out.println("\nTreatments:");
+    //     for (Treatment treatment : medicalRecord.getTreatments()) {
+    //         System.out.println(treatment);
+    //     }
+
+    //     // Display Prescriptions
+    //     System.out.println("\nPrescriptions:");
+    //     for (Prescription prescription : medicalRecord.getPrescriptions()) {
+    //         System.out.println(prescription);
+    //     }
+    //     System.out.println("---- End of Medical Record ----");
+    // }
+
+    // public void updatePatientRecord(MedicalRecord medicalRecord, Diagnosis newDiagnosis, Treatment newTreatment, Prescription newPrescription) {
+    //     System.out.println("Updating medical record for patient ID: " + medicalRecord.getPatientID());
+
+    //     if (newDiagnosis != null) {
+    //         medicalRecord.addDiagnosis(newDiagnosis);
+    //         System.out.println("Added diagnosis: " + newDiagnosis);
+    //     }
+
+    //     if (newTreatment != null) {
+    //         medicalRecord.addTreatment(newTreatment);
+    //         System.out.println("Added treatment plan: " + newTreatment);
+    //     }
+
+    //     if (newPrescription != null) {
+    //         medicalRecord.addPrescription(newPrescription);
+    //         System.out.println("Added prescription: " + newPrescription);
+    //     }
+    //     System.out.println("Medical record updated successfully.");
+    // }
+
+    // public void viewPersonalSchedule() {
+    //     System.out.println("Doctor's Schedule:");
+    //     for (String slot : schedule) {
+    //         System.out.println(slot);
+    //     }
+    // }
+
+    // public void setAvailabilityForAppointment(String timeSlot) {
+    //     schedule.add(timeSlot);
+    //     System.out.println("Availability set for: " + timeSlot);
+    // }
+
+    // public void acceptAppointment(String appointmentID) {
+    //     System.out.println("Accepted appointment with ID: " + appointmentID);
+    // }
+
+    // public void declineAppointment(String appointmentID) {
+    //     System.out.println("Declined appointment with ID: " + appointmentID);
+    // }
+
+    // public void viewUpcomingAppointments() {
+    //     System.out.println("Upcoming Appointments:");
+    // }
+
+    // public void recordAppointmentOutcome(String appointmentID, String date, String serviceType, String medicationName, String medicationStatus, String consultationNotes) {
+    //     System.out.println("Recording outcome for appointment ID: " + appointmentID);
+    //     System.out.println("Date: " + date);
+    //     System.out.println("Service Type: " + serviceType);
+    //     System.out.println("Prescribed Medication: " + medicationName + " (Status: " + medicationStatus + ")");
+    //     System.out.println("Consultation Notes: " + consultationNotes);
+    // }

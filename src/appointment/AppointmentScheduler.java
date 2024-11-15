@@ -1,5 +1,11 @@
 package appointment;
 
+import user.Patient;
+import user.Doctor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppointmentScheduler implements Schedulable {
     private Appointment appointment;
 
@@ -12,7 +18,7 @@ public class AppointmentScheduler implements Schedulable {
         // Check if the time slot is available for scheduling
         if (appointment.getTimeSlot().isAvailable()) {
             // Set the appointment status to scheduled
-            appointment.setStatus(AppointmentStatus.SCHEDULED);
+            appointment.setStatus(AppointmentStatus.PENDING);
             // Mark the time slot as not available anymore
             appointment.getTimeSlot().setAvailability(false);
             System.out.println("Appointment scheduled for patient: " + appointment.getPatient().getName() + " on " + appointment.getTimeSlot().toString());
@@ -24,7 +30,7 @@ public class AppointmentScheduler implements Schedulable {
     @Override
     public void rescheduleAppointment() {
         // Check if the new time slot is available for rescheduling
-        if (appointment.getTimeSlot().isAvailable()) {
+        if (appointment.getDoctor().isSlotAvailable(appointment.getDate(), appointment.getTimeSlot())) {
             // Release the old time slot
             appointment.getTimeSlot().setAvailability(true);
             // Set the new time slot
@@ -41,7 +47,7 @@ public class AppointmentScheduler implements Schedulable {
     @Override
     public void cancelAppointment() {
         // Set the status to canceled
-        appointment.setStatus(AppointmentStatus.CANCELED);
+        appointment.setStatus(AppointmentStatus.CANCELLED);
         // Mark the time slot as available again
         appointment.getTimeSlot().setAvailability(true);
         System.out.println("Appointment canceled for patient: " + appointment.getPatient().getName() + " on " + appointment.getTimeSlot().toString());

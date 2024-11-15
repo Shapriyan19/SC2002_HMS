@@ -1,6 +1,10 @@
 package appointment;
 
 import user.Patient;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import user.Doctor;
 
 public class Appointment {
@@ -11,12 +15,13 @@ public class Appointment {
     private AppointmentStatus status;
     private String date;
     private TimeSlot timeSlot;
+    private AppointmentOutcomeRecord outcomeRecord;
 
     public Appointment(Patient patient, Doctor doctor, String date, TimeSlot timeSlot) {
         this.appointmentID = ++appointmentCounter;
         this.patient = patient;
         this.doctor = doctor;
-        this.status = AppointmentStatus.PENDING; // Default status
+        this.status = AppointmentStatus.PENDING;
         this.date = date;
         this.timeSlot = timeSlot;
     }
@@ -34,19 +39,28 @@ public class Appointment {
     }
 
     public void cancelAppointment() {
-        this.status = AppointmentStatus.CANCELED;
-        timeSlot.setAvailability(true); // Release the time slot
+        this.status = AppointmentStatus.CANCELLED;
+        timeSlot.setAvailability(true);
     }
 
     public void rescheduleAppointment(String newDate, TimeSlot newTimeSlot) {
         this.date = newDate;
-        this.timeSlot.setAvailability(true); // Release the old slot
+        this.timeSlot.setAvailability(true);
         this.timeSlot = newTimeSlot;
         this.status = AppointmentStatus.RESCHEDULED;
-        newTimeSlot.setAvailability(false); // Book the new slot
+        newTimeSlot.setAvailability(false);
     }
 
-    // Getters and setters for the appointment fields
+    // New setters for date and timeSlot
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTimeSlot(TimeSlot timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    // Getters
     public int getAppointmentID() {
         return appointmentID;
     }
@@ -66,7 +80,31 @@ public class Appointment {
     public Doctor getDoctor() {
         return doctor;
     }
+
+    public void completeAppointment(String serviceType, List<MedicationRecord> prescribedMedications, String consultationNotes) {
+        if (this.status == AppointmentStatus.CONFIRMED) {
+            this.status = AppointmentStatus.COMPLETED;
+            setOutcomeRecord(serviceType, prescribedMedications, consultationNotes);
+            System.out.println("Appointment completed and outcome recorded.");
+        } else {
+            System.out.println("Appointment must be confirmed before completing.");
+        }
+    }
+
+    public void setOutcomeRecord(String serviceType, List<MedicationRecord> prescribedMedications, String consultationNotes) {
+        if (this.status == AppointmentStatus.COMPLETED) {
+            this.outcomeRecord = new AppointmentOutcomeRecord(this.date, serviceType, prescribedMedications, consultationNotes);
+        } else {
+            System.out.println("Appointment must be completed before adding an outcome record.");
+        }
+    }
+
+    public AppointmentOutcomeRecord getOutcomeRecord() {
+        return outcomeRecord;
+    }
 }
+
+
 
 
 //old code

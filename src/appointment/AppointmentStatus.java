@@ -2,9 +2,9 @@ package appointment;
 
 public enum AppointmentStatus {
     PENDING,      // Default status
-    SCHEDULED,
+    //SCHEDULED,
     CONFIRMED,
-    CANCELED,
+    CANCELLED,
     COMPLETED,
     RESCHEDULED
 }
