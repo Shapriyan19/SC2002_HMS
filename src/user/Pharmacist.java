@@ -45,8 +45,6 @@ public class Pharmacist extends User {
         pharmacistsList.add(this);
     }
 
-<<<<<<< HEAD
-=======
     public void viewLatestAppointmentOutcomeRecord(Patient patient) {
             if (patient == null || patient.getAppointments().isEmpty()) {
                 System.out.println("No appointments available for the patient.");
@@ -82,7 +80,6 @@ public class Pharmacist extends User {
             System.out.println("Service Type: " + outcomeRecord.getServiceType());
             System.out.println("Consultation Notes: " + outcomeRecord.getConsultationNotes());
             System.out.println("Prescription Status: " + outcomeRecord.getPrescriptionStatus());
->>>>>>> a1265e7824d75987d0f0031b2e27f588f1ab0759
 
             // Print prescribed medications if available
             List<MedicationRecord> medications = outcomeRecord.getPrescribedMedications();
@@ -350,7 +347,7 @@ public class Pharmacist extends User {
     //     System.out.println("Replenishment report submitted for medication: " + medicationName + ", Quantity needed: " + quantityNeeded);
     //     // Implement logic to submit a replenishment report for low-stock medications
     // }
-    
+
     // Method to add a prescription to the pharmacist's list
     // public void addPrescription(Prescription prescription) {
     //     prescriptions.put(prescription.getPrescriptionID(), prescription);

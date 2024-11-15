@@ -417,10 +417,6 @@ public class Administrator extends User {
         }
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a1265e7824d75987d0f0031b2e27f588f1ab0759
     // Login method implementation
     @Override
     public boolean login(String enteredPassword) {
@@ -492,7 +488,6 @@ public class Administrator extends User {
         this.age = age;
     }
 
-<<<<<<< HEAD
 } 
     // Method to manage medication inventory
     // public void manageMedicationInventory(int medicationID, String action, int quantity) {
@@ -535,11 +530,4 @@ public class Administrator extends User {
     //         System.out.println("Replenishment request ID: " + order.getOrderID() + " is already " + order.getStatus());
     //     }
     // }
-=======
-    public void setHospitalID(String HospitalID) {
-        this.HospitalID = HospitalID;
-    }
-
-}
->>>>>>> a1265e7824d75987d0f0031b2e27f588f1ab0759
 
