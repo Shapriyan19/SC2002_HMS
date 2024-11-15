@@ -7,12 +7,14 @@ public class AppointmentOutcomeRecord {
     private String serviceType;
     private List<MedicationRecord> prescribedMedications;
     private String consultationNotes;
+    private String prescriptionStatus; // New attribute
 
     public AppointmentOutcomeRecord(String appointmentDate, String serviceType, List<MedicationRecord> prescribedMedications, String consultationNotes) {
         this.appointmentDate = appointmentDate;
         this.serviceType = serviceType;
         this.prescribedMedications = prescribedMedications;
         this.consultationNotes = consultationNotes;
+        this.prescriptionStatus = "pending"; // Default value
     }
 
     // Getters and Setters
@@ -47,5 +49,12 @@ public class AppointmentOutcomeRecord {
     public void setConsultationNotes(String consultationNotes) {
         this.consultationNotes = consultationNotes;
     }
-}
 
+    public String getPrescriptionStatus() { // Getter for prescriptionStatus
+        return prescriptionStatus;
+    }
+
+    public void setPrescriptionStatus(String prescriptionStatus) { // Setter for prescriptionStatus
+        this.prescriptionStatus = prescriptionStatus;
+    }
+}

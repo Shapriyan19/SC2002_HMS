@@ -1,3 +1,13 @@
 Staff ID,Name,Password,Role,Gender,Age
+<<<<<<< HEAD
 DC0000,Dr. Alifce,password,DOCTOR,F,42
 PH0000,Pharma Bob,password,PHARMACIST,M,29
+=======
+<<<<<<< HEAD
+AD0000,Alice,password,ADMINISTRATOR,Female,35
+PH0000,John Doe,password,PHARMACIST,Male,35
+=======
+DC0001,Jane Smith,password,DOCTOR,M,45
+DC0000,John Doe,password,DOCTOR,M,45
+>>>>>>> 9f4dc779e9e6b40469de51ece3f22b3b7d20d270
+>>>>>>> a1265e7824d75987d0f0031b2e27f588f1ab0759
