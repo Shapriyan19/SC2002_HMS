@@ -7,8 +7,8 @@ public class AppointmentSchedulingApp {
         Doctor doctor = new Doctor(Role.DOCTOR, "John Doe", "M", 45);
         
         // Create a patient
-        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890, "johndoe@example.com");
-        Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890, "johndoe@example.com");
+        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890, "johndoe@example.com",null);
+        Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890, "johndoe@example.com",null);
         
         // Create a calendar for the doctor
         appointment.Calendar calendar = doctor.getCalendar();

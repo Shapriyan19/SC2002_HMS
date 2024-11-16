@@ -5,14 +5,14 @@ public class App {
         // Creating patients with different roles
         System.out.println("Creating Patient 1:");
         Patient patient1 = new Patient(Role.PATIENT, "John Doe", 
-                                      "1990-05-15", "Male", "O+", 1234567890L, "johndoe@example.com");
+                                      "1990-05-15", "Male", "O+", 1234567890L, "johndoe@example.com",null);
         
         System.out.println("Patient 1 details:");
         printPatientDetails(patient1);
 
         System.out.println("\nCreating Patient 2:");
         Patient patient2 = new Patient(Role.PATIENT, "Jane Smith", 
-                                      "1985-08-25", "Female", "A+", 9876543210L, "janesmith@example.com");
+                                      "1985-08-25", "Female", "A+", 9876543210L, "janesmith@example.com",null);
 
         System.out.println("Patient 2 details:");
         printPatientDetails(patient2);

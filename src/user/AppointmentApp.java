@@ -47,8 +47,8 @@ public class AppointmentApp {
 
     public static void main(String[] args) {
         // Create patients and doctors
-        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890, "johndoe@example.com");
-        Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890, "johndoe@example.com");
+        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890, "johndoe@example.com",null);
+        Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890, "johndoe@example.com",null);
         Doctor doctor1 = new Doctor(Role.DOCTOR, "Dr. John", "Male", 35);
         Doctor doctor2 = new Doctor(Role.DOCTOR, "Dr. Alice", "Female", 40);
 
