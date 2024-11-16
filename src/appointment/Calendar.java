@@ -42,10 +42,33 @@ public class Calendar {
         }
     }
 
-    private void setAppointmentTime(){
-        // change the time for the appointment
-        
+    //method to update own timing
+    public void setAppointmentTime(String newStartTime, String newEndTime) {
+        // Clear existing time slots
+        availableTimeSlots.clear();
+    
+        // Parse the new start and end times
+        String[] startParts = newStartTime.split(":");
+        String[] endParts = newEndTime.split(":");
+    
+        int startHour = Integer.parseInt(startParts[0]);
+        int startMinute = Integer.parseInt(startParts[1]);
+        int endHour = Integer.parseInt(endParts[0]);
+        int endMinute = Integer.parseInt(endParts[1]);
+    
+        // Generate time slots in 30-minute intervals for the updated range
+        for (int hour = startHour; hour < endHour || (hour == endHour && startMinute < endMinute); hour++) {
+            for (int minute = (hour == startHour ? startMinute : 0); minute < 60; minute += 30) {
+                if ((hour < endHour) || (hour == endHour && minute + 30 <= endMinute)) {
+                    String startTime = String.format("%02d:%02d", hour, minute);
+                    String endTime = String.format("%02d:%02d", hour, minute + 30);
+                    TimeSlot timeSlot = new TimeSlot(startTime, endTime);
+                    availableTimeSlots.add(timeSlot);
+                }
+            }
+        }
     }
+    
 
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);

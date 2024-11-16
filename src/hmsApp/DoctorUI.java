@@ -207,13 +207,36 @@ public class DoctorUI {
     // 4. Set Availability for Appointments
     private void setAvailabilityForAppointments() {
         System.out.println("Setting availability...");
-        // Example: prompt doctor to choose time slots or set availability for specific dates
-        System.out.println("Enter the start and end time of availability (HH:mm): ");
+    
+        // Prompt the doctor to enter the new availability range
+        System.out.print("Enter the start time of availability (HH:mm): ");
         String startTime = scanner.next();
+        System.out.print("Enter the end time of availability (HH:mm): ");
         String endTime = scanner.next();
-        // Update availability logic (perhaps modify doctor’s schedule)
+    
+        // Validate and update the time slots
+        if (isValidTime(startTime) && isValidTime(endTime) && startTime.compareTo(endTime) < 0) {
+            doctor.getCalendar().setAppointmentTime(startTime, endTime); // Update the calendar's time slots
+            System.out.println("Availability updated successfully from " + startTime + " to " + endTime + ".");
+        } else {
+            System.out.println("Invalid time range. Please try again.");
+        }
     }
-
+    
+    // Helper method to validate time format (HH:mm)
+    private boolean isValidTime(String time) {
+        try {
+            String[] parts = time.split(":");
+            if (parts.length != 2) return false;
+    
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
     // 5. Accept or Decline Appointment Requests
     private void acceptOrDeclineAppointments() {
         System.out.print("Enter the appointment ID to manage: ");
