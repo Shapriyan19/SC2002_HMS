@@ -8,17 +8,18 @@ import java.util.List;
 //accessing appointment package
 import appointment.*;
 //accessing medical record (associating medical records with patient)
-// import medical.MedicalRecord;
-// import medical.Prescription;
-// import medical.Diagnosis;
-// import medical.LabTest;
-// import medical.Treatment;
+import medical.MedicalRecord;
+import medical.Prescription;
+import medical.Diagnosis;
+import medical.LabTest;
+import medical.Treatment;
 
 public class Patient extends User {
 
     private static List<Patient> patientsList = new ArrayList<>(); // Store all patients
     // Attributes
     // private String patientID;    to be removed
+    
     private String name;
     private String dateOfBirth;
     private String gender;
@@ -27,12 +28,12 @@ public class Patient extends User {
     private String email;
     private List<Appointment>appointments;
     private Calendar calendar;
-    // private MedicalRecord medicalRecord; // Past diagnoses & treatments //to be checked
+    private MedicalRecord medicalRecord; // Past diagnoses & treatments //to be checked
     // private List<String> appointmentHistory; //to be checked
 
     // Constructor
     public Patient(Role role, String name, 
-                   String dateOfBirth, String gender, String bloodType, long phoneNumber, String email) {
+                   String dateOfBirth, String gender, String bloodType, long phoneNumber, String email, MedicalRecord medicalRecord) {
         super(generateNewHospitalID(role), role);
         // this.patientID = patientID; to be removed
         this.name = name;
@@ -43,8 +44,9 @@ public class Patient extends User {
         this.email = email;
         this.appointments=new ArrayList<>();
         this.calendar=new Calendar("November");  // Initialize with a default or specific month
-        // this.medicalRecord = new MedicalRecord(HospitalID); //medical records
+        this.medicalRecord = medicalRecord; //medical records
         // this.appointmentHistory = new ArrayList<>();
+        //this.medicalRecord = medicalRecord; //medical records
         patientsList.add(this); //add new patient to list
         updateCSV(); 
     }
@@ -61,6 +63,22 @@ public class Patient extends User {
         this.appointments=new ArrayList<>();
         patientsList.add(this);
     }
+
+    // Getter method for medical record
+    public MedicalRecord getMedicalRecord() {
+        return this.medicalRecord;
+    }
+    
+
+     // Method to view the full medical record details
+     public void viewMedicalRecord(Patient patient) {
+        if (medicalRecord != null) {
+            medicalRecord.viewMedicalRecord(patient);
+        } else {
+            System.out.println("No medical record available for this patient.");
+        }
+    }
+    
 
     public void updateDOB(String dateOfBirth){
         this.dateOfBirth=dateOfBirth;

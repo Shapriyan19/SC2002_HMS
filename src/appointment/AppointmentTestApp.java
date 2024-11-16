@@ -7,8 +7,8 @@ import user.Role;
 public class AppointmentTestApp {
     public static void main(String[] args) {
         // Create sample patients
-        Patient patient1 = new Patient(Role.PATIENT, "Jack","21-03-2004","Male","A+",1234567890L,"abc@gmail.com");
-        Patient patient2 = new Patient(Role.PATIENT, "Dan","23-03-2004","Male","B+",12345672390L,"xyz@gmail.com");
+        Patient patient1 = new Patient(Role.PATIENT, "Jack","21-03-2004","Male","A+",1234567890L,"abc@gmail.com",null);
+        Patient patient2 = new Patient(Role.PATIENT, "Dan","23-03-2004","Male","B+",12345672390L,"xyz@gmail.com",null);
 
         // Create sample doctors
         Doctor doctor1 = new Doctor(Role.DOCTOR,"Nick","Male",32);

@@ -1,11 +1,18 @@
 package user;
 
 import appointment.*;
+import medical.Diagnosis;
+import medical.LabTest;
+import medical.MedicalRecord;
+import medical.Prescription;
+import medical.Treatment;
+import user.Patient;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 // import java.nio.file.*;
-// import medical.MedicalRecord;
+//import medical.MedicalRecord;
 // import medical.Diagnosis;
 // import medical.LabTest;
 // import medical.Prescription;
@@ -19,7 +26,7 @@ public class Doctor extends User {
     private String name;
     // private String specialisation;
     // private List<String> schedule;
-    // private List<Patient> patientList;
+    private List<Patient> patientList;
     private String gender;
     private int age;
     private Calendar calendar; //Doctor's calendar to manage appointments
@@ -31,7 +38,20 @@ public class Doctor extends User {
         this.name = name;
         // this.specialisation = specialisation;
         // this.schedule = new ArrayList<>();
-        // this.patientList = new ArrayList<>();
+        this.gender = gender;
+        this.age = age;
+        this.calendar = new Calendar("November");
+        doctorsList.add(this);
+        updateCSV();
+    }
+
+    public Doctor(Role role, String name, String gender, int age,List<Patient> patientList) {
+        super(generateNewHospitalID(role), role);
+        // this.doctorID = doctorID;    to be removed
+        this.name = name;
+        // this.specialisation = specialisation;
+        // this.schedule = new ArrayList<>();
+        this.patientList = patientList;
         this.gender = gender;
         this.age = age;
         this.calendar = new Calendar("November");
@@ -46,6 +66,39 @@ public class Doctor extends User {
         this.gender=gender;
         this.age=age;
         doctorsList.add(this);
+    }
+    
+    // View Patient Medical Records
+    public void viewAllPatientMedicalRecords() {
+        if (patientList.isEmpty()) {
+            System.out.println("No patients assigned to Dr. " + this.name);
+            return;
+        }
+
+        System.out.println("Medical Records for Patients of Dr. " + this.name + ":");
+        for (Patient patient : patientList) {
+            System.out.println("Viewing medical record for patient: " + patient.getName());
+            patient.viewMedicalRecord(patient);  // Calling viewMedicalRecord in Patient class
+        }
+    }
+    
+    // Update medical records
+    public void updatePatientMedicalRecord(Patient patient, ArrayList<Diagnosis> newDiagnosis, ArrayList<Prescription> newPrescription, ArrayList<Treatment> newTreatment,ArrayList<LabTest> newLabTest) {
+        if (patient == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
+    
+        MedicalRecord medicalRecord = patient.getMedicalRecord(); // Get the patient's medical record
+        if (medicalRecord == null) {
+            System.out.println("Medical record not found for patient: " + patient.getName());
+            return;
+        }
+    
+        medicalRecord.updateMedicalRecord(newDiagnosis, newLabTest, newPrescription, newTreatment);
+    
+        // Confirming the update
+        System.out.println("Medical record updated successfully for patient: " + patient.getName());
     }
 
     //methods for appointments 
