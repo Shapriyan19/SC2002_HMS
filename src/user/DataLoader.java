@@ -14,7 +14,7 @@ public class DataLoader {
         loadAdministrators();
         loadPharmacists();
         loadPatients();
-        createRandomAppointments();  // New method to schedule random appointments after loading data
+        //createRandomAppointments();  // New method to schedule random appointments after loading data
     }
 
     // Load doctors from CSV and store in Doctor's static list
