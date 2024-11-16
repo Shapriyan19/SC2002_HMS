@@ -69,21 +69,21 @@ public class MedicalRecord {
     }
 
     // Method to update medical record details
-    public void updateMedicalRecord(ArrayList<Diagnosis> newDiagnoses, ArrayList<LabTest> newLabTests,
-                                    ArrayList<Prescription> newPrescriptions, ArrayList<Treatment> newTreatments) {
-        if (newDiagnoses != null) {
-            this.diagnoses.addAll(newDiagnoses);
-        }
-        if (newLabTests != null) {
-            this.labTests.addAll(newLabTests);
-        }
-        if (newPrescriptions != null) {
-            this.prescriptions.addAll(newPrescriptions);
-        }
-        if (newTreatments != null) {
-            this.treatments.addAll(newTreatments);
-        }
-    }
+    // public void updateMedicalRecord(ArrayList<Diagnosis> newDiagnoses, ArrayList<LabTest> newLabTests,
+    //                                 ArrayList<Prescription> newPrescriptions, ArrayList<Treatment> newTreatments) {
+    //     if (newDiagnoses != null) {
+    //         this.diagnoses.addAll(newDiagnoses);
+    //     }
+    //     if (newLabTests != null) {
+    //         this.labTests.addAll(newLabTests);
+    //     }
+    //     if (newPrescriptions != null) {
+    //         this.prescriptions.addAll(newPrescriptions);
+    //     }
+    //     if (newTreatments != null) {
+    //         this.treatments.addAll(newTreatments);
+    //     }
+    // }
 
     public ArrayList<Diagnosis> getDiagnoses() {
         return diagnoses;
@@ -133,7 +133,7 @@ public class MedicalRecord {
     }
 
     @Override
-    public String toString() {
-        return "Medical Record for Hospital ID: " + hospitalID;
+    public String toString() { 
+        return "Medical Record for Patient: " + patient.getName() + " (Hospital ID: " + patient.getHospitalID() + ")"; 
     }
 }
