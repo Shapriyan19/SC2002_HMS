@@ -13,11 +13,18 @@ public class Calendar {
     private List<TimeSlot> availableTimeSlots;
 
     public Calendar(String monthString) {
-        Month month = Month.valueOf(monthString.toUpperCase());
-        this.yearMonth = YearMonth.of(2023, month);
-        this.appointments = new ArrayList<>();
-        this.availableTimeSlots = new ArrayList<>();
-        initializeTimeSlots();
+        try {
+            // Parse the provided month string to a Month enum
+            Month month = Month.valueOf(monthString.toUpperCase());
+            // Use the current year dynamically
+            this.yearMonth = YearMonth.of(java.time.LocalDate.now().getYear(), month);
+            this.appointments = new ArrayList<>();
+            this.availableTimeSlots = new ArrayList<>();
+            initializeTimeSlots();
+        } catch (IllegalArgumentException e) {
+            // Handle invalid month names gracefully
+            throw new IllegalArgumentException("Invalid month name provided: " + monthString);
+        }
     }
 
     private void initializeTimeSlots() {
