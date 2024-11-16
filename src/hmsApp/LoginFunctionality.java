@@ -78,8 +78,8 @@ public class LoginFunctionality {
 
         switch (role) {
             case Role.ADMINISTRATOR:
-                AdministratorUI adminUI = new AdministratorUI((Administrator) user);
-                adminUI.showMenu();
+                // AdministratorUI adminUI = new AdministratorUI((Administrator) user);
+                // adminUI.showMenu();
                 break;
             case Role.DOCTOR:
                 DoctorUI doctorUI = new DoctorUI((Doctor) user);

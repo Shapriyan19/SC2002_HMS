@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 //accessing appointment package
 import appointment.*;
 //accessing medical record (associating medical records with patient)
@@ -51,8 +53,9 @@ public class Patient extends User {
         updateCSV(); 
     }
 
-    //Constructor to get from CSV files
-    public Patient(String hospitalID,String name,String password,String dateOfBirth, String gender, String bloodType, long phoneNumber, String email, Role role ){
+    // Constructor to get from CSV files
+    public Patient(String hospitalID, String name, String password, String dateOfBirth, String gender, 
+                   String bloodType, long phoneNumber, String email, Role role) {
         super(hospitalID, role, password);
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -60,8 +63,88 @@ public class Patient extends User {
         this.bloodType = bloodType;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.appointments=new ArrayList<>();
+        this.appointments = new ArrayList<>();
+        
+        // Generate random appointments and medical records
+        this.calendar = new Calendar("November");  // Initialize with a default or specific month
+        this.medicalRecord = generateRandomMedicalRecord(); // Create a random medical record
+        
+        // Generate some random appointments
+        generateRandomAppointments();
+
         patientsList.add(this);
+    }
+
+    // Method to generate a random medical record
+    private MedicalRecord generateRandomMedicalRecord() {
+        // Create random data for medical records
+        Random random = new Random();
+    
+        // Lists to hold random diagnoses, treatments, prescriptions, and lab tests
+        ArrayList<Diagnosis> diagnoses = new ArrayList<>();
+        ArrayList<Treatment> treatments = new ArrayList<>();
+        ArrayList<Prescription> prescriptions = new ArrayList<>();
+        ArrayList<LabTest> labTests = new ArrayList<>();
+    
+        // Add random diagnoses (between 1 and 3)
+        for (int i = 0; i < random.nextInt(3) + 1; i++) {
+            int diagnosisID = random.nextInt(1000) + 1;  // Random ID between 1 and 1000
+            String description = "Diagnosis " + (i + 1);
+            String date = "2024-11-" + (random.nextInt(30) + 1);  // Random date in November 2024
+            Diagnosis diagnosis = new Diagnosis(diagnosisID, description, date);
+            diagnoses.add(diagnosis);
+        }
+    
+        // Add random treatments (between 1 and 2)
+        for (int i = 0; i < random.nextInt(2) + 1; i++) {
+            String treatmentName = "Treatment " + (i + 1);
+            String startDate = "2024-11-" + (random.nextInt(30) + 1);  // Random start date in November 2024
+            String endDate = "2024-11-" + (random.nextInt(30) + 1);  // Random end date in November 2024
+            if (startDate.compareTo(endDate) > 0) {
+                // Ensure end date is after start date
+                endDate = startDate;
+            }
+            Treatment treatment = new Treatment(treatmentName, startDate, endDate);
+            treatments.add(treatment);
+        }
+    
+        // Add random prescriptions (between 1 and 2)
+        for (int i = 0; i < random.nextInt(2) + 1; i++) {
+            int prescriptionID = random.nextInt(1000) + 1;  // Random prescription ID
+            String medicationName = "Medication " + (i + 1);
+            int dosage = (random.nextInt(10) + 1) * 10;  // Random dosage (multiples of 10)
+            Prescription prescription = new Prescription(prescriptionID, medicationName, dosage);
+            prescriptions.add(prescription);
+        }
+    
+        // Add random lab tests (between 1 and 2)
+        for (int i = 0; i < random.nextInt(2) + 1; i++) {
+            int testID = random.nextInt(1000) + 1;  // Random test ID
+            String testName = "Lab Test " + (i + 1);
+            String result = "Normal";  // You can randomize this if needed
+            String date = "2024-11-" + (random.nextInt(30) + 1);  // Random test date in November 2024
+            LabTest labTest = new LabTest(testID, testName, result, date);
+            labTests.add(labTest);
+        }
+    
+        // Create and return the MedicalRecord object
+        return new MedicalRecord(diagnoses, labTests, prescriptions, treatments);
+    }
+    
+    // Method to generate random appointments
+     private void generateRandomAppointments() {
+        Random random = new Random();
+        for (int i = 0; i < random.nextInt(3) + 1; i++) {  // Random between 1 and 3 appointments
+            // Assume Doctor class exists with available time slots and a method to schedule appointments
+            Doctor doctor = new Doctor("Doctor " + (i + 1), "Specialty " + (i + 1));  // Create a random doctor
+            String date = "2024-11-" + (random.nextInt(30) + 1);  // Random date in November 2024
+            TimeSlot timeSlot = new TimeSlot("10:00 AM");  // Random time slot
+
+            // Schedule a random appointment
+            Appointment appointment = new Appointment(this, doctor, date, timeSlot);
+            this.appointments.add(appointment);
+            this.calendar.addAppointment(appointment);
+        }
     }
 
     // Getter method for medical record

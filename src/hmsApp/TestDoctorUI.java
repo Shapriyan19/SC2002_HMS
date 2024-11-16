@@ -6,8 +6,8 @@ import user.*;
 public class TestDoctorUI {
     public static void main(String[] args) {
         // Create some sample data
-        Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890L, "johndoe@example.com");
-        Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890L, "jack@example.com");
+        // Patient patient1 = new Patient(Role.PATIENT, "John Doe", "01/01/1985", "Male", "O+", 1234567890L, "johndoe@example.com");
+        // Patient patient2 = new Patient(Role.PATIENT, "Jack", "01/01/1999", "Male", "O+", 1234567890L, "jack@example.com");
         
         TimeSlot timeSlot1 = new TimeSlot("09:00", "09:30");
         TimeSlot timeSlot2 = new TimeSlot("10:00", "10:30");
