@@ -1,6 +1,8 @@
 package user;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import appointment.Appointment;
@@ -243,60 +245,30 @@ public class Pharmacist extends User {
     }
 
 
-    public void updateCSV() {
-        File file = new File("Data/Staff_List.csv");
-        List<String> lines = new ArrayList<>();
-        boolean isNew = true;
-        boolean isHeaderWritten = false;
+    private void updateCSV() {
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("Data/Staff_List.csv"))) {
+            // Writing the header to the CSV file
+            String header = "Staff ID,Name,Password,Role,Gender,Age";
+            bw.write(header);
+            bw.newLine();  // Move to the next line after the header
     
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Check if header is already written
-                if (line.startsWith("Staff ID")) {
-                    if (!isHeaderWritten) {
-                        lines.add(line); // Write header only once
-                        isHeaderWritten = true;
-                    }
-                } else if (line.startsWith(HospitalID + ",")) {
-                    // Check if the record exists (by matching HospitalID)
-                    isNew = false;
-                    lines.add(toCSVFormat()); // Update the existing record
-                } else {
-                    lines.add(line); // Keep old records intact
-                }
+            // Writing each staff member's details
+            for (Pharmacist pharmacist : pharmacistsList) {  // assuming pharmacistsList is a collection of pharmacist objects
+                String line = String.join(",",
+                    pharmacist.getHospitalID(),
+                    pharmacist.getName(),
+                    pharmacist.getPassword(),
+                    pharmacist.getRole().toString(),  // Convert Role to String
+                    pharmacist.getGender(),
+                    String.valueOf(pharmacist.getAge()));  // Convert Age to String
+                bw.write(line);
+                bw.newLine();  // Move to the next line for each staff member
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    
-        // If the record doesn't exist, add it as a new one
-        if (isNew) {
-            lines.add(toCSVFormat());
-        }
-    
-        // Write the updated data back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            if (!isHeaderWritten) {
-                // Write header if it hasn't been written yet
-                writer.write("Staff ID,Name,Password,Role,Specialty/Department,Gender,Age");
-                writer.newLine();
-            }
-    
-            for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
-            }
-    
-            System.out.println("Staff data updated in Staff_List.csv.");
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error updating the CSV file: " + e.getMessage());
         }
     }
-
-    private String toCSVFormat() {
-        return HospitalID + "," + name + ","+ password + "," + role + "," + gender + "," + age;
-    }
+    
 }
 
     // Method to export inventory to CSV

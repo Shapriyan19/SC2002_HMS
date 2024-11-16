@@ -1,4 +1,5 @@
 package hmsApp;
+
 import user.*;
 import java.util.List;
 import java.util.Scanner;
@@ -7,11 +8,6 @@ public class LoginFunctionality {
 
     public static void main(String[] args) {
         // Sample users for testing
-        // Administrator admin = new Administrator("ADM001", "AdminUser", "admin123", Role.ADMINISTRATOR, "M", 35);
-        // Doctor doctor = new Doctor(Role.DOCTOR, "Dr. Alifce", "F", 42);
-        // Patient patient = new Patient(Role.PATIENT, "John Doe", "1990-05-15", "Male", "O+", 1234567890L, "johndoe@example.com");
-        // Pharmacist pharmacist = new Pharmacist(Role.PHARMACIST, "Pharma Bob", "M", 29);
-
         DataLoader.loadAllData();
 
         Scanner scanner = new Scanner(System.in);
@@ -35,9 +31,11 @@ public class LoginFunctionality {
             System.out.println("Invalid credentials. Please try again.");
         }
 
+        // Debugging: Create a new pharmacist and add to CSV
+        Pharmacist pharmacist1 = new Pharmacist(Role.PHARMACIST, "abc", "M", 29);
+        System.out.println("Pharmacist object created and added to CSV.");
+        
         scanner.close();
-        Pharmacist pharmacist1 = new Pharmacist(Role.PHARMACIST, "Dan", "M", 29);
-        System.out.printf("pharmacist 1 object added");
     }
 
     // Authenticate user based on ID and password

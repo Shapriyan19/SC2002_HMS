@@ -10,9 +10,9 @@ public class MedicalRecord {
     private ArrayList<Prescription> prescriptions;
     private ArrayList<Treatment> treatments;
 
-    public MedicalRecord(Patient patient, ArrayList<Diagnosis> diagnoses, ArrayList<LabTest> labTests,
+    public MedicalRecord(ArrayList<Diagnosis> diagnoses, ArrayList<LabTest> labTests,
                          ArrayList<Prescription> prescriptions, ArrayList<Treatment> treatments) {
-        this.patient = patient;
+        //this.patient = patient;
         this.diagnoses = diagnoses != null ? diagnoses : new ArrayList<>();
         this.labTests = labTests != null ? labTests : new ArrayList<>();
         this.prescriptions = prescriptions != null ? prescriptions : new ArrayList<>();
@@ -20,7 +20,7 @@ public class MedicalRecord {
     }
 
     // Method to view the medical record details
-    public void viewMedicalRecord() {
+    public void viewMedicalRecord(Patient patient) {
         System.out.println("Patient Details:");
         System.out.println("Hospital ID: " + patient.getHospitalID());
         System.out.println("Name: " + patient.getName());
@@ -68,6 +68,23 @@ public class MedicalRecord {
         }
     }
 
+    // Method to update medical record details
+    // public void updateMedicalRecord(ArrayList<Diagnosis> newDiagnoses, ArrayList<LabTest> newLabTests,
+    //                                 ArrayList<Prescription> newPrescriptions, ArrayList<Treatment> newTreatments) {
+    //     if (newDiagnoses != null) {
+    //         this.diagnoses.addAll(newDiagnoses);
+    //     }
+    //     if (newLabTests != null) {
+    //         this.labTests.addAll(newLabTests);
+    //     }
+    //     if (newPrescriptions != null) {
+    //         this.prescriptions.addAll(newPrescriptions);
+    //     }
+    //     if (newTreatments != null) {
+    //         this.treatments.addAll(newTreatments);
+    //     }
+    // }
+
     public ArrayList<Diagnosis> getDiagnoses() {
         return diagnoses;
     }
@@ -84,104 +101,39 @@ public class MedicalRecord {
         return treatments;
     }
 
+    // Method to only get MedicalRecord Details 
+    public String getMedicalRecordSummary() {
+
+        StringBuilder summary = new StringBuilder();
+        //summary.append("Medical Record for Hospital ID: ").append(patient.hospitalID).append("\n\n");
+
+
+
+        summary.append("Diagnoses:\n");
+        for (Diagnosis diagnosis : diagnoses) {
+            summary.append(diagnosis.toString()).append("\n"); // Assumes Diagnosis has a toString() method
+        }
+
+        summary.append("\nLab Tests:\n");
+        for (LabTest labTest : labTests) {
+            summary.append(labTest.toString()).append("\n"); // Assumes LabTest has a toString() method
+        }
+
+        summary.append("\nPrescriptions:\n");
+        for (Prescription prescription : prescriptions) {
+            summary.append(prescription.toString()).append("\n"); // Assumes Prescription has a toString() method
+        }
+
+        summary.append("\nTreatments:\n");
+        for (Treatment treatment : treatments) {
+            summary.append(treatment.toString()).append("\n"); // Assumes Treatment has a toString() method
+        }
+
+        return summary.toString();
+    }
+
     @Override
-    public String toString() {
-        return "Medical Record for Patient: " + patient.getName() + " (Hospital ID: " + patient.getHospitalID() + ")";
+    public String toString() { 
+        return "Medical Record for Patient: " + patient.getName() + " (Hospital ID: " + patient.getHospitalID() + ")"; 
     }
 }
-
-
-
-
-
-
-
-// package medical;
-// import java.util.ArrayList;
-
-// public class MedicalRecord {
-//     private String hospitalID;
-//     private String name;
-//     private String dateOfBirth;
-//     private String gender;
-//     private String contactNumber;
-//     private String emailAddress;
-//     private String bloodType;
-//     private ArrayList<Diagnosis> diagnoses;
-//     private ArrayList<LabTest> labTests;
-//     private ArrayList<Prescription> prescriptions;
-//     private ArrayList<Treatment> treatments;
-
-//     public MedicalRecord(String hospitalID) {
-//         this.hospitalID = hospitalID;
-//         this.name = name;
-//         this.dateOfBirth = dateOfBirth;
-//         this.gender = gender;
-//         this.contactNumber = contactNumber;
-//         this.emailAddress = emailAddress;
-//         this.bloodType = bloodType;
-//         this.diagnoses = new ArrayList<>();
-//         this.labTests = new ArrayList<>();
-//         this.prescriptions = new ArrayList<>();
-//         this.treatments = new ArrayList<>();
-//     }
-
-//     // Getters for Basic Information - Only Patient and Doctor should have access to this data
-//     public String getPatientID() { return hospitalID; }
-//     // public String getName() { return name; }
-//     // public String getDateOfBirth() { return dateOfBirth; }
-//     // public String getGender() { return gender; }
-//     // public String getContactNumber() { return contactNumber; }
-//     // public String getEmailAddress() { return emailAddress; }
-//     // public String getBloodType() { return bloodType; }
-
-//     // Setters for Non-Medical Information - Only accessible by Patient
-//     // public void setContactNumber(String contactNumber) {
-//     //     this.contactNumber = contactNumber;
-//     // }
-
-//     // public void setEmailAddress(String emailAddress) {
-//     //     this.emailAddress = emailAddress;
-//     // }
-
-//     // Diagnosis Management - Only Doctor can add
-//     public ArrayList<Diagnosis> getDiagnoses() {
-//         return diagnoses;
-//     }
-
-//     public void addDiagnosis(Diagnosis diagnosis) {
-//         this.diagnoses.add(diagnosis);
-//     }
-
-//     // Lab Test Management - Only Doctor can add
-//     public ArrayList<LabTest> getLabTests() {
-//         return labTests;
-//     }
-
-//     public void addLabTest(LabTest labTest) {
-//         this.labTests.add(labTest);
-//     }
-
-//     // Prescription Management - Only Doctor can add, Pharmacist can update status
-//     public ArrayList<Prescription> getPrescriptions() {
-//         return prescriptions;
-//     }
-
-//     public void addPrescription(Prescription prescription) {
-//         this.prescriptions.add(prescription);
-//     }
-
-//     // Treatment Management - Only Doctor can add
-//     public ArrayList<Treatment> getTreatments() {
-//         return treatments;
-//     }
-
-//     public void addTreatment(Treatment treatment) {
-//         this.treatments.add(treatment);
-//     }
-
-//     @Override
-//     public String toString() {
-//         return "Medical Record for Hospital ID: " + hospitalID;
-//     }
-// }

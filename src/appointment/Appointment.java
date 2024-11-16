@@ -104,13 +104,14 @@ public class Appointment {
         if (this.status == AppointmentStatus.COMPLETED) {
             List<MedicationRecord> medicationRecords = new ArrayList<>();
             for (String med : medications) {
-                medicationRecords.add(new MedicationRecord(med));
+                medicationRecords.add(new MedicationRecord(med, "DefaultDosage")); // Replace "DefaultDosage" with actual dosage
             }
             this.outcomeRecord = new AppointmentOutcomeRecord(this.date, serviceType, medicationRecords, consultationNotes);
         } else {
             System.out.println("Appointment must be completed before adding an outcome record.");
         }
     }
+    
     
 
     public AppointmentOutcomeRecord getOutcomeRecord() {
