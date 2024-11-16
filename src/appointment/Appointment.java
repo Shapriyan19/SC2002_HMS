@@ -112,11 +112,20 @@ public class Appointment {
     //     }
     // }
     
-    
-
     public AppointmentOutcomeRecord getOutcomeRecord() {
         return outcomeRecord;
     }
+
+    @Override
+    public String toString() {
+        return "Appointment ID: " + this.getAppointmentID() + " | " +
+            "Patient: " + this.getPatient().getName() + " | " + 
+            "Date: " + this.getDate() + " | " +
+            "Time: From: " + this.getTimeSlot().getStartTime() + " To: " + this.getTimeSlot().getEndTime() + " | " +
+            "Status: " + this.getStatus();
+    }
+
+    
 }
 
 

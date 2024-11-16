@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import user.Doctor;
+import java.time.LocalDate;
 
 public class Calendar {
     private YearMonth yearMonth;
@@ -41,6 +42,34 @@ public class Calendar {
         }
     }
 
+    //method to update own timing
+    public void setAppointmentTime(String newStartTime, String newEndTime) {
+        // Clear existing time slots
+        availableTimeSlots.clear();
+    
+        // Parse the new start and end times
+        String[] startParts = newStartTime.split(":");
+        String[] endParts = newEndTime.split(":");
+    
+        int startHour = Integer.parseInt(startParts[0]);
+        int startMinute = Integer.parseInt(startParts[1]);
+        int endHour = Integer.parseInt(endParts[0]);
+        int endMinute = Integer.parseInt(endParts[1]);
+    
+        // Generate time slots in 30-minute intervals for the updated range
+        for (int hour = startHour; hour < endHour || (hour == endHour && startMinute < endMinute); hour++) {
+            for (int minute = (hour == startHour ? startMinute : 0); minute < 60; minute += 30) {
+                if ((hour < endHour) || (hour == endHour && minute + 30 <= endMinute)) {
+                    String startTime = String.format("%02d:%02d", hour, minute);
+                    String endTime = String.format("%02d:%02d", hour, minute + 30);
+                    TimeSlot timeSlot = new TimeSlot(startTime, endTime);
+                    availableTimeSlots.add(timeSlot);
+                }
+            }
+        }
+    }
+    
+
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
         // Remove the time slot from the available time slots
@@ -75,10 +104,25 @@ public class Calendar {
 
     public List<Appointment> getAppointmentsForMonth() {
         List<Appointment> appointmentsInMonth = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
         for (Appointment app : appointments) {
-            YearMonth appointmentYearMonth = YearMonth.parse(app.getDate(), DateTimeFormatter.ISO_DATE);
-            if (appointmentYearMonth.getYear() == this.yearMonth.getYear() && appointmentYearMonth.getMonth() == this.yearMonth.getMonth()) {
-                appointmentsInMonth.add(app);
+            // Ensure the date is formatted correctly
+            String formattedDate = app.getDate();
+            if (formattedDate.length() == 10 && formattedDate.charAt(5) == '-') {
+                try {
+                    // Try to parse the date with the proper format
+                    LocalDate parsedDate = LocalDate.parse(formattedDate, formatter);
+                    YearMonth appointmentYearMonth = YearMonth.from(parsedDate);
+    
+                    if (appointmentYearMonth.getYear() == this.yearMonth.getYear() && appointmentYearMonth.getMonth() == this.yearMonth.getMonth()) {
+                        appointmentsInMonth.add(app);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid date format for appointment: " + formattedDate);
+                }
+            } else {
+                System.out.println("Invalid date format: " + formattedDate);
             }
         }
         return appointmentsInMonth;

@@ -47,7 +47,7 @@ public class Doctor extends User {
         this.name = name;
         // this.specialisation = specialisation;
         // this.schedule = new ArrayList<>();
-        this.patientList = patientList;
+        this.patientList = patientList != null ? patientList : new ArrayList<>(); // Ensure it's never null
         this.gender = gender;
         this.age = age;
         this.calendar = new Calendar("November");
@@ -61,6 +61,8 @@ public class Doctor extends User {
         this.name=name;
         this.gender=gender;
         this.age=age;
+        this.calendar=new Calendar("November");
+        this.patientList = patientList != null ? patientList : new ArrayList<>(); // Ensure it's never null
         doctorsList.add(this);
     }
     
@@ -77,6 +79,28 @@ public class Doctor extends User {
             patient.viewMedicalRecord(patient);  // Calling viewMedicalRecord in Patient class
         }
     }
+
+    //View Patient Medical Record by ID
+    public void viewPatientMedicalRecordByID(String patientID) {
+        Patient patient = null;
+        
+        // Search for the patient by ID in the doctor's patient list
+        for (Patient p : patientList) {
+            if (p.getHospitalID().equals(patientID)) {
+                patient = p;
+                break;
+            }
+        }
+
+        // If the patient is found, view their medical record
+        if (patient != null) {
+            System.out.println("Viewing medical record for patient: " + patient.getName());
+            patient.viewMedicalRecord(patient);  // Assuming viewMedicalRecord method exists in the Patient class
+        } else {
+            System.out.println("Patient with ID " + patientID + " not found.");
+        }
+    }
+
     
     // Update medical records
     public void updatePatientMedicalRecord(Patient patient, ArrayList<Diagnosis> newDiagnosis, ArrayList<Prescription> newPrescription, ArrayList<Treatment> newTreatment,ArrayList<LabTest> newLabTest) {
@@ -298,6 +322,10 @@ public class Doctor extends User {
     public static List<Doctor> getDoctorsList() {
         return doctorsList;
     }
+
+    public List<Patient> getPatientList(){
+        return patientList;
+    }
     // Getters and setters
     public String getDoctorID() {
         return HospitalID; 
@@ -322,17 +350,10 @@ public class Doctor extends User {
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
-    // public String getSpecialisation() { 
-    //     return specialisation; 
-    // }
-    
-    // public List<String> getSchedule() { 
-    //     return schedule; 
-    // }
-    
-    // public List<Patient> getPatientList() { 
-    //     return patientList; 
-    // }
+
+    public int getPatientListSize() {
+        return patientList.size();
+    }
 
     // Setters
     public void setName(String name) {
@@ -348,6 +369,18 @@ public class Doctor extends User {
     }
 
 }
+    // public String getSpecialisation() { 
+    //     return specialisation; 
+    // }
+    
+    // public List<String> getSchedule() { 
+    //     return schedule; 
+    // }
+    
+    // public List<Patient> getPatientList() { 
+    //     return patientList; 
+    // }
+    
     // public void addPatient(int patientID) {
     //     patientList.add(patientID);
     //     System.out.println("Added patient with ID: " + patientID);

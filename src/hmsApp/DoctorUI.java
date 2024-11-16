@@ -2,7 +2,12 @@ package hmsApp;
 
 
 import java.util.Scanner;
+
+import medical.Diagnosis;
+import medical.LabTest;
 import medical.MedicalRecord;
+import medical.Prescription;
+import medical.Treatment;
 import appointment.Appointment;
 import appointment.AppointmentStatus;
 import appointment.MedicationRecord;
@@ -72,47 +77,166 @@ public class DoctorUI {
     // 1. View Patient Medical Records
     private void viewPatientMedicalRecords() {
         System.out.print("Enter the Hospital ID of the patient: ");
-        int hospitalID = scanner.nextInt();
-        Patient patient = getPatientByHospitalID(hospitalID); // Assuming a method to get a patient by ID
-        if (patient != null) {
-            MedicalRecord medicalRecord = patient.getMedicalRecord();
-            medicalRecord.viewMedicalRecord(patient);
-        } else {
-            System.out.println("Patient not found.");
-        }
+        String hospitalID = scanner.next();
+        
+        // Call the method in Doctor class to view medical record by patient ID
+        doctor.viewPatientMedicalRecordByID(hospitalID);  // Correct method call
     }
+
 
     // 2. Update Patient Medical Records
     private void updatePatientMedicalRecords() {
         System.out.print("Enter the Hospital ID of the patient to update records: ");
-        int hospitalID = scanner.nextInt();
+        String hospitalID = scanner.next();
         Patient patient = getPatientByHospitalID(hospitalID); // Assuming a method to get a patient by ID
+    
         if (patient != null) {
             MedicalRecord medicalRecord = patient.getMedicalRecord();
-            // Collect new data (e.g., diagnosis, lab tests) and update record
+            if (medicalRecord == null) {
+                System.out.println("Medical record not found for patient: " + patient.getName());
+                return;
+            }
+    
             System.out.println("Updating medical records for " + patient.getName());
-            // Example: Collect new diagnoses and add to medical record
-            // medicalRecord.updateMedicalRecord(newDiagnoses, newLabTests, newPrescriptions, newTreatments);
+    
+            // Collect new diagnoses
+            ArrayList<Diagnosis> newDiagnoses = new ArrayList<>();
+            int existingDiagnoses = medicalRecord.getDiagnoses().size();
+            System.out.println("Number of existing diagnoses: " + existingDiagnoses);
+            System.out.print("Enter the number of new diagnoses to add: ");
+            int numDiagnoses = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            for (int i = 0; i < numDiagnoses; i++) {
+                System.out.println("Diagnosis ID: " + (existingDiagnoses + i + 1));
+                System.out.print("Enter diagnosis detail: ");
+                String diagnosisDetail = scanner.nextLine();
+                System.out.print("Enter diagnosis date (YYYY-MM-DD): ");
+                String date = scanner.nextLine();
+                newDiagnoses.add(new Diagnosis((existingDiagnoses + i + 1), diagnosisDetail, date));
+            }
+    
+            // Collect new lab tests
+            ArrayList<LabTest> newLabTests = new ArrayList<>();
+            int existingLabTests = medicalRecord.getLabTests().size();
+            System.out.println("Number of existing lab tests: " + existingLabTests);
+            System.out.print("Enter the number of new lab tests to add: ");
+            int numLabTests = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            for (int i = 0; i < numLabTests; i++) {
+                System.out.println("Lab test ID: " + (existingLabTests + i + 1));
+                System.out.print("Enter test name: ");
+                String testName = scanner.nextLine();
+                System.out.print("Enter result: ");
+                String result = scanner.nextLine();
+                System.out.print("Enter test date (YYYY-MM-DD): ");
+                String date = scanner.nextLine();
+                newLabTests.add(new LabTest((existingLabTests + i + 1), testName, result, date));
+            }
+    
+            // Collect new prescriptions
+            ArrayList<Prescription> newPrescriptions = new ArrayList<>();
+            int existingPrescriptions = medicalRecord.getPrescriptions().size();
+            System.out.println("Number of existing prescriptions: " + existingPrescriptions);
+            System.out.print("Enter the number of new prescriptions to add: ");
+            int numPrescriptions = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            for (int i = 0; i < numPrescriptions; i++) {
+                System.out.println("Prescription ID: " + (existingPrescriptions + i + 1));
+                System.out.print("Enter medication name: ");
+                String medicationName = scanner.nextLine();
+                System.out.print("Enter dosage: ");
+                int dosage = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                newPrescriptions.add(new Prescription((existingPrescriptions + i + 1), medicationName, dosage));
+            }
+    
+            // Collect new treatments
+            ArrayList<Treatment> newTreatments = new ArrayList<>();
+            int existingTreatments = medicalRecord.getTreatments().size();
+            System.out.println("Number of existing treatments: " + existingTreatments);
+            System.out.print("Enter the number of new treatments to add: ");
+            int numTreatments = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            for (int i = 0; i < numTreatments; i++) {
+                System.out.println("Treatment ID: " + (existingTreatments + i + 1));
+                System.out.print("Enter treatment name: ");
+                String treatmentName = scanner.nextLine();
+                System.out.print("Enter start date (YYYY-MM-DD): ");
+                String startDate = scanner.nextLine();
+                System.out.print("Enter end date (YYYY-MM-DD): ");
+                String endDate = scanner.nextLine();
+                if (startDate.compareTo(endDate) > 0) {
+                    System.out.println("Start date is after end date; adjusting end date to match start date.");
+                    endDate = startDate;
+                }
+                newTreatments.add(new Treatment(treatmentName, startDate, endDate));
+            }
+    
+            // Update the medical record
+            medicalRecord.updateMedicalRecord(newDiagnoses, newLabTests, newPrescriptions, newTreatments);
+            System.out.println("Medical records updated successfully for " + patient.getName());
+    
         } else {
-            System.out.println("Patient not found.");
+            System.out.println("Patient with Hospital ID " + hospitalID + " not found.");
         }
     }
-
+    
     // 3. View Personal Schedule
     private void viewPersonalSchedule() {
-        doctor.displayAppointments();
+        List<Appointment> appointments = doctor.getAppointments(); // Assuming this returns all appointments for the doctor
+        List<Appointment> confirmedAppointments = new ArrayList<>();
+    
+        // Filter out confirmed appointments
+        for (Appointment appointment : appointments) {
+            if (appointment.getStatus() == AppointmentStatus.CONFIRMED) { // Assuming AppointmentStatus is an enum with CONFIRMED status
+                confirmedAppointments.add(appointment);
+            }
+        }
+    
+        if (confirmedAppointments.isEmpty()) {
+            System.out.println("No confirmed upcoming appointments.");
+        } else {
+            System.out.println("-- Confirmed Upcoming Appointments --");
+            for (Appointment appointment : confirmedAppointments) {
+                System.out.println(appointment);
+            }
+        }
     }
+    
 
     // 4. Set Availability for Appointments
     private void setAvailabilityForAppointments() {
         System.out.println("Setting availability...");
-        // Example: prompt doctor to choose time slots or set availability for specific dates
-        System.out.println("Enter the start and end time of availability (HH:mm): ");
+    
+        // Prompt the doctor to enter the new availability range
+        System.out.print("Enter the start time of availability (HH:mm): ");
         String startTime = scanner.next();
+        System.out.print("Enter the end time of availability (HH:mm): ");
         String endTime = scanner.next();
-        // Update availability logic (perhaps modify doctor’s schedule)
+    
+        // Validate and update the time slots
+        if (isValidTime(startTime) && isValidTime(endTime) && startTime.compareTo(endTime) < 0) {
+            doctor.getCalendar().setAppointmentTime(startTime, endTime); // Update the calendar's time slots
+            System.out.println("Availability updated successfully from " + startTime + " to " + endTime + ".");
+        } else {
+            System.out.println("Invalid time range. Please try again.");
+        }
     }
-
+    
+    // Helper method to validate time format (HH:mm)
+    private boolean isValidTime(String time) {
+        try {
+            String[] parts = time.split(":");
+            if (parts.length != 2) return false;
+    
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
     // 5. Accept or Decline Appointment Requests
     private void acceptOrDeclineAppointments() {
         System.out.print("Enter the appointment ID to manage: ");
@@ -136,15 +260,7 @@ public class DoctorUI {
 
     // 6. View Upcoming Appointments
     private void viewUpcomingAppointments() {
-        List<Appointment> appointments = doctor.getAppointments(); // Assuming method to get doctor's appointments
-        if (appointments.isEmpty()) {
-            System.out.println("No upcoming appointments.");
-        } else {
-            System.out.println("-- Upcoming Appointments --");
-            for (Appointment appointment : appointments) {
-                System.out.println(appointment);
-            }
-        }
+        doctor.displayAppointments();
     }
 
     // 7. Record Appointment Outcome
@@ -171,7 +287,7 @@ public class DoctorUI {
                         break;
                     }
                     System.out.print("Dosage (mg): ");
-                    String dosage = scanner.nextLine();
+                    int dosage = scanner.nextInt();
                     scanner.nextLine(); // Consume the newline character
                     prescribedMedications.add(new MedicationRecord(medicationName, dosage));
                 }
@@ -193,10 +309,15 @@ public class DoctorUI {
 
 
     // Helper methods to get Patient and Appointment (mock implementations)
-    private Patient getPatientByHospitalID(int hospitalID) {
-        // Implement logic to fetch patient by hospital ID from the database or list
-        return null; // Mock return for now
+    private Patient getPatientByHospitalID(String HospitalID) {
+        for (Patient p : doctor.getPatientList()) {
+            if (p.getHospitalID().equals(HospitalID)) {
+                return p; // Return the patient if found
+            }
+        }
+        return null; // Return null if no patient is found
     }
+    
 
     private Appointment getAppointmentByID(int appointmentID) {
         // Implement logic to fetch appointment by ID from the database or list

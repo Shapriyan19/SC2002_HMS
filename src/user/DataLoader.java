@@ -14,7 +14,7 @@ public class DataLoader {
         loadAdministrators();
         loadPharmacists();
         loadPatients();
-        //createRandomAppointments();  // New method to schedule random appointments after loading data
+        createRandomAppointments();  // New method to schedule random appointments after loading data
     }
 
     // Load doctors from CSV and store in Doctor's static list
@@ -83,34 +83,57 @@ public class DataLoader {
     }
 
     //New method to create random appointments
-    // private static void createRandomAppointments() {
-    //     Random random = new Random();
+    private static void createRandomAppointments() {
+        Random random = new Random();
+    
+        List<Patient> patients = Patient.getPatientsList();
+        List<Doctor> doctors = Doctor.getDoctorsList();
+    
+        // Randomly assign appointments for patients with doctors
+        for (Patient patient : patients) {
+            Doctor doctor = doctors.get(random.nextInt(doctors.size()));  // Random doctor from the list
+    
+            // Randomly choose a day in November
+            int day = random.nextInt(30) + 1;  // Random day between 1 and 30
+    
+            // Format the day to always have two digits
+            String formattedDay = String.format("%02d", day);
+    
+            // Construct the date string as "2024-11-xx" with a properly formatted day
+            String date = "2024-11-" + formattedDay;
+    
+            // Randomly choose a time slot
+            String startTime = "10:00 AM";
+            String endTime = "10:30 AM";  // Example of a 30-minute appointment slot
+            TimeSlot timeSlot = new TimeSlot(startTime, endTime);
+    
+            // Create an Appointment and AppointmentScheduler
+            Appointment appointment = new Appointment(patient, doctor, date, timeSlot);
+            AppointmentScheduler scheduler = new AppointmentScheduler(appointment);
+    
+            // Try to schedule the appointment
+            System.out.println("Scheduling appointment for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + date);
+            scheduler.scheduleAppointment();  // This will schedule the appointment and print whether it was successful or not
+    
+            // Add the appointment to the doctor's calendar
+            doctor.getCalendar().addAppointment(appointment);
+    
+            // Add the patient to the doctor's patientList if not already present
+            if (!doctor.getPatientList().contains(patient)) {
+                doctor.getPatientList().add(patient);
+            }
+        }
+    
+        //Optionally display doctor appointments for verification
+        // for (Doctor doctor : doctors) {
+        //     //doctor.displayAppointments();
+        //     //System.out.printf("No of patients: %d",doctor.getPatientListSize());
+        //     //doctor.viewAllPatientMedicalRecords();
+        // }
 
-    //     List<Patient> patients = Patient.getPatientsList();
-    //     List<Doctor> doctors = Doctor.getDoctorsList();
-
-    //     // Randomly assign appointments for patients with doctors
-    //     for (Patient patient : patients) {
-    //         Doctor doctor = doctors.get(random.nextInt(doctors.size()));  // Random doctor from the list
-
-    //         // Randomly choose a date in November
-    //         String date = "2024-11-" + (random.nextInt(30) + 1);
-
-    //         // Randomly choose a time slot
-    //         String startTime = "10:00 AM";
-    //         String endTime = "10:30 AM";  // Example of a 30-minute appointment slot
-    //         TimeSlot timeSlot = new TimeSlot(startTime, endTime);
-
-    //         // Create an Appointment and AppointmentScheduler
-    //         Appointment appointment = new Appointment(patient, doctor, date, timeSlot);
-    //         AppointmentScheduler scheduler = new AppointmentScheduler(appointment);
-
-    //         // Try to schedule the appointment
-    //         System.out.println("Scheduling appointment for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + date);
-    //         scheduler.scheduleAppointment();  // This will schedule the appointment and print whether it was successful or not
-    //     }
-    // }
-
+        
+    }
+    
     // Load administrators from CSV and store in Administrator's static list (implement similarly)
     private static void loadAdministrators() {
         File file = new File("Data/Staff_List.csv");

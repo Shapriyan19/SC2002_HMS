@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 //accessing appointment package
@@ -68,9 +70,6 @@ public class Patient extends User {
         // Generate random appointments and medical records
         this.calendar = new Calendar("November");  // Initialize with a default or specific month
         this.medicalRecord = generateRandomMedicalRecord(); // Create a random medical record
-        
-        // Generate some random appointments
-        // generateRandomAppointments();
 
         patientsList.add(this);
     }
@@ -182,11 +181,16 @@ public class Patient extends User {
     }
 
     public static void updateCSV() {
+        Map<String, Patient> uniquePatients = new HashMap<>();
+        for (Patient patient : patientsList) {
+            uniquePatients.put(patient.getHospitalID(), patient);  // This assumes getHospitalID() method exists and returns a unique identifier
+        }
+
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("Data/Patient_List.csv"));
             writer.write("Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email");
             writer.newLine();
-            for (Patient patient : patientsList) {
+            for (Patient patient : uniquePatients.values()) {
                 writer.write(patient.toCSVFormat());
                 writer.newLine();
             }
@@ -198,8 +202,8 @@ public class Patient extends User {
     }
 
     private String toCSVFormat() {
-        return HospitalID + "," + name + ","+ password + "," + dateOfBirth + "," + gender + "," + bloodType + ","
-                + phoneNumber + "," + email;
+        // Formatting the patient data for CSV output
+        return getHospitalID() + "," + name + "," + password + "," + dateOfBirth + "," + gender + "," + bloodType + "," + phoneNumber + "," + email;
     }
 
     //methods to book appointment
