@@ -15,6 +15,11 @@ public class Medication implements InventoryItem {
         this.price = price;
     }
 
+    //to be used by medical record
+    public Medication(String name){
+        this.name=name;
+    }
+
     @Override
     public String getName() {
         return name;

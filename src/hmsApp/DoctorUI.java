@@ -2,6 +2,7 @@ package hmsApp;
 
 
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import medical.Diagnosis;
 import medical.LabTest;
@@ -38,8 +39,9 @@ public class DoctorUI {
             System.out.println("4. Set Availability for Appointments");
             System.out.println("5. Accept or Decline Appointment Requests");
             System.out.println("6. View Upcoming Appointments");
-            System.out.println("7. Record Appointment Outcome");
-            System.out.println("8. Logout");
+            System.out.println("7. Complete Appointment");
+            System.out.println("8. Record Appointment Outcome");
+            System.out.println("9. Logout");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
@@ -63,15 +65,18 @@ public class DoctorUI {
                     viewUpcomingAppointments();
                     break;
                 case 7:
-                    recordAppointmentOutcome();
+                    completeAppointment();
                     break;
                 case 8:
+                    recordAppointmentOutcome();
+                    break;
+                case 9:
                     System.out.println("Logging out...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 8);
+        } while (choice !=9);
     }
 
     // 1. View Patient Medical Records
@@ -184,22 +189,15 @@ public class DoctorUI {
     // 3. View Personal Schedule
     private void viewPersonalSchedule() {
         List<Appointment> appointments = doctor.getAppointments(); // Assuming this returns all appointments for the doctor
-        List<Appointment> confirmedAppointments = new ArrayList<>();
-    
-        // Filter out confirmed appointments
-        for (Appointment appointment : appointments) {
-            if (appointment.getStatus() == AppointmentStatus.CONFIRMED) { // Assuming AppointmentStatus is an enum with CONFIRMED status
-                confirmedAppointments.add(appointment);
-            }
-        }
-    
+        List<Appointment> confirmedAppointments = appointments.stream()
+                                                              .filter(app -> app.getStatus() == AppointmentStatus.CONFIRMED)
+                                                              .collect(Collectors.toList());
+
         if (confirmedAppointments.isEmpty()) {
             System.out.println("No confirmed upcoming appointments.");
         } else {
             System.out.println("-- Confirmed Upcoming Appointments --");
-            for (Appointment appointment : confirmedAppointments) {
-                System.out.println(appointment);
-            }
+            confirmedAppointments.forEach(app -> System.out.println(app));
         }
     }
     
@@ -239,74 +237,149 @@ public class DoctorUI {
     
     // 5. Accept or Decline Appointment Requests
     private void acceptOrDeclineAppointments() {
+        List<Appointment> pendingAppointments = doctor.getAppointments().stream()
+                                                    .filter(app -> app.getStatus() == AppointmentStatus.PENDING)
+                                                    .collect(Collectors.toList());
+
+        if (pendingAppointments.isEmpty()) {
+            System.out.println("No pending appointments to manage.");
+            return;
+        }
+
+        System.out.println("Pending Appointments:");
+        pendingAppointments.forEach(appointment -> {
+            System.out.println("Appointment ID: " + appointment.getAppointmentID() +
+                            ", Patient: " + appointment.getPatient().getName() +
+                            ", Date: " + appointment.getDate() +
+                            ", Time: " + appointment.getTimeSlot().toString() +
+                            ", Status: " + appointment.getStatus());
+        });
+
         System.out.print("Enter the appointment ID to manage: ");
         int appointmentID = scanner.nextInt();
-        Appointment appointment = getAppointmentByID(appointmentID); // Assuming method to fetch appointment
+        Appointment appointment = pendingAppointments.stream()
+                                                    .filter(app -> app.getAppointmentID() == appointmentID)
+                                                    .findFirst()
+                                                    .orElse(null);
+
         if (appointment != null) {
             System.out.println("1. Confirm Appointment");
             System.out.println("2. Cancel Appointment");
             int decision = scanner.nextInt();
             if (decision == 1) {
-                appointment.setStatus(AppointmentStatus.CONFIRMED); // Assuming AppointmentStatus enum
-                System.out.println("Appointment accepted.");
+                doctor.confirmAppointment(appointment);
+                System.out.println("Appointment confirmed for patient: " + appointment.getPatient().getName());
             } else if (decision == 2) {
-                appointment.setStatus(AppointmentStatus.CANCELLED);
-                System.out.println("Appointment declined.");
+                doctor.cancelAppointment(appointment);
+                System.out.println("Appointment declined for patient: " + appointment.getPatient().getName());
             }
         } else {
-            System.out.println("Appointment not found.");
+            System.out.println("Appointment ID not found. Please try again.");
         }
     }
+    
 
     // 6. View Upcoming Appointments
     private void viewUpcomingAppointments() {
         doctor.displayAppointments();
     }
 
-    // 7. Record Appointment Outcome
+
+    // 7. Complete Appointment
+    private void completeAppointment() {
+        // Display all confirmed appointments
+        List<Appointment> confirmedAppointments = doctor.getAppointments().stream()
+                                                        .filter(app -> app.getStatus() == AppointmentStatus.CONFIRMED)
+                                                        .collect(Collectors.toList());
+        if (confirmedAppointments.isEmpty()) {
+            System.out.println("No confirmed appointments available to record outcomes.");
+            return;
+        }
+    
+        // Display the confirmed appointments
+        System.out.println("Confirmed appointments:");
+        for (int i = 0; i < confirmedAppointments.size(); i++) {
+            Appointment app = confirmedAppointments.get(i);
+            System.out.println((i + 1) + ". Appointment ID: " + app.getAppointmentID() + 
+                               " | Patient: " + app.getPatient().getName() + 
+                               " | Date: " + app.getDate() +
+                               " | Time: " + app.getTimeSlot().toString());
+        }
+    
+        // Ask the doctor to select an appointment to complete
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Select an appointment to complete (enter the number): ");
+        int appointmentIndex = scanner.nextInt() - 1;
+    
+        if (appointmentIndex < 0 || appointmentIndex >= confirmedAppointments.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+    
+        // Get the selected appointment
+        Appointment selectedAppointment = confirmedAppointments.get(appointmentIndex);
+    
+        // Change the status of the selected appointment to COMPLETED
+        selectedAppointment.setStatus(AppointmentStatus.COMPLETED);
+        System.out.println("Appointment " + selectedAppointment.getAppointmentID() + " has been marked as completed.");
+    }
+    
+    // 8. Record Appointment Outcome
     private void recordAppointmentOutcome() {
+        // Display all completed appointments
+        List<Appointment> completedAppointments = doctor.getAppointments().stream()
+                                                        .filter(app -> app.getStatus() == AppointmentStatus.COMPLETED)
+                                                        .collect(Collectors.toList());
+    
+        if (completedAppointments.isEmpty()) {
+            System.out.println("No completed appointments available to record outcomes.");
+            return;
+        }
+    
+        System.out.println("Completed Appointments:");
+        completedAppointments.forEach(appointment -> {
+            System.out.println("Appointment ID: " + appointment.getAppointmentID() +
+                            ", Patient: " + appointment.getPatient().getName() +
+                            ", Date: " + appointment.getDate());
+        });
+    
         System.out.print("Enter the appointment ID to record outcome: ");
         int appointmentID = scanner.nextInt();
-        Appointment appointment = getAppointmentByID(appointmentID); // Assuming method to fetch appointment
+        Appointment appointment = completedAppointments.stream()
+                                                    .filter(app -> app.getAppointmentID() == appointmentID)
+                                                    .findFirst()
+                                                    .orElse(null);
+    
         if (appointment != null) {
-            // Check if the appointment is completed before recording outcome
-            if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
-                scanner.nextLine();  // Consume newline character
-
-                // Input service type
-                System.out.print("Enter the service type for this appointment: ");
-                String serviceType = scanner.nextLine();
-
-                // Input prescribed medications (this can be a list, so we will collect multiple medications)
-                List<MedicationRecord> prescribedMedications = new ArrayList<>();
-                System.out.println("Enter prescribed medications (type 'done' to finish):");
-                while (true) {
-                    System.out.print("Medication Name: ");
-                    String medicationName = scanner.nextLine();
-                    if (medicationName.equalsIgnoreCase("done")) {
-                        break;
-                    }
-                    System.out.print("Dosage (mg): ");
-                    int dosage = scanner.nextInt();
-                    scanner.nextLine(); // Consume the newline character
-                    prescribedMedications.add(new MedicationRecord(medicationName, dosage));
+            scanner.nextLine();  // Consume newline character
+    
+            System.out.print("Enter the service type for this appointment: ");
+            String serviceType = scanner.nextLine();
+    
+            List<MedicationRecord> prescribedMedications = new ArrayList<>();
+            System.out.println("Enter prescribed medications (type 'done' to finish):");
+            while (true) {
+                System.out.print("Medication Name: ");
+                String medicationName = scanner.nextLine();
+                if (medicationName.equalsIgnoreCase("done")) {
+                    break;
                 }
-
-                // Input consultation notes
-                System.out.print("Enter consultation notes: ");
-                String consultationNotes = scanner.nextLine();
-
-                // Set the outcome record
-                appointment.setOutcomeRecord(serviceType, prescribedMedications, consultationNotes);
-                System.out.println("Outcome recorded successfully.");
-            } else {
-                System.out.println("Appointment must be completed before adding an outcome record.");
+                System.out.print("Dosage (mg): ");
+                int dosage = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+                prescribedMedications.add(new MedicationRecord(medicationName, dosage));
             }
+    
+            System.out.print("Enter consultation notes: ");
+            String consultationNotes = scanner.nextLine();
+    
+            // Set the outcome record without checking medication inventory
+            appointment.setOutcomeRecord(serviceType, prescribedMedications, consultationNotes);
+            System.out.println("Outcome recorded successfully.");
         } else {
-            System.out.println("Appointment not found.");
+            System.out.println("No appointment found with the provided ID. Please try again.");
         }
-    }
-
+    }    
 
     // Helper methods to get Patient and Appointment (mock implementations)
     private Patient getPatientByHospitalID(String HospitalID) {
@@ -320,9 +393,14 @@ public class DoctorUI {
     
 
     private Appointment getAppointmentByID(int appointmentID) {
-        // Implement logic to fetch appointment by ID from the database or list
-        return null; // Mock return for now
+        for (Appointment app : doctor.getAppointments()) {
+            if (app.getAppointmentID() == appointmentID) {
+                return app;
+            }
+        }
+        return null; // if no appointment matches
     }
+
 }
 
 
