@@ -51,7 +51,7 @@ public class PatientUI {
                     cancelAnAppointment();
                     break;
                 case 6:
-                    patient.viewAndPayForAppointment();
+                    viewAndPayForAppointment();
                     break;
                 case 7:
                     System.out.println("Logging out...");
