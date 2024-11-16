@@ -124,10 +124,10 @@ public class DataLoader {
             }
         }
     
-        // Optionally display doctor appointments for verification
-        // for (Doctor doctor : doctors) {
-        //     doctor.displayAppointments();
-        // }
+        //Optionally display doctor appointments for verification
+        for (Doctor doctor : doctors) {
+            doctor.displayAppointments();
+        }
     }
     
     

@@ -171,7 +171,7 @@ public class DoctorUI {
                         break;
                     }
                     System.out.print("Dosage (mg): ");
-                    String dosage = scanner.nextLine();
+                    int dosage = scanner.nextInt();
                     scanner.nextLine(); // Consume the newline character
                     prescribedMedications.add(new MedicationRecord(medicationName, dosage));
                 }
