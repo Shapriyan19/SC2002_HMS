@@ -7,14 +7,14 @@ import java.util.Scanner;
 public class LoginFunctionality {
 
     public static void main(String[] args) {
-        // Sample users for testing
+        // Load sample users or data for testing
         DataLoader.loadAllData();
 
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to the HMS Login System!");
 
-        // Prompt user for login
+        // Prompt user for login credentials
         System.out.print("Enter your Staff/Patient ID: ");
         String id = scanner.nextLine();
 
@@ -27,14 +27,13 @@ public class LoginFunctionality {
         if (loggedInUser != null) {
             System.out.println("Login successful!");
             System.out.println("Welcome, " + loggedInUser.getRole() + " " + loggedInUser.getHospitalID() + "!");
+
+            // Navigate to the corresponding UI
+            navigateToRoleUI(loggedInUser);
         } else {
             System.out.println("Invalid credentials. Please try again.");
         }
 
-        // Debugging: Create a new pharmacist and add to CSV
-        Pharmacist pharmacist1 = new Pharmacist(Role.PHARMACIST, "abc", "M", 29);
-        System.out.println("Pharmacist object created and added to CSV.");
-        
         scanner.close();
     }
 
@@ -71,5 +70,32 @@ public class LoginFunctionality {
         }
 
         return null; // No matching user found
+    }
+
+    // Navigate to the corresponding UI based on the user's role
+    private static void navigateToRoleUI(User user) {
+        Role role = user.getRole();
+
+        switch (role) {
+            case Role.ADMINISTRATOR:
+                AdministratorUI adminUI = new AdministratorUI((Administrator) user);
+                adminUI.showMenu();
+                break;
+            case Role.DOCTOR:
+                DoctorUI doctorUI = new DoctorUI((Doctor) user);
+                doctorUI.showMenu();
+                break;
+            case Role.PATIENT:
+                PatientUI patientUI = new PatientUI((Patient) user);
+                patientUI.showMenu();
+                break;
+            case Role.PHARMACIST:
+                PharmacistUI pharmacistUI = new PharmacistUI((Pharmacist) user);
+                pharmacistUI.showMenu();
+                break;
+            default:
+                System.out.println("Role not recognized. Cannot proceed to UI.");
+                break;
+        }
     }
 }

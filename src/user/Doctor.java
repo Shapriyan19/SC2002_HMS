@@ -21,11 +21,7 @@ import java.util.List;
 public class Doctor extends User {
 
     private static List<Doctor> doctorsList=new ArrayList<>();
-    // Instance variables
-    // private String doctorID; to be removed
     private String name;
-    // private String specialisation;
-    // private List<String> schedule;
     private List<Patient> patientList;
     private String gender;
     private int age;
@@ -152,18 +148,6 @@ public class Doctor extends User {
             System.out.println("Cannot reschedule appointment. Status: " + appointment.getStatus());
         }
     }
-
-    // Function to view all appointments for the doctor in the current month
-    // public void viewAppointmentsForMonth() {
-    //     List<Appointment> appointments = calendar.getAppointmentsForMonth();
-    //     if (appointments.isEmpty()) {
-    //         System.out.println("No appointments for this month.");
-    //     } else {
-    //         for (Appointment app : appointments) {
-    //             System.out.println("Appointment ID: " + app.getAppointmentID() + " | Patient: " + app.getPatient().getName() + " | Status: " + app.getStatus());
-    //         }
-    //     }
-    // }
 
     public void displayAppointments() {
         List<Appointment> doctorAppointments = calendar.getAppointmentsForDoctor(this);

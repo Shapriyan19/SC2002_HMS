@@ -1,7 +1,3 @@
 Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email
-<<<<<<< HEAD
-PA0000,Jamie,password,1993-01-01,Male,O-,1234567880,hello@example.com
-PA0001,Muru,password,1995-01-01,Male,B+,1234567860,muru.doe@example.com
-=======
-PA0000,John Doe,password,1990-05-15,Male,O+,1234567890,johndoe@example.com
->>>>>>> 5a47d342bd7111452988139ae4e40febeb91d16e
+PA0000,John Doe,password,01/01/1985,Male,O+,1234567890,johndoe@example.com
+PA0001,Jack,password,01/01/1999,Male,O+,1234567890,johndoe@example.com
