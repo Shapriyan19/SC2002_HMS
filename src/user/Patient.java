@@ -68,9 +68,6 @@ public class Patient extends User {
         // Generate random appointments and medical records
         this.calendar = new Calendar("November");  // Initialize with a default or specific month
         this.medicalRecord = generateRandomMedicalRecord(); // Create a random medical record
-        
-        // Generate some random appointments
-        generateRandomAppointments();
 
         patientsList.add(this);
     }
@@ -132,20 +129,20 @@ public class Patient extends User {
     }
     
     // Method to generate random appointments
-     private void generateRandomAppointments() {
-        Random random = new Random();
-        for (int i = 0; i < random.nextInt(3) + 1; i++) {  // Random between 1 and 3 appointments
-            // Assume Doctor class exists with available time slots and a method to schedule appointments
-            Doctor doctor = new Doctor("Doctor " + (i + 1), "Specialty " + (i + 1));  // Create a random doctor
-            String date = "2024-11-" + (random.nextInt(30) + 1);  // Random date in November 2024
-            TimeSlot timeSlot = new TimeSlot("10:00 AM");  // Random time slot
+    //  private void generateRandomAppointments() {
+    //     Random random = new Random();
+    //     for (int i = 0; i < random.nextInt(3) + 1; i++) {  // Random between 1 and 3 appointments
+    //         // Assume Doctor class exists with available time slots and a method to schedule appointments
+    //         Doctor doctor = new Doctor("Doctor " + (i + 1), "Specialty " + (i + 1));  // Create a random doctor
+    //         String date = "2024-11-" + (random.nextInt(30) + 1);  // Random date in November 2024
+    //         TimeSlot timeSlot = new TimeSlot("10:00 AM");  // Random time slot
 
-            // Schedule a random appointment
-            Appointment appointment = new Appointment(this, doctor, date, timeSlot);
-            this.appointments.add(appointment);
-            this.calendar.addAppointment(appointment);
-        }
-    }
+    //         // Schedule a random appointment
+    //         Appointment appointment = new Appointment(this, doctor, date, timeSlot);
+    //         this.appointments.add(appointment);
+    //         this.calendar.addAppointment(appointment);
+    //     }
+    // }
 
     // Getter method for medical record
     public MedicalRecord getMedicalRecord() {

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import user.Doctor;
+import java.time.LocalDate;
 
 public class Calendar {
     private YearMonth yearMonth;
@@ -75,10 +76,25 @@ public class Calendar {
 
     public List<Appointment> getAppointmentsForMonth() {
         List<Appointment> appointmentsInMonth = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
         for (Appointment app : appointments) {
-            YearMonth appointmentYearMonth = YearMonth.parse(app.getDate(), DateTimeFormatter.ISO_DATE);
-            if (appointmentYearMonth.getYear() == this.yearMonth.getYear() && appointmentYearMonth.getMonth() == this.yearMonth.getMonth()) {
-                appointmentsInMonth.add(app);
+            // Ensure the date is formatted correctly
+            String formattedDate = app.getDate();
+            if (formattedDate.length() == 10 && formattedDate.charAt(5) == '-') {
+                try {
+                    // Try to parse the date with the proper format
+                    LocalDate parsedDate = LocalDate.parse(formattedDate, formatter);
+                    YearMonth appointmentYearMonth = YearMonth.from(parsedDate);
+    
+                    if (appointmentYearMonth.getYear() == this.yearMonth.getYear() && appointmentYearMonth.getMonth() == this.yearMonth.getMonth()) {
+                        appointmentsInMonth.add(app);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid date format for appointment: " + formattedDate);
+                }
+            } else {
+                System.out.println("Invalid date format: " + formattedDate);
             }
         }
         return appointmentsInMonth;

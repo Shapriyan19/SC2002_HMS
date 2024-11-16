@@ -47,7 +47,7 @@ public class Doctor extends User {
         this.name = name;
         // this.specialisation = specialisation;
         // this.schedule = new ArrayList<>();
-        this.patientList = patientList;
+        this.patientList = patientList != null ? patientList : new ArrayList<>(); // Ensure it's never null
         this.gender = gender;
         this.age = age;
         this.calendar = new Calendar("November");
@@ -61,6 +61,8 @@ public class Doctor extends User {
         this.name=name;
         this.gender=gender;
         this.age=age;
+        this.calendar=new Calendar("November");
+        this.patientList = patientList != null ? patientList : new ArrayList<>(); // Ensure it's never null
         doctorsList.add(this);
     }
     
@@ -297,6 +299,10 @@ public class Doctor extends User {
     
     public static List<Doctor> getDoctorsList() {
         return doctorsList;
+    }
+
+    public List<Patient> getPatientList(){
+        return patientList;
     }
     // Getters and setters
     public String getDoctorID() {

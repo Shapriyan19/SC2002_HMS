@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class LoginFunctionality {
 
     public static void main(String[] args) {
-        Administrator admin=new Administrator(Role.ADMINISTRATOR, "Pavithra", "female", 23);
         
         // Load sample users or data for testing
         DataLoader.loadAllData();

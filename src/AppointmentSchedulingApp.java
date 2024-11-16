@@ -3,7 +3,7 @@ import user.*;
 
 public class AppointmentSchedulingApp {
     public static void main(String[] args) {
-        DataLoader.loadAllData(); // Load data from CSV files
+        //DataLoader.loadAllData(); // Load data from CSV files
         // Create a doctor
         Doctor doctor = new Doctor(Role.DOCTOR, "John Doe", "M", 45);
         
