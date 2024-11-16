@@ -297,6 +297,56 @@ public class Pharmacist extends User {
     private String toCSVFormat() {
         return HospitalID + "," + name + ","+ password + "," + role + "," + gender + "," + age;
     }
+}
+
+    // Method to export inventory to CSV
+    // public void exportInventoryToCSV(String filePath) {
+    //     try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+    //         writer.println("MedicationID,Name,StockLevel,LowStockAlertLevel");
+    //         for (Medication medication : inventory.getAllMedications().values()) {
+    //             writer.println(medication.getMedicationID() + "," 
+    //                            + medication.getName() + "," 
+    //                            + medication.getStockLevel() + "," 
+    //                            + medication.getLowStockLevelAlert());
+    //         }
+    //         System.out.println("Inventory successfully exported to CSV file: " + filePath);
+    //     } catch (IOException e) {
+    //         System.out.println("Error exporting inventory to CSV: " + e.getMessage());
+    //     }
+    // }
+
+    // Method to view the outcomes of appointments
+    // public void viewAppointmentOutcomeRecords() {
+    //     System.out.println("Viewing appointment outcome records:");
+    //     // Placeholder logic: Retrieve and display appointment outcomes that involve prescriptions
+    // }
+
+    // Method to update the status of a prescription
+    // public void updatePrescriptionStatus(Prescription prescription, PrescriptionStatus newStatus) {
+    //     System.out.println("Updating status of prescription ID: " + prescription.getPrescriptionID() + " to " + newStatus);
+    //     if (prescription != null) {
+    //         prescription.setStatus(newStatus);
+    //         System.out.println("Prescription ID " + prescription.getPrescriptionID() + " status updated to: " + newStatus);
+    //     } 
+    //     else {
+    //         System.out.println("Prescription not found.");
+    //     }
+    // }
+
+    // Method to view the current inventory of medications
+    // public void viewMedicationInventory() {
+    //     System.out.println("Medication Inventory:");
+    //     Map<Integer, Medication> medications = inventory.getAllMedications();
+    //     for (Medication medication : medications.values()) {
+    //         System.out.println("Medication: " + medication.getName() + ", ID: " + medication.getMedicationID() + ", Stock Level: " + medication.getStockLevel());
+    //     }
+    // }
+
+    // Method to submit a replenishment report
+    // public void submitReplenishmentReport(String medicationName, int quantityNeeded) {
+    //     System.out.println("Replenishment report submitted for medication: " + medicationName + ", Quantity needed: " + quantityNeeded);
+    //     // Implement logic to submit a replenishment report for low-stock medications
+    // }
 
     // Method to add a prescription to the pharmacist's list
     // public void addPrescription(Prescription prescription) {
@@ -333,4 +383,3 @@ public class Pharmacist extends User {
     //     inventory.addMedication(new Medication(medicationName, quantity,lowStockLevelAlert)); // Assuming Medication constructor takes name and stock level
     //     System.out.println("Added medication to inventory: " + medicationName + " (Quantity: " + quantity + ")"+" (Low Stock Alert Level: "+lowStockLevelAlert+")");
     // }
-}

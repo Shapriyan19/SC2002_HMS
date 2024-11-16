@@ -1,7 +1,2 @@
 Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email
-PA0002,Jane Smith,password,05-14-1992,Female,A,9876543210,janesmith@example.com
-PA0002,Jane Smith,password,05-14-1992,Female,A,9876543210,janesmith@example.com
-PA0003,Alice Brown,password,11-30-1978,Female,B+,1239874560,alicebrown@example.com
-PA0003,Alice Brown,password,11-30-1978,Female,B+,1239874560,alicebrown@example.com
-PA0000,John Doe,password,01/01/1985,Male,O+,1234567890,johndoe@example.com
-PA0001,Jack,password,01/01/1999,Male,O+,1234567890,johndoe@example.com
+PA0000,John Doe,password,1990-05-15,Male,O+,1234567890,johndoe@example.com
