@@ -126,7 +126,9 @@ public class DataLoader {
     
         //Optionally display doctor appointments for verification
         // for (Doctor doctor : doctors) {
-        //     doctor.displayAppointments();
+        //     //doctor.displayAppointments();
+        //     //System.out.printf("No of patients: %d",doctor.getPatientListSize());
+        //     //doctor.viewAllPatientMedicalRecords();
         // }
 
         

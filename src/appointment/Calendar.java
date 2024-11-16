@@ -42,6 +42,11 @@ public class Calendar {
         }
     }
 
+    private void setAppointmentTime(){
+        // change the time for the appointment
+        
+    }
+
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
         // Remove the time slot from the available time slots
