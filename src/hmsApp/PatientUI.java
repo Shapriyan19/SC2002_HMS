@@ -5,6 +5,9 @@ import user.Patient;
 import user.Doctor;
 import java.util.List;
 import java.util.Scanner;
+import billing.Invoice; 
+import billing.Bill;
+
 
 public class PatientUI {
 
@@ -25,11 +28,12 @@ public class PatientUI {
             System.out.println("3. Update My Personal Details");
             System.out.println("4. Schedule New Appointment");
             System.out.println("5. Cancel An Appointment");
-            System.out.println("6. Logout");
-
+            System.out.println("6. View and Pay for Appointment");
+            System.out.println("7. Logout");
+    
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-
+    
             switch (choice) {
                 case 1:
                     viewConfirmedAppointments();
@@ -47,14 +51,18 @@ public class PatientUI {
                     cancelAnAppointment();
                     break;
                 case 6:
+                    patient.viewAndPayForAppointment();
+                    break;
+                case 7:
                     System.out.println("Logging out...");
                     patient.logout();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 6);
+        } while (choice != 7);
     }
+    
 
     private void viewConfirmedAppointments() {
         List<Appointment> appointments = patient.getAppointments();
@@ -179,4 +187,80 @@ public class PatientUI {
                 System.out.println("Appointment ID not found or cannot be canceled.");
             }
         }
+
+
+        public void viewAndPayForAppointment() {
+            // Get the list of appointments from the patient
+            List<Appointment> appointments = patient.getAppointments();
+        
+            // Check if the patient has any appointments
+            if (appointments.isEmpty()) {
+                System.out.println("No appointments available to view or pay for.");
+                return;
+            }
+        
+            // Display all appointments for the patient
+            System.out.println("\n--- Your Appointments ---");
+            for (Appointment appointment : appointments) {
+                System.out.println(appointment);
+            }
+        
+            // Prompt the patient to enter the AppointmentID to pay for
+            System.out.print("\nEnter the Appointment ID you want to pay for: ");
+            int appointmentID = scanner.nextInt();
+        
+            // Find the appointment with the given AppointmentID
+            Appointment selectedAppointment = null;
+            for (Appointment appointment : appointments) {
+                if (appointment.getAppointmentID() == appointmentID) {
+                    selectedAppointment = appointment;
+                    break;
+                }
+            }
+        
+            if (selectedAppointment == null) {
+                System.out.println("Invalid Appointment ID. Please try again.");
+                return;
+            }
+        
+            // Ensure the appointment is completed
+            if (selectedAppointment.getStatus() != AppointmentStatus.COMPLETED) {
+                System.out.println("The selected appointment is not completed and cannot be invoiced.");
+                return;
+            }
+        
+            // Process the invoice and payment
+            processInvoiceAndPayment(selectedAppointment);
+        }
+        
+
+        private void processInvoiceAndPayment(Appointment appointment) {
+            // Retrieve the appointment outcome record
+            AppointmentOutcomeRecord outcome = appointment.getOutcomeRecord();
+            if (outcome == null) {
+                System.out.println("No outcome record available for the selected appointment.");
+                return;
+            }
+        
+            // Generate the invoice
+            Invoice invoice = new Invoice(patient.getName(), outcome); // No serviceCost parameter needed
+        
+            // Display the invoice to the patient
+            invoice.printInvoice();
+        
+            // Prompt the patient to confirm payment
+            System.out.print("\nDo you want to pay this bill? (yes/no): ");
+            scanner.nextLine(); // Consume newline
+            String decision = scanner.nextLine().trim().toLowerCase();
+        
+            if ("yes".equals(decision)) {
+                // Process the bill payment
+                Bill bill = new Bill(invoice);
+                bill.payBill();
+            } else {
+                System.out.println("Payment cancelled. Invoice remains unpaid.");
+            }
+        }
+        
+    
 }

@@ -1,5 +1,4 @@
 package billing;
-import billing.Invoice;
 
 public class Bill {
     private Invoice invoice;
