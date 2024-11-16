@@ -10,8 +10,8 @@ public class Billing implements Billable {
     @Override
     public void generateBill() {
         System.out.println("Generating bill for the following items:");
-        invoice.printInvoiceItems();
-        System.out.println("Total Amount: " + invoice.calculateTotal());
+        invoice.printInvoice();
+        System.out.println("Total Amount: " + invoice.getTotalCost());
     }
 
     @Override

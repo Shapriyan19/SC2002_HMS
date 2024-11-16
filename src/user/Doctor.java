@@ -6,7 +6,7 @@ import medical.LabTest;
 import medical.MedicalRecord;
 import medical.Prescription;
 import medical.Treatment;
-import user.Patient;
+// import user.Patient;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -3,6 +3,9 @@ package user;
 import inventory.Inventory;
 import inventory.Medication;
 import inventory.MedicationOrder;
+import inventory.ReplenishmentRequest;
+import appointment.Appointment;
+import appointment.Calendar;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,16 +29,17 @@ public class Administrator extends User {
     private String gender;
     private int age;
     private static Inventory inventory;
+    // private Calendar calendar;
     
 
-    // Constructor
-    public Administrator(Role role, String name,String gender, int age) {
+        // Constructor
+        // Constructor
+    public Administrator(Role role, String name, String gender, int age) {
         super(generateNewHospitalID(role), role);
-        // this.adminID = adminID;  to be removed
         this.name = name;
-        // this.inventory=inventory;
-        this.gender=gender;
-        this.age=age;
+        this.gender = gender;
+        this.age = age;
+        // this.calendar = new Calendar("November"); // Initialize the calendar instance
         administratorList.add(this);
         if (inventory == null) {
             inventory = new Inventory();
@@ -43,19 +47,65 @@ public class Administrator extends User {
         updateCSV();
     }
 
-    //Constructor to get from CSV File
-    public Administrator(String hospitalID,String name,String password,Role role,String gender,int age){
-        super(hospitalID, role,password);
-        this.name=name;
-        this.gender=gender;
-        this.age=age;
+    // Constructor to get from CSV File
+    public Administrator(String hospitalID, String name, String password, Role role, String gender, int age) {
+        super(hospitalID, role, password);
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        // this.calendar = new Calendar("November"); // Initialize the calendar instance
         administratorList.add(this);
         if (inventory == null) {
             inventory = new Inventory();
         }
     }
 
-    //viewappointment details
+    public void displayAppointments() {
+        List<Doctor> doctorsList = Doctor.getDoctorsList(); // Retrieve the list of all doctors
+        
+        if (doctorsList.isEmpty()) {
+            System.out.println("No doctors available to display appointments.");
+            return;
+        }
+    
+        System.out.println("--- All Doctors' Appointments ---");
+        
+        for (Doctor doctor : doctorsList) {
+            List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor);
+            System.out.println("Appointments for Dr. " + doctor.getName() + ":");
+            
+            if (doctorAppointments.isEmpty()) {
+                System.out.println("  No appointments scheduled for this doctor.");
+            } else {
+                for (Appointment app : doctorAppointments) {
+                    System.out.println("  Appointment ID: " + app.getAppointmentID() +
+                                       " | Patient: " + app.getPatient().getName() +
+                                       " | Date: " + app.getDate() +
+                                       " | Time: " + app.getTimeSlot().toString() +
+                                       " | Status: " + app.getStatus());
+                }
+            }
+            System.out.println(); // Add a line break between doctors
+        }
+    }
+    
+
+
+    // public void displayAppointments() {
+    //     List<Appointment> doctorAppointments = calendar.getAppointmentsForDoctor(this);
+    //     if (doctorAppointments.isEmpty()) {
+    //         System.out.println("No appointments scheduled for Dr. " + this.name);
+    //     } else {
+    //         System.out.println("Appointments for Dr. " + this.name + ":");
+    //         for (Appointment app : doctorAppointments) {
+    //             System.out.println("Appointment ID: " + app.getAppointmentID() +
+    //                             " | Patient: " + app.getPatient().getName() +
+    //                             " | Date: " + app.getDate() +
+    //                             " | Time: " + app.getTimeSlot().toString() +
+    //                             " | Status: " + app.getStatus());
+    //         }
+    //     }
+    // }
     
     public void viewHospitalStaff() {
         System.out.println("Hospital Staff List:");
@@ -264,7 +314,7 @@ public class Administrator extends User {
 
 
     // Helper methods to find staff by ID in each category
-    private Doctor findDoctorById(String id) {
+    public Doctor findDoctorById(String id) {
         for (Doctor doctor : Doctor.getDoctorsList()) {
             if (doctor.getHospitalID().equals(id)) {
                 return doctor;
@@ -273,7 +323,7 @@ public class Administrator extends User {
         return null;
     }
 
-    private Administrator findAdministratorById(String id) {
+    public Administrator findAdministratorById(String id) {
         for (Administrator admin : Administrator.getAdministratorsList()) {
             if (admin.getHospitalID().equals(id)) {
                 return admin;
@@ -282,7 +332,7 @@ public class Administrator extends User {
         return null;
     }
 
-    private Pharmacist findPharmacistById(String id) {
+    public Pharmacist findPharmacistById(String id) {
         for (Pharmacist pharmacist : Pharmacist.getPharmacistsList()) {
             if (pharmacist.getHospitalID().equals(id)) {
                 return pharmacist;
@@ -395,27 +445,54 @@ public class Administrator extends User {
     public void updateLowStockAlertLevel(String name, int newLowStockLevelAlert) {
         if (inventory.getAllMedications().containsKey(name)) {
             inventory.updateLowStockLevelAlert(name, newLowStockLevelAlert);
-            System.out.println("Updated low stock alert level of " + name + " to " + newLowStockLevelAlert);
+            // System.out.println("Updated low stock alert level of " + name + " to " + newLowStockLevelAlert);
         } else {
             System.out.println("Medication " + name + " does not exist in the inventory.");
         }
     }
 
-    public void approveReplenishmentRequest(String medicationName, int requestedQuantity) {
-        Medication medication = inventory.getAllMedications().get(medicationName);
+    public void approveReplenishmentRequest(ReplenishmentRequest request) {
+    String medicationName = request.getMedicationName();
+    int requestedQuantity = request.getRequestedQuantity();
+    String pharmacistName = request.getPharmacistName();
 
-        if (medication != null) {
+    Medication medication = inventory.getAllMedications().get(medicationName);
+
+    if (medication != null) {
+        // Check if stock level is below the alert threshold
+        if (medication.getStockLevel() < medication.getLowStockLevelAlert()) {
             // Update stock level with the requested quantity
             int newStockLevel = medication.getStockLevel() + requestedQuantity;
             inventory.updateStockLevel(medicationName, newStockLevel);
-            System.out.println("Replenishment request approved:");
+
+            System.out.println("Replenishment request approved by Administrator:");
+            System.out.println("Requested by Pharmacist: " + pharmacistName);
             System.out.println("Medication: " + medicationName);
             System.out.println("Requested Quantity: " + requestedQuantity);
             System.out.println("New Stock Level: " + newStockLevel);
         } else {
-            System.out.println("Medication " + medicationName + " not found in the inventory.");
+            System.out.println("Stock level for " + medicationName + " is sufficient. No replenishment needed.");
         }
-    }
+    } else {
+        System.out.println("Medication " + medicationName + " not found in the inventory.");}
+    }    
+
+
+    // public void approveReplenishmentRequest(String medicationName, int requestedQuantity) {
+    //     Medication medication = inventory.getAllMedications().get(medicationName);
+
+    //     if (medication != null) {
+    //         // Update stock level with the requested quantity
+    //         int newStockLevel = medication.getStockLevel() + requestedQuantity;
+    //         inventory.updateStockLevel(medicationName, newStockLevel);
+    //         System.out.println("Replenishment request approved:");
+    //         System.out.println("Medication: " + medicationName);
+    //         System.out.println("Requested Quantity: " + requestedQuantity);
+    //         System.out.println("New Stock Level: " + newStockLevel);
+    //     } else {
+    //         System.out.println("Medication " + medicationName + " not found in the inventory.");
+    //     }
+    // }
 
     // Login method implementation
     @Override
