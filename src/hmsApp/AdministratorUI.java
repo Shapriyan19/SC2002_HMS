@@ -1,16 +1,12 @@
 package hmsApp;
 
-import user.Administrator;
-import user.Doctor;
-import user.Patient;
-import user.Pharmacist;
-import user.Role;
-import inventory.Medication;
 import inventory.ReplenishmentRequest;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import user.Administrator;
+import user.Doctor;
+import user.Pharmacist;
+import user.Role;
 
 public class AdministratorUI {
 
@@ -29,7 +25,8 @@ public class AdministratorUI {
             System.out.println("2. View Appointments Details");
             System.out.println("3. View and Manage Medication Inventory");
             System.out.println("4. Approve Replenishment Requests");
-            System.out.println("5. Logout");
+            System.out.println("5. Change Password");
+            System.out.println("6. Logout");
             System.out.print("Select an option: ");
 
             int choice = scanner.nextInt();
@@ -49,6 +46,9 @@ public class AdministratorUI {
                     approveReplenishmentRequests();
                     break;
                 case 5:
+                    changePassword();
+                    break;
+                case 6:
                     logout();
                     return; // exit the UI
                 default:
@@ -603,7 +603,28 @@ public class AdministratorUI {
     //     }
     // }
 
-    
+    private void changePassword() {
+        System.out.println("\n--- Change Password ---");
+        
+        // Prompt user to enter the current password
+        System.out.print("Enter current password: ");
+        String currentPassword = scanner.nextLine();
+        
+        // Prompt user to enter the new password
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+        
+        // Call the changePassword method from the User class (admin in this case)
+        boolean passwordChanged = admin.changePassword(currentPassword, newPassword);
+        
+        // Check the result of the password change
+        if (passwordChanged) {
+            System.out.println("Password changed successfully.");
+        } else {
+            System.out.println("Password change failed. Incorrect current password.");
+        }
+    }
+
 
     private void logout() {
         System.out.println("\nLogging out. Goodbye, " + admin.getName() + "!");
