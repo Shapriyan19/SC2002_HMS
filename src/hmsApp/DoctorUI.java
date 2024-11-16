@@ -100,8 +100,26 @@ public class DoctorUI {
 
     // 3. View Personal Schedule
     private void viewPersonalSchedule() {
-        doctor.displayAppointments();
+        List<Appointment> appointments = doctor.getAppointments(); // Assuming this returns all appointments for the doctor
+        List<Appointment> confirmedAppointments = new ArrayList<>();
+    
+        // Filter out confirmed appointments
+        for (Appointment appointment : appointments) {
+            if (appointment.getStatus() == AppointmentStatus.CONFIRMED) { // Assuming AppointmentStatus is an enum with CONFIRMED status
+                confirmedAppointments.add(appointment);
+            }
+        }
+    
+        if (confirmedAppointments.isEmpty()) {
+            System.out.println("No confirmed upcoming appointments.");
+        } else {
+            System.out.println("-- Confirmed Upcoming Appointments --");
+            for (Appointment appointment : confirmedAppointments) {
+                System.out.println(appointment);
+            }
+        }
     }
+    
 
     // 4. Set Availability for Appointments
     private void setAvailabilityForAppointments() {
@@ -136,15 +154,7 @@ public class DoctorUI {
 
     // 6. View Upcoming Appointments
     private void viewUpcomingAppointments() {
-        List<Appointment> appointments = doctor.getAppointments(); // Assuming method to get doctor's appointments
-        if (appointments.isEmpty()) {
-            System.out.println("No upcoming appointments.");
-        } else {
-            System.out.println("-- Upcoming Appointments --");
-            for (Appointment appointment : appointments) {
-                System.out.println(appointment);
-            }
-        }
+        doctor.displayAppointments();
     }
 
     // 7. Record Appointment Outcome

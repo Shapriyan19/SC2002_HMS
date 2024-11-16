@@ -125,14 +125,13 @@ public class DataLoader {
         }
     
         //Optionally display doctor appointments for verification
-        for (Doctor doctor : doctors) {
-            doctor.displayAppointments();
-        }
+        // for (Doctor doctor : doctors) {
+        //     doctor.displayAppointments();
+        // }
+
+        
     }
     
-    
-    
-
     // Load administrators from CSV and store in Administrator's static list (implement similarly)
     private static void loadAdministrators() {
         File file = new File("Data/Staff_List.csv");
