@@ -7,6 +7,8 @@ import java.util.Scanner;
 public class LoginFunctionality {
 
     public static void main(String[] args) {
+        Administrator admin=new Administrator(Role.ADMINISTRATOR, "Pavithra", "female", 23);
+        
         // Load sample users or data for testing
         DataLoader.loadAllData();
 
@@ -45,27 +47,35 @@ public class LoginFunctionality {
         List<Pharmacist> pharmacistList = Pharmacist.getPharmacistsList();
 
         // Check each list for the given credentials
-        for (Administrator admin : adminList) {
-            if (admin.getHospitalID().equals(id) && admin.login(password)) {
-                return admin;
+        if (adminList != null) {
+            for (Administrator admin : adminList) {
+                if (admin.getHospitalID().equals(id) && admin.login(password)) {
+                    return admin;
+                }
             }
         }
 
-        for (Doctor doctor : doctorList) {
-            if (doctor.getHospitalID().equals(id) && doctor.login(password)) {
-                return doctor;
+        if (doctorList != null) {
+            for (Doctor doctor : doctorList) {
+                if (doctor.getHospitalID().equals(id) && doctor.login(password)) {
+                    return doctor;
+                }
             }
         }
 
-        for (Patient patient : patientList) {
-            if (patient.getHospitalID().equals(id) && patient.login(password)) {
-                return patient;
+        if (patientList != null) {
+            for (Patient patient : patientList) {
+                if (patient.getHospitalID().equals(id) && patient.login(password)) {
+                    return patient;
+                }
             }
         }
 
-        for (Pharmacist pharmacist : pharmacistList) {
-            if (pharmacist.getHospitalID().equals(id) && pharmacist.login(password)) {
-                return pharmacist;
+        if (pharmacistList != null) {
+            for (Pharmacist pharmacist : pharmacistList) {
+                if (pharmacist.getHospitalID().equals(id) && pharmacist.login(password)) {
+                    return pharmacist;
+                }
             }
         }
 
