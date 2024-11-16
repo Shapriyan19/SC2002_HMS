@@ -338,7 +338,6 @@ public class Doctor extends User {
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
-}
     // public String getSpecialisation() { 
     //     return specialisation; 
     // }
@@ -351,6 +350,20 @@ public class Doctor extends User {
     //     return patientList; 
     // }
 
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+}
     // public void addPatient(int patientID) {
     //     patientList.add(patientID);
     //     System.out.println("Added patient with ID: " + patientID);

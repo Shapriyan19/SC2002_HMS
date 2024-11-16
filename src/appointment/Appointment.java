@@ -36,6 +36,7 @@ public class Appointment {
 
     public void confirmAppointment() {
         this.status = AppointmentStatus.CONFIRMED;
+        this.timeSlot.setAvailability(false); // Mark the time slot as unavailable
     }
 
     public void cancelAppointment() {
@@ -98,6 +99,19 @@ public class Appointment {
             System.out.println("Appointment must be completed before adding an outcome record.");
         }
     }
+
+    public void setOutcome(String serviceType, String[] medications, String consultationNotes) {
+        if (this.status == AppointmentStatus.COMPLETED) {
+            List<MedicationRecord> medicationRecords = new ArrayList<>();
+            for (String med : medications) {
+                medicationRecords.add(new MedicationRecord(med));
+            }
+            this.outcomeRecord = new AppointmentOutcomeRecord(this.date, serviceType, medicationRecords, consultationNotes);
+        } else {
+            System.out.println("Appointment must be completed before adding an outcome record.");
+        }
+    }
+    
 
     public AppointmentOutcomeRecord getOutcomeRecord() {
         return outcomeRecord;
