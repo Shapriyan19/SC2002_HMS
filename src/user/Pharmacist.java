@@ -160,6 +160,28 @@ public class Pharmacist extends User {
     }
     }
 
+    // public void sendReplenishmentRequest(String medicationName, int requestedQuantity) {
+    //     Medication medication = inventory.getAllMedications().get(medicationName);
+    
+    //     if (medication != null) {
+    //         if (medication.getStockLevel() < medication.getLowStockLevelAlert()) {
+    //             // Create a replenishment request object
+    //             ReplenishmentRequest request = new ReplenishmentRequest(medicationName, requestedQuantity, this.getName());
+    
+    //             // Add the request to the shared list
+    //             ReplenishmentRequest.addReplenishmentRequest(request);
+    
+    //             System.out.println("Replenishment request submitted for approval.");
+    //             System.out.println("Medication: " + medicationName);
+    //             System.out.println("Requested Quantity: " + requestedQuantity);
+    //         } else {
+    //             System.out.println("Stock level for " + medicationName + " is sufficient. No replenishment needed.");
+    //         }
+    //     } else {
+    //         System.out.println("Medication " + medicationName + " does not exist in the inventory.");
+    //     }
+    // }
+    
     public void sendReplenishmentRequest(String medicationName, int requestedQuantity) {
         Medication medication = inventory.getAllMedications().get(medicationName);
     

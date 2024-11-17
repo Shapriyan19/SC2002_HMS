@@ -1,7 +1,7 @@
 medicationName,stockLevel,lowStockLevelAlert,price
 Paracetamol,100,20,5.99
 Aspirin,200,30,4.99
-abc,76,15,12.5
+abc,74,15,12.5
 Ibuprofen,75,10,8.49
 Amoxicillin,50,15,12.5
 Doxycycline,40,30,18.75

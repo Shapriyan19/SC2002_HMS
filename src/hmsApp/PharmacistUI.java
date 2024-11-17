@@ -333,6 +333,17 @@ public class PharmacistUI {
         pharmacist.viewMedicationInventory();
     }
 
+    // private void submitReplenishmentRequest() {
+    //     System.out.println("\n--- Submit Replenishment Request ---");
+    //     System.out.print("Enter Medication Name: ");
+    //     String name = scanner.nextLine();
+    //     System.out.print("Enter Quantity to Replenish: ");
+    //     int quantity = scanner.nextInt();
+    //     scanner.nextLine();
+    //     Administrator admin = new Administrator(Role.ADMINISTRATOR, "John Doe", "Male", 35);// Placeholder; replace with actual administrator reference
+    //     pharmacist.sendReplenishmentRequest(name, quantity);
+    // }
+
     private void submitReplenishmentRequest() {
         System.out.println("\n--- Submit Replenishment Request ---");
         System.out.print("Enter Medication Name: ");
@@ -340,9 +351,18 @@ public class PharmacistUI {
         System.out.print("Enter Quantity to Replenish: ");
         int quantity = scanner.nextInt();
         scanner.nextLine();
-        Administrator admin = new Administrator(Role.ADMINISTRATOR, "John Doe", "Male", 35);// Placeholder; replace with actual administrator reference
+    
+        // Create an administrator reference (replace with the actual administrator object if available)
+        // Administrator admin = new Administrator(Role.ADMINISTRATOR, "John Doe", "Male", 35);
+    
+        // Call the pharmacist method to send the replenishment request
         pharmacist.sendReplenishmentRequest(name, quantity);
+    
+        // Confirm the request is sent
+        System.out.println("Replenishment request has been sent to the administrator.");
+        System.out.println("The administrator can now view and process this request.");
     }
+    
 
     private void logout() {
         pharmacist.logout();
