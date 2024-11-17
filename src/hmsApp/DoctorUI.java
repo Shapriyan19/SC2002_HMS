@@ -12,6 +12,7 @@ import medical.Treatment;
 import appointment.Appointment;
 import appointment.AppointmentStatus;
 import appointment.MedicationRecord;
+import appointment.TimeSlot;
 import user.Doctor;
 import user.Patient;
 
@@ -188,18 +189,38 @@ public class DoctorUI {
     
     // 3. View Personal Schedule
     private void viewPersonalSchedule() {
-        List<Appointment> appointments = doctor.getAppointments(); // Assuming this returns all appointments for the doctor
-        List<Appointment> confirmedAppointments = appointments.stream()
-                                                              .filter(app -> app.getStatus() == AppointmentStatus.CONFIRMED)
-                                                              .collect(Collectors.toList());
-
-        if (confirmedAppointments.isEmpty()) {
-            System.out.println("No confirmed upcoming appointments.");
+        System.out.print("Enter the date (YYYY-MM-DD) to view the schedule: ");
+        String selectedDate = scanner.next(); // Get date input from the user
+    
+        // Filter confirmed and pending appointments by the selected date
+        List<Appointment> confirmedAndPendingAppointments = doctor.getAppointments()
+                .stream()
+                .filter(app -> (app.getStatus() == AppointmentStatus.CONFIRMED || app.getStatus() == AppointmentStatus.PENDING) 
+                        && app.getDate().equals(selectedDate))
+                .toList();
+    
+        if (confirmedAndPendingAppointments.isEmpty()) {
+            System.out.println("No confirmed or pending appointments for " + selectedDate + ".");
         } else {
-            System.out.println("-- Confirmed Upcoming Appointments --");
-            confirmedAppointments.forEach(app -> System.out.println(app));
+            System.out.println("-- Confirmed and Pending Appointments for " + selectedDate + " --");
+            confirmedAndPendingAppointments.forEach(app -> System.out.println("Appointment ID: " + app.getAppointmentID() +
+                    " | Patient: " + app.getPatient().getName() +
+                    " | Date: " + app.getDate() +
+                    " | Time: " + app.getTimeSlot() +
+                    " | Status: " + app.getStatus()));
+        }
+    
+        // Retrieve available time slots for the selected date (accounting for both confirmed and pending appointments)
+        List<TimeSlot> availableSlots = doctor.getCalendar().getAvailableTimeSlotsForDate(selectedDate);
+        if (availableSlots.isEmpty()) {
+            System.out.println("No available time slots for " + selectedDate + ".");
+        } else {
+            System.out.println("-- Available Time Slots for " + selectedDate + " --");
+            availableSlots.forEach(slot -> System.out.println(slot));
         }
     }
+    
+
     
 
     // 4. Set Availability for Appointments
@@ -240,12 +261,12 @@ public class DoctorUI {
         List<Appointment> pendingAppointments = doctor.getAppointments().stream()
                                                     .filter(app -> app.getStatus() == AppointmentStatus.PENDING)
                                                     .collect(Collectors.toList());
-
+    
         if (pendingAppointments.isEmpty()) {
             System.out.println("No pending appointments to manage.");
             return;
         }
-
+    
         System.out.println("Pending Appointments:");
         pendingAppointments.forEach(appointment -> {
             System.out.println("Appointment ID: " + appointment.getAppointmentID() +
@@ -254,14 +275,14 @@ public class DoctorUI {
                             ", Time: " + appointment.getTimeSlot().toString() +
                             ", Status: " + appointment.getStatus());
         });
-
+    
         System.out.print("Enter the appointment ID to manage: ");
         int appointmentID = scanner.nextInt();
         Appointment appointment = pendingAppointments.stream()
                                                     .filter(app -> app.getAppointmentID() == appointmentID)
                                                     .findFirst()
                                                     .orElse(null);
-
+    
         if (appointment != null) {
             System.out.println("1. Confirm Appointment");
             System.out.println("2. Cancel Appointment");
@@ -272,17 +293,38 @@ public class DoctorUI {
             } else if (decision == 2) {
                 doctor.cancelAppointment(appointment);
                 System.out.println("Appointment declined for patient: " + appointment.getPatient().getName());
+                
+                // Add this slot back to the available slots
+                doctor.getCalendar().addAvailableTimeSlot(appointment.getTimeSlot());
+                System.out.println("Time slot " + appointment.getTimeSlot() + " is now available.");
             }
         } else {
             System.out.println("Appointment ID not found. Please try again.");
         }
     }
     
-
     // 6. View Upcoming Appointments
-    private void viewUpcomingAppointments() {
-        doctor.displayAppointments();
+private void viewUpcomingAppointments() {
+    // Filter the appointments to only show confirmed ones
+    List<Appointment> confirmedAppointments = doctor.getAppointments().stream()
+                                                   .filter(app -> app.getStatus() == AppointmentStatus.CONFIRMED)
+                                                   .collect(Collectors.toList());
+
+    if (confirmedAppointments.isEmpty()) {
+        System.out.println("No upcoming confirmed appointments.");
+        return;
     }
+
+    // Display the confirmed appointments
+    System.out.println("Upcoming Confirmed Appointments:");
+    for (Appointment app : confirmedAppointments) {
+        System.out.println("Appointment ID: " + app.getAppointmentID() + 
+                           " | Patient: " + app.getPatient().getName() + 
+                           " | Date: " + app.getDate() +
+                           " | Time: " + app.getTimeSlot().toString());
+    }
+}
+
 
 
     // 7. Complete Appointment
@@ -309,10 +351,10 @@ public class DoctorUI {
         // Ask the doctor to select an appointment to complete
         Scanner scanner = new Scanner(System.in);
         System.out.print("Select an appointment to complete (enter the number): ");
-        int appointmentIndex = scanner.nextInt() - 1;
+        int appointmentIndex = scanner.nextInt() - 1; // Adjust for zero-indexing
     
         if (appointmentIndex < 0 || appointmentIndex >= confirmedAppointments.size()) {
-            System.out.println("Invalid selection.");
+            System.out.println("Invalid selection. Please select a valid appointment.");
             return;
         }
     
@@ -323,6 +365,8 @@ public class DoctorUI {
         selectedAppointment.setStatus(AppointmentStatus.COMPLETED);
         System.out.println("Appointment " + selectedAppointment.getAppointmentID() + " has been marked as completed.");
     }
+    
+    
     
     // 8. Record Appointment Outcome
     private void recordAppointmentOutcome() {

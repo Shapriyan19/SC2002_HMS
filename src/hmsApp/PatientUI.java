@@ -29,7 +29,8 @@ public class PatientUI {
             System.out.println("4. Schedule New Appointment");
             System.out.println("5. Cancel An Appointment");
             System.out.println("6. View and Pay for Appointment");
-            System.out.println("7. Logout");
+            System.out.println("7. View Past Appointment Outcome Records");
+            System.out.println("8. Logout");
     
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -54,13 +55,15 @@ public class PatientUI {
                     viewAndPayForAppointment();
                     break;
                 case 7:
+                    viewPastAppointmentOutcomeRecords();
+                case 8:
                     System.out.println("Logging out...");
                     patient.logout();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 7);
+        } while (choice != 8);
     }
     
 
@@ -262,5 +265,54 @@ public class PatientUI {
             }
         }
         
-    
+        private void viewPastAppointmentOutcomeRecords() {
+            List<Appointment> appointments = patient.getAppointments();
+            boolean hasPastAppointments = false;
+        
+            System.out.println("-- My Past Appointments --");
+        
+            // Header for the table of past appointments
+            System.out.printf("%-25s %-15s %-15s %-20s %-20s\n", "Doctor", "Date", "Time", "Services Provided", "Consultation Notes");
+            System.out.println("-------------------------------------------------------------------");
+        
+            // Iterate through the list of appointments
+            for (Appointment appointment : appointments) {
+                // Check if the appointment has a completed status
+                if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+                    AppointmentOutcomeRecord outcome = appointment.getOutcomeRecord();
+        
+                    if (outcome != null) {
+                        String doctorName = appointment.getDoctor().getName();
+                        String date = appointment.getDate();
+                        String time = appointment.getTimeSlot().getStartTime() + " to " + appointment.getTimeSlot().getEndTime(); // Get the time range
+                        String servicesProvided = outcome.getServiceType(); // The service type (e.g., General Checkup)
+                        String consultationNotes = outcome.getConsultationNotes(); // Notes from the consultation
+                        String prescribedMedications = formatPrescribedMedications(outcome.getPrescribedMedications()); // Format medications
+        
+                        // Print the appointment details along with outcome
+                        System.out.printf("%-25s %-15s %-15s %-20s %-20s\n", doctorName, date, time, servicesProvided, consultationNotes);
+                        System.out.println("Prescribed Medications: " + prescribedMedications);
+                        hasPastAppointments = true;
+                    }
+                }
+            }
+        
+            if (!hasPastAppointments) {
+                System.out.println("You have no past completed appointments.");
+            }
+        }
+        
+        // Helper method to format prescribed medications
+        private String formatPrescribedMedications(List<MedicationRecord> medications) {
+            if (medications == null || medications.isEmpty()) {
+                return "No medications prescribed.";
+            }
+            StringBuilder meds = new StringBuilder();
+            for (MedicationRecord medication : medications) {
+                meds.append(medication.getMedicationName()).append(" (").append(medication.getDosage()).append("), ");
+            }
+            return meds.toString().replaceAll(", $", ""); // Remove trailing comma
+        }
+        
+        
 }
