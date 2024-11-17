@@ -5,7 +5,7 @@ import java.nio.file.*;
 import java.util.*;
 
 public class Inventory {
-    private Map<String, Medication> medications;  // Store medications in a map with medication name as key
+    private static Map<String, Medication> medications;  // Store medications in a map with medication name as key
     private static final String CSV_FILE_PATH = "data/Medicine_list.csv";  // Path to the CSV file
 
     public Inventory() {
@@ -140,6 +140,19 @@ public class Inventory {
             System.out.println("ALERT: Medication " + medication.getName() + " is below the low stock alert level! Current stock: " + medication.getStockLevel());
         }
     }
+
+    // Get medication by name
+    // Get medication by name
+    public static Medication getMedicationByName(String name) {
+        // Check if the inventory contains the given medication name and return the corresponding Medication object
+        if (medications.containsKey(name)) {
+            return medications.get(name);  // Return the Medication object found by name
+        } else {
+            System.out.println("Medication with name '" + name + "' not found in inventory.");
+            return null;  // Return null if medication not found
+        }
+    }
+
 }
 
 
