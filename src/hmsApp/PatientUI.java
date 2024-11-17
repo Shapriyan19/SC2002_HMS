@@ -27,9 +27,11 @@ public class PatientUI {
             System.out.println("2. View My Medical Records");
             System.out.println("3. Update My Personal Details");
             System.out.println("4. Schedule New Appointment");
-            System.out.println("5. Cancel An Appointment");
-            System.out.println("6. View and Pay for Appointment");
-            System.out.println("7. Logout");
+            System.out.println("5. Reschedule An Appointment");
+            System.out.println("6. Cancel An Appointment");
+            System.out.println("7. View and Pay for Appointment");
+            System.out.println("8. View Past Appointment Outcome Records");
+            System.out.println("9. Logout");
     
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -48,19 +50,25 @@ public class PatientUI {
                     scheduleNewAppointment();
                     break;
                 case 5:
-                    cancelAnAppointment();
+                    rescheduleAppointment();
                     break;
                 case 6:
-                    viewAndPayForAppointment();
+                    cancelAnAppointment();
                     break;
                 case 7:
+                    viewAndPayForAppointment();
+                    break;
+                case 8:
+                    viewPastAppointmentOutcomeRecords();
+                    break;
+                case 9:
                     System.out.println("Logging out...");
                     patient.logout();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 7);
+        } while (choice != 9);
     }
     
 
@@ -127,45 +135,126 @@ public class PatientUI {
             System.out.println("Enter the doctor's name you want to schedule with:");
             scanner.nextLine();  // Consume newline left-over
             String doctorName = scanner.nextLine();
-    
+        
             Doctor doctor = Doctor.getDoctorsList().stream()
                                   .filter(d -> d.getName().equals(doctorName))
                                   .findFirst()
                                   .orElse(null);
-    
+        
             if (doctor == null) {
                 System.out.println("Doctor not found.");
                 return;
             }
-    
+        
             System.out.print("Enter the date for the appointment (YYYY-MM-DD): ");
             String date = scanner.nextLine();
             List<TimeSlot> availableSlots = doctor.getAvailableTimeSlots(date);
-    
+        
             if (availableSlots.isEmpty()) {
                 System.out.println("No available slots on " + date);
                 return;
             }
-    
+        
             System.out.println("Available slots:");
             for (TimeSlot slot : availableSlots) {
                 System.out.println(slot.getStartTime() + " to " + slot.getEndTime());
             }
-    
+        
             System.out.print("Select a time slot (enter the start time): ");
             String startTime = scanner.nextLine();
             TimeSlot selectedSlot = availableSlots.stream()
                                                   .filter(slot -> slot.getStartTime().equals(startTime))
                                                   .findFirst()
                                                   .orElse(null);
-    
+        
             if (selectedSlot == null) {
                 System.out.println("Invalid time slot.");
                 return;
             }
-    
+        
+            // Schedule the appointment through the patient's method
             patient.scheduleAppointment(doctor, date, selectedSlot);
+        
+            System.out.println("Appointment scheduled with Dr. " + doctor.getName() + " on " + date + " at " + selectedSlot.getStartTime());
         }
+        
+        
+        private void rescheduleAppointment() {
+            // Show all current appointments
+            System.out.println("Your current appointments:");
+            List<Appointment> appointments = patient.getAppointments();
+        
+            if (appointments.isEmpty()) {
+                System.out.println("No appointments found.");
+                return;
+            }
+        
+            for (Appointment app : appointments) {
+                System.out.println("ID: " + app.getAppointmentID() + 
+                                   ", Doctor: " + app.getDoctor().getName() + 
+                                   ", Date: " + app.getDate() + 
+                                   ", Time: " + app.getTimeSlot().getStartTime() + " to " + app.getTimeSlot().getEndTime() + 
+                                   ", Status: " + app.getStatus());
+            }
+        
+            System.out.println("\nEnter the ID of the appointment you want to reschedule:");
+            int appointmentID = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
+        
+            // Find the selected appointment
+            Appointment appointment = appointments.stream()
+                                                  .filter(app -> app.getAppointmentID() == appointmentID)
+                                                  .findFirst()
+                                                  .orElse(null);
+        
+            if (appointment == null) {
+                System.out.println("Appointment not found.");
+                return;
+            }
+        
+            Doctor doctor = appointment.getDoctor();
+        
+            System.out.println("Current appointment details:");
+            System.out.println("Doctor: " + doctor.getName());
+            System.out.println("Date: " + appointment.getDate());
+            System.out.println("Time: " + appointment.getTimeSlot().getStartTime() + " to " + appointment.getTimeSlot().getEndTime());
+        
+            System.out.print("Enter the new date for the appointment (YYYY-MM-DD): ");
+            String newDate = scanner.nextLine();
+            List<TimeSlot> availableSlots = doctor.getAvailableTimeSlots(newDate);
+        
+            if (availableSlots.isEmpty()) {
+                System.out.println("No available slots on " + newDate);
+                return;
+            }
+        
+            System.out.println("Available slots:");
+            for (TimeSlot slot : availableSlots) {
+                System.out.println(slot.getStartTime() + " to " + slot.getEndTime());
+            }
+        
+            System.out.print("Select a new time slot (enter the start time): ");
+            String newStartTime = scanner.nextLine();
+            TimeSlot selectedSlot = availableSlots.stream()
+                                                  .filter(slot -> slot.getStartTime().equals(newStartTime))
+                                                  .findFirst()
+                                                  .orElse(null);
+        
+            if (selectedSlot == null) {
+                System.out.println("Invalid time slot.");
+                return;
+            }
+        
+            // Reschedule the appointment through the doctor's method
+            doctor.rescheduleAppointment(appointment, newDate, selectedSlot);
+        
+            System.out.println("Appointment rescheduled with Dr. " + doctor.getName() +
+                               " to " + newDate + " at " + selectedSlot.getStartTime());
+        }
+        
+        
+        
+        
     
         private void cancelAnAppointment() {
             System.out.println("Select an appointment to cancel:");
@@ -187,7 +276,6 @@ public class PatientUI {
                 System.out.println("Appointment ID not found or cannot be canceled.");
             }
         }
-
 
         public void viewAndPayForAppointment() {
             // Get the list of appointments from the patient
@@ -262,5 +350,54 @@ public class PatientUI {
             }
         }
         
-    
+        private void viewPastAppointmentOutcomeRecords() {
+            List<Appointment> appointments = patient.getAppointments();
+            boolean hasPastAppointments = false;
+        
+            System.out.println("-- My Past Appointments --");
+        
+            // Header for the table of past appointments
+            System.out.printf("%-25s %-15s %-15s %-20s %-20s\n", "Doctor", "Date", "Time", "Services Provided", "Consultation Notes");
+            System.out.println("-------------------------------------------------------------------");
+        
+            // Iterate through the list of appointments
+            for (Appointment appointment : appointments) {
+                // Check if the appointment has a completed status
+                if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+                    AppointmentOutcomeRecord outcome = appointment.getOutcomeRecord();
+        
+                    if (outcome != null) {
+                        String doctorName = appointment.getDoctor().getName();
+                        String date = appointment.getDate();
+                        String time = appointment.getTimeSlot().getStartTime() + " to " + appointment.getTimeSlot().getEndTime(); // Get the time range
+                        String servicesProvided = outcome.getServiceType(); // The service type (e.g., General Checkup)
+                        String consultationNotes = outcome.getConsultationNotes(); // Notes from the consultation
+                        String prescribedMedications = formatPrescribedMedications(outcome.getPrescribedMedications()); // Format medications
+        
+                        // Print the appointment details along with outcome
+                        System.out.printf("%-25s %-15s %-15s %-20s %-20s\n", doctorName, date, time, servicesProvided, consultationNotes);
+                        System.out.println("Prescribed Medications: " + prescribedMedications);
+                        hasPastAppointments = true;
+                    }
+                }
+            }
+        
+            if (!hasPastAppointments) {
+                System.out.println("You have no past completed appointments.");
+            }
+        }
+        
+        // Helper method to format prescribed medications
+        private String formatPrescribedMedications(List<MedicationRecord> medications) {
+            if (medications == null || medications.isEmpty()) {
+                return "No medications prescribed.";
+            }
+            StringBuilder meds = new StringBuilder();
+            for (MedicationRecord medication : medications) {
+                meds.append(medication.getMedicationName()).append(" (").append(medication.getDosage()).append("), ");
+            }
+            return meds.toString().replaceAll(", $", ""); // Remove trailing comma
+        }
+        
+        
 }

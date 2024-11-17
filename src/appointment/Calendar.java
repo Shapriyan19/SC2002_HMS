@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import user.Doctor;
 import java.time.LocalDate;
+import java.util.Iterator;
 
 public class Calendar {
     private YearMonth yearMonth;
@@ -29,18 +30,29 @@ public class Calendar {
     }
 
     private void initializeTimeSlots() {
-        // Create time slots from 9:00 AM to 5:00 PM in 30-minute intervals
         for (int hour = 9; hour <= 17; hour++) {
             for (int minute = 0; minute < 60; minute += 30) {
-                if (minute + 30 < 60) {
-                    String startTime = String.format("%02d:%02d", hour, minute);
-                    String endTime = String.format("%02d:%02d", hour, minute + 30);
-                    TimeSlot timeSlot = new TimeSlot(startTime, endTime);
-                    availableTimeSlots.add(timeSlot);
-                }
+                String startTime = String.format("%02d:%02d", hour, minute);
+                String endTime = String.format("%02d:%02d", hour, minute + 30);
+                TimeSlot timeSlot = new TimeSlot(startTime, endTime);
+                availableTimeSlots.add(timeSlot);
             }
         }
+    }    
+
+    // Method to update availability after appointment is declined
+    // public void updateAvailability(TimeSlot timeSlot) {
+    //     // Add the time slot back to the list of available slots
+    //     availableTimeSlots.add(timeSlot);
+    //     System.out.println("Time slot " + timeSlot + " is now available.");
+    // }
+
+    
+
+    public void addAvailableTimeSlot(TimeSlot timeSlot) {
+        availableTimeSlots.add(timeSlot);
     }
+    
 
     //method to update own timing
     public void setAppointmentTime(String newStartTime, String newEndTime) {
@@ -72,14 +84,18 @@ public class Calendar {
 
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
-        // Remove the time slot from the available time slots
-        for (TimeSlot timeSlot : availableTimeSlots) {
+        
+        // Use an iterator to safely remove items from the list during iteration
+        Iterator<TimeSlot> iterator = availableTimeSlots.iterator();
+        while (iterator.hasNext()) {
+            TimeSlot timeSlot = iterator.next();
             if (timeSlot.equals(appointment.getTimeSlot())) {
-                availableTimeSlots.remove(timeSlot);
+                iterator.remove();
                 break;
             }
         }
     }
+    
 
     public List<Appointment> getAppointmentsForDate(String date) {
         List<Appointment> appointmentsOnDate = new ArrayList<>();
@@ -93,14 +109,46 @@ public class Calendar {
 
     public List<TimeSlot> getAvailableTimeSlotsForDate(String date) {
         List<TimeSlot> availableSlots = new ArrayList<>(this.availableTimeSlots);
-        // Check which time slots are still available on the given date
+    
+        // Debug: Print all appointments for the date
+        System.out.println("Appointments on " + date + ":");
         for (Appointment app : appointments) {
-            if (app.getDate().equals(date) && app.getStatus() == AppointmentStatus.PENDING) {
-                availableSlots.remove(app.getTimeSlot());
+            if (app.getDate().equals(date)) {
+                System.out.println("Appointment ID: " + app.getAppointmentID() + " | Time: " + app.getTimeSlot());
             }
         }
+    
+        // List to track time slots that were removed due to confirmed appointments
+        List<TimeSlot> removedSlots = new ArrayList<>();
+    
+        // Remove time slots occupied by confirmed appointments
+        for (Appointment app : appointments) {
+            if (app.getDate().equals(date) && app.getStatus() == AppointmentStatus.CONFIRMED) {
+                availableSlots.removeIf(slot -> slot.equals(app.getTimeSlot()));
+                removedSlots.add(app.getTimeSlot()); // Track removed time slots
+                System.out.println("Timeslot removed: " + app.getTimeSlot());
+            }
+        }
+    
+        // Ensure canceled appointments' time slots are added back to available slots
+        for (Appointment app : appointments) {
+            if (app.getDate().equals(date) && app.getStatus() == AppointmentStatus.CANCELLED) {
+                // Only add the canceled time slot back if it was previously removed due to a confirmed appointment
+                if (removedSlots.contains(app.getTimeSlot()) && !availableSlots.contains(app.getTimeSlot())) {
+                    availableSlots.add(app.getTimeSlot());
+                    System.out.println("Timeslot added back: " + app.getTimeSlot());
+                }
+            }
+        }
+    
         return availableSlots;
     }
+    
+    
+    
+    
+    
+    
 
     public List<Appointment> getAppointmentsForMonth() {
         List<Appointment> appointmentsInMonth = new ArrayList<>();
