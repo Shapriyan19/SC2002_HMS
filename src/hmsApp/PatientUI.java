@@ -27,10 +27,11 @@ public class PatientUI {
             System.out.println("2. View My Medical Records");
             System.out.println("3. Update My Personal Details");
             System.out.println("4. Schedule New Appointment");
-            System.out.println("5. Cancel An Appointment");
-            System.out.println("6. View and Pay for Appointment");
-            System.out.println("7. View Past Appointment Outcome Records");
-            System.out.println("8. Logout");
+            System.out.println("5. Reschedule An Appointment");
+            System.out.println("6. Cancel An Appointment");
+            System.out.println("7. View and Pay for Appointment");
+            System.out.println("8. View Past Appointment Outcome Records");
+            System.out.println("9. Logout");
     
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -49,21 +50,25 @@ public class PatientUI {
                     scheduleNewAppointment();
                     break;
                 case 5:
-                    cancelAnAppointment();
+                    rescheduleAppointment();
                     break;
                 case 6:
-                    viewAndPayForAppointment();
+                    cancelAnAppointment();
                     break;
                 case 7:
-                    viewPastAppointmentOutcomeRecords();
+                    viewAndPayForAppointment();
+                    break;
                 case 8:
+                    viewPastAppointmentOutcomeRecords();
+                    break;
+                case 9:
                     System.out.println("Logging out...");
                     patient.logout();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 8);
+        } while (choice != 9);
     }
     
 
@@ -167,13 +172,88 @@ public class PatientUI {
                 return;
             }
         
-            // Create a new appointment and add it to the doctor's calendar
-            Appointment appointment = new Appointment(patient, doctor, date, selectedSlot);
-            doctor.addAppointmentToCalendar(appointment); // Ensure this adds to doctor's calendar
-            patient.scheduleAppointment(appointment); // Ensure the patient knows about this appointment
+            // Schedule the appointment through the patient's method
+            patient.scheduleAppointment(doctor, date, selectedSlot);
         
             System.out.println("Appointment scheduled with Dr. " + doctor.getName() + " on " + date + " at " + selectedSlot.getStartTime());
         }
+        
+        
+        private void rescheduleAppointment() {
+            // Show all current appointments
+            System.out.println("Your current appointments:");
+            List<Appointment> appointments = patient.getAppointments();
+        
+            if (appointments.isEmpty()) {
+                System.out.println("No appointments found.");
+                return;
+            }
+        
+            for (Appointment app : appointments) {
+                System.out.println("ID: " + app.getAppointmentID() + 
+                                   ", Doctor: " + app.getDoctor().getName() + 
+                                   ", Date: " + app.getDate() + 
+                                   ", Time: " + app.getTimeSlot().getStartTime() + " to " + app.getTimeSlot().getEndTime() + 
+                                   ", Status: " + app.getStatus());
+            }
+        
+            System.out.println("\nEnter the ID of the appointment you want to reschedule:");
+            int appointmentID = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
+        
+            // Find the selected appointment
+            Appointment appointment = appointments.stream()
+                                                  .filter(app -> app.getAppointmentID() == appointmentID)
+                                                  .findFirst()
+                                                  .orElse(null);
+        
+            if (appointment == null) {
+                System.out.println("Appointment not found.");
+                return;
+            }
+        
+            Doctor doctor = appointment.getDoctor();
+        
+            System.out.println("Current appointment details:");
+            System.out.println("Doctor: " + doctor.getName());
+            System.out.println("Date: " + appointment.getDate());
+            System.out.println("Time: " + appointment.getTimeSlot().getStartTime() + " to " + appointment.getTimeSlot().getEndTime());
+        
+            System.out.print("Enter the new date for the appointment (YYYY-MM-DD): ");
+            String newDate = scanner.nextLine();
+            List<TimeSlot> availableSlots = doctor.getAvailableTimeSlots(newDate);
+        
+            if (availableSlots.isEmpty()) {
+                System.out.println("No available slots on " + newDate);
+                return;
+            }
+        
+            System.out.println("Available slots:");
+            for (TimeSlot slot : availableSlots) {
+                System.out.println(slot.getStartTime() + " to " + slot.getEndTime());
+            }
+        
+            System.out.print("Select a new time slot (enter the start time): ");
+            String newStartTime = scanner.nextLine();
+            TimeSlot selectedSlot = availableSlots.stream()
+                                                  .filter(slot -> slot.getStartTime().equals(newStartTime))
+                                                  .findFirst()
+                                                  .orElse(null);
+        
+            if (selectedSlot == null) {
+                System.out.println("Invalid time slot.");
+                return;
+            }
+        
+            // Reschedule the appointment through the doctor's method
+            doctor.rescheduleAppointment(appointment, newDate, selectedSlot);
+        
+            System.out.println("Appointment rescheduled with Dr. " + doctor.getName() +
+                               " to " + newDate + " at " + selectedSlot.getStartTime());
+        }
+        
+        
+        
         
     
         private void cancelAnAppointment() {
@@ -196,7 +276,6 @@ public class PatientUI {
                 System.out.println("Appointment ID not found or cannot be canceled.");
             }
         }
-
 
         public void viewAndPayForAppointment() {
             // Get the list of appointments from the patient

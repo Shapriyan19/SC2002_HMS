@@ -224,6 +224,7 @@ public class Patient extends User {
     public void scheduleAppointment(Doctor doctor, String date, TimeSlot timeSlot) {
         if (doctor.isSlotAvailable(date, timeSlot)) {
             Appointment newAppointment = new Appointment(this, doctor, date, timeSlot);
+            doctor.addAppointmentToCalendar(newAppointment);
             calendar.addAppointment(newAppointment); // Use calendar instance
             appointments.add(newAppointment); // Add to patient's appointments list
             System.out.println("Appointment scheduled with Dr. " + doctor.getName() + " on " + date + " at " + timeSlot);

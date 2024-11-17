@@ -258,35 +258,38 @@ public class DoctorUI {
     
     // 5. Accept or Decline Appointment Requests
     private void acceptOrDeclineAppointments() {
-        List<Appointment> pendingAppointments = doctor.getAppointments().stream()
-                                                    .filter(app -> app.getStatus() == AppointmentStatus.PENDING)
-                                                    .collect(Collectors.toList());
+        // Filter pending and rescheduled appointments
+        List<Appointment> pendingOrRescheduledAppointments = doctor.getAppointments().stream()
+            .filter(app -> app.getStatus() == AppointmentStatus.PENDING)
+            .collect(Collectors.toList());
     
-        if (pendingAppointments.isEmpty()) {
-            System.out.println("No pending appointments to manage.");
+        if (pendingOrRescheduledAppointments.isEmpty()) {
+            System.out.println("No pending or rescheduled appointments to manage.");
             return;
         }
     
-        System.out.println("Pending Appointments:");
-        pendingAppointments.forEach(appointment -> {
+        System.out.println("Pending and Rescheduled Appointments:");
+        pendingOrRescheduledAppointments.forEach(appointment -> {
             System.out.println("Appointment ID: " + appointment.getAppointmentID() +
-                            ", Patient: " + appointment.getPatient().getName() +
-                            ", Date: " + appointment.getDate() +
-                            ", Time: " + appointment.getTimeSlot().toString() +
-                            ", Status: " + appointment.getStatus());
+                               ", Patient: " + appointment.getPatient().getName() +
+                               ", Date: " + appointment.getDate() +
+                               ", Time: " + appointment.getTimeSlot().toString() +
+                               ", Status: " + appointment.getStatus());
         });
     
         System.out.print("Enter the appointment ID to manage: ");
         int appointmentID = scanner.nextInt();
-        Appointment appointment = pendingAppointments.stream()
-                                                    .filter(app -> app.getAppointmentID() == appointmentID)
-                                                    .findFirst()
-                                                    .orElse(null);
+        scanner.nextLine(); // Consume leftover newline
+        Appointment appointment = pendingOrRescheduledAppointments.stream()
+            .filter(app -> app.getAppointmentID() == appointmentID)
+            .findFirst()
+            .orElse(null);
     
         if (appointment != null) {
             System.out.println("1. Confirm Appointment");
             System.out.println("2. Cancel Appointment");
             int decision = scanner.nextInt();
+            scanner.nextLine(); // Consume leftover newline
             if (decision == 1) {
                 doctor.confirmAppointment(appointment);
                 System.out.println("Appointment confirmed for patient: " + appointment.getPatient().getName());
@@ -302,6 +305,7 @@ public class DoctorUI {
             System.out.println("Appointment ID not found. Please try again.");
         }
     }
+    
     
     // 6. View Upcoming Appointments
 private void viewUpcomingAppointments() {

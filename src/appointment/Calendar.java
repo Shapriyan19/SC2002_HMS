@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import user.Doctor;
 import java.time.LocalDate;
+import java.util.Iterator;
 
 public class Calendar {
     private YearMonth yearMonth;
@@ -46,6 +47,8 @@ public class Calendar {
     //     System.out.println("Time slot " + timeSlot + " is now available.");
     // }
 
+    
+
     public void addAvailableTimeSlot(TimeSlot timeSlot) {
         availableTimeSlots.add(timeSlot);
     }
@@ -81,14 +84,18 @@ public class Calendar {
 
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
-        // Remove the time slot from the available time slots
-        for (TimeSlot timeSlot : availableTimeSlots) {
+        
+        // Use an iterator to safely remove items from the list during iteration
+        Iterator<TimeSlot> iterator = availableTimeSlots.iterator();
+        while (iterator.hasNext()) {
+            TimeSlot timeSlot = iterator.next();
             if (timeSlot.equals(appointment.getTimeSlot())) {
-                availableTimeSlots.remove(timeSlot);
+                iterator.remove();
                 break;
             }
         }
     }
+    
 
     public List<Appointment> getAppointmentsForDate(String date) {
         List<Appointment> appointmentsOnDate = new ArrayList<>();
