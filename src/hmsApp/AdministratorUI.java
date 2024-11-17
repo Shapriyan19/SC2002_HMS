@@ -60,7 +60,6 @@ public class AdministratorUI {
     private void viewAndManageHospitalStaff() {
         System.out.println("\n--- View and Manage Hospital Staff ---");
         admin.viewHospitalStaff();
-
         System.out.println("\nOptions:");
         System.out.println("1. Add Staff");
         System.out.println("2. Update Staff");
@@ -88,6 +87,7 @@ public class AdministratorUI {
         }
     }
 
+
     private void addStaff() {
         System.out.print("Enter Role (doctor/pharmacist/administrator): ");
         String role = scanner.nextLine().toLowerCase();
@@ -97,19 +97,25 @@ public class AdministratorUI {
         String gender = scanner.nextLine();
         System.out.print("Enter Age: ");
         int age = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Clear buffer
     
         if ("doctor".equals(role)) {
-            // Do not create a patient list; pass null for patientList
-            admin.manageHospitalDoctor("add", new Doctor(Role.DOCTOR, name, gender, age, null));
+            System.out.println("Creating Doctor...");
+            // Doctor newDoctor = new Doctor(Role.DOCTOR, name, gender, new ArrayList<>(), age, 1);
+            System.out.println("Adding Doctor...");
+            // admin.manageHospitalDoctor("add", newDoctor);
         } else if ("pharmacist".equals(role)) {
-            admin.manageHospitalPharmacist("add", new Pharmacist(Role.PHARMACIST, name, gender, age));
+            Pharmacist newPharmacist = new Pharmacist(Role.PHARMACIST, name, gender, age);
+            System.out.println("Adding Pharmacist...");
+            admin.manageHospitalPharmacist("add", newPharmacist);
         } else if ("administrator".equals(role)) {
-            admin.manageHospitalAdministrator("add", new Administrator(Role.ADMINISTRATOR, name, gender, age));
+            Administrator newAdministrator = new Administrator(Role.ADMINISTRATOR, name, gender, age);
+            System.out.println("Adding Administrator...");
+            admin.manageHospitalAdministrator("add", newAdministrator);
         } else {
-            System.out.println("Invalid role.");
+            System.out.println("Invalid role entered. Please try again.");
         }
-    }  
+    }
 
 
     private void updateStaff() {
@@ -239,11 +245,6 @@ public class AdministratorUI {
         }
     }
 
-
-    // private void viewAppointmentsDetails() {
-    //     System.out.println("\n--- View Appointments Details ---");
-    //     System.out.println("Feature not implemented for this demo.");
-    // }
 
     private void viewAppointmentsDetails() {
     System.out.println("\n--- View Appointments Details ---");
@@ -602,8 +603,6 @@ public class AdministratorUI {
     //         System.out.println("Replenishment request was not approved.");
     //     }
     // }
-
-    
 
     private void logout() {
         System.out.println("\nLogging out. Goodbye, " + admin.getName() + "!");

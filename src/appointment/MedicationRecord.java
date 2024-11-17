@@ -6,7 +6,7 @@ import inventory.Inventory;
 public class MedicationRecord {
     private String medicationName;  // Changed to String type
     private String status;  // Default to "Pending"
-    private double dosage;
+    private int dosage;
     private double price;   // Automatically fetched from Medication inventory
 
     // Constructor accepts only medication name as String
@@ -38,11 +38,11 @@ public class MedicationRecord {
         this.price = fetchMedicationPrice(medicationName); // Update price when name changes
     }
 
-    public double getDosage() {
+    public int getDosage() {
         return dosage;
     }
 
-    public void setDosage(double dosage) {
+    public void setDosage(int dosage) {
         this.dosage = dosage;
     }
 
