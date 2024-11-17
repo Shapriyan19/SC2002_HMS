@@ -1,123 +1,115 @@
-# SC2002_HMS
 # Hospital Management System (HMS)
 
 ## Overview
-The Hospital Management System (HMS) is a Java-based application designed to automate and manage key hospital operations. The system enhances the efficiency of hospital resource management, improves patient care, and streamlines administrative processes. It includes features such as patient management, appointment scheduling, staff management, and medication inventory management.
+The Hospital Management System (HMS) is a Java-based application designed to automate and streamline hospital operations. This system enhances the efficiency of hospital resource management, improves patient care, and simplifies administrative processes through features like patient management, appointment scheduling, staff management, and medication inventory control.
 
-## Features
+## Key Features
 
-### General Features:
-#### Role-Based Access:
-- Users log in with their unique hospital ID and a default password ("password").
-- Upon first login, users can change their password.
-- The system validates login credentials and grants role-specific access.
+### Authentication System
+- Role-based access control
+- Secure login with hospital ID
+- Password management system
+- First-time login password change requirement
 
-#### User Roles:
-- **Patient**
-- **Doctor**
-- **Pharmacist**
-- **Administrator**
+### User Roles and Capabilities
 
-### Role-Specific Features:
+#### 🏥 Patient
+- View and manage personal medical records
+- Schedule and manage appointments
+- Update contact information
+- Access appointment history and outcomes
 
-#### Patient:
-- **Information Access**: 
-  - View medical records (Patient ID, Name, Date of Birth, Gender, Contact Information, Blood Type, Past Diagnoses, and Treatments).
-  - Update non-medical personal information (e.g., contact number, email).
-  - Restrictions: Cannot modify past diagnoses, treatments, or blood type.
-  
-- **Appointment Management**:
-  - View available appointment slots with doctors.
-  - Schedule, reschedule, or cancel appointments.
-  - View the status of scheduled appointments (e.g., confirmed, canceled, completed).
-  - Access Appointment Outcome Records for past appointments.
+#### 👨‍⚕️ Doctor
+- Manage patient medical records
+- Set availability and manage appointments
+- Record diagnoses and treatments
+- Create and manage prescriptions
 
-#### Doctor:
-- **Medical Record Management**:
-  - View and update medical records of patients under their care.
-  - Add new diagnoses, prescriptions, and treatment plans.
+#### 💊 Pharmacist
+- Process and update prescriptions
+- Manage medication inventory
+- Monitor stock levels
+- Submit inventory replenishment requests
 
-- **Appointment Management**:
-  - View personal schedule and set availability.
-  - Accept or decline appointment requests.
-  - Record appointment outcomes (Date, Type of service, Prescribed medications, Consultation notes).
+#### 👤 Administrator
+- Comprehensive staff management
+- System-wide appointment oversight
+- Inventory control and management
+- System initialization and data import
 
-#### Pharmacist:
-- **Prescription Management**:
-  - View and update the status of prescriptions in Appointment Outcome Records.
-  - Monitor and manage medication inventory (stock levels).
-  - Submit replenishment requests for low-stock medications.
+## Technical Specifications
 
-#### Administrator:
-- **Staff Management**:
-  - Add, update, or remove hospital staff (doctors, pharmacists).
-  - Display staff list filtered by role, gender, or age.
+### Technology Stack
+- Programming Language: Java (JDK 17+)
+- Architecture: Object-Oriented Design
+- Storage: File-based persistent storage
+- Interface: Command-Line Interface (CLI)
 
-- **Appointment Management**:
-  - Access real-time updates of appointments (Patient ID, Doctor ID, Appointment status).
-  - Access Appointment Outcome Records for completed appointments.
+### Data Management
+The system manages data through CSV files:
+- `staff.csv`: Staff records and credentials
+- `patients.csv`: Patient information and medical records
+- `medicine.csv`: Medication inventory and stock levels
 
-- **Inventory Management**:
-  - Manage medication inventory (add, remove, update stock levels).
-  - Update low stock level alerts.
-  - Approve replenishment requests and automatically update stock levels.
+## Installation Guide
 
-- **System Initialization**:
-  - Import initial staff list, patient list, and inventory details from files.
+### Prerequisites
+- Java Development Kit (JDK) 17 or later
+- Git version control system
+- Terminal or Command Prompt access
 
-## Technologies Used
-- **Java**: Core programming language.
-- **Object-Oriented Programming (OOP)**: Encapsulation, inheritance, and polymorphism.
-- **File Handling**: Persistent storage for staff, patient, appointment, and inventory data.
-- **Command-Line Interface (CLI)**: Interactive menus for each user role.
+### Setup Instructions
 
-## Installation
+1. Clone the repository
+```bash
+git clone https://github.com/username/hospital-management-system.git
+cd hospital-management-system
+```
 
-### Prerequisites:
-- Java Development Kit (JDK 17 or later).
-- Git (for cloning the repository).
+2. Compile the source code
+```bash
+javac -d out src/hmsApp/*.java src/user/*.java src/appointment/*.java src/inventory/*.java
+```
 
-### Steps to Install:
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/username/hospital-management-system.git
-   cd hospital-management-system
+3. Run the application
+```bash
+java -cp out hmsApp.LoginFunctionality
+```
 
-2. **Compile the Code**:
-  ```bash
-  javac -d out src/hmsApp/*.java src/user/*.java src/appointment/*.java src/inventory/*.java
+### Data File Setup
+Ensure these files are present in the `data/` directory before running:
+- `staff.csv` - Initial staff information
+- `patients.csv` - Patient database
+- `medicine.csv` - Medication inventory data
 
-3. **Run the application**:
-  ```bash
-  java -cp out hmsApp.LoginFunctionality
-Verify Data Files: Ensure the following files are present in the data/ directory:
+## System Usage
 
-staff.csv (initial staff list)
-patients.csv (initial patient data)
-medicine.csv (initial medication inventory)
-Run the Program: Run the LoginFunctionality class to start the application.
+### Login Process
+1. Launch the application
+2. Enter your hospital ID
+3. Use default password ("password") for first login
+4. Change password upon first access
 
-Usage
-Login:
+### Role-Specific Operations
+Access features based on your assigned role:
+- Patients: Appointment booking and medical record access
+- Doctors: Patient care and appointment management
+- Pharmacists: Medication and prescription handling
+- Administrators: System management and oversight
 
-Use your hospital ID and password to log in.
-Access role-specific functionalities based on your role.
-Role-Specific Actions:
+## Development Team
 
-Manage appointments, inventory, or patient records as per your role (details under Features).
-Data Files
-staff.csv: Contains hospital staff details (role, name, age, gender).
-patients.csv: Contains patient information (medical records, contact info).
-medicine.csv: Tracks medication details, including stock levels and low-stock alerts.
-Authors
-Kalaiselvan Shanmugapriyan
-Manikandan Yuvana
-Rajadharshini Nedumaran
-Murugappan Venkatesh
-Srishakti Nedunchelian
-License
-This project is licensed under the MIT License.
+- Kalaiselvan Shanmugapriyan
+- Manikandan Yuvana
+- Rajadharshini Nedumaran
+- Murugappan Venkatesh
+- Srishakti Nedunchelian
 
-Acknowledgments
-SC2002 Instructors and TAs for their guidance.
-The team members for their contributions.
+## License
+This project is released under the MIT License.
+
+## Acknowledgments
+- SC2002 course instructors and teaching assistants
+- All team members for their valuable contributions
+
+---
