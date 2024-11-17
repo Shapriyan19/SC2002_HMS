@@ -109,10 +109,10 @@ public class Administrator extends User {
     
     public void viewHospitalStaff() {
         System.out.println("Hospital Staff List:");
-
         // View doctors
         System.out.println("\nDoctors:");
         for (Doctor doctor : Doctor.getDoctorsList()) {
+
             System.out.println("ID: " + doctor.getHospitalID() + ", Name: " + doctor.getName() +
                                ", Gender: " + doctor.getGender() + ", Age: " + doctor.getAge());
         }
@@ -131,6 +131,8 @@ public class Administrator extends User {
                                ", Gender: " + pharmacist.getGender() + ", Age: " + pharmacist.getAge());
         }
     }
+
+
 
     // Method to manage Doctor staff (add, update, or remove)
 // Method to manage Doctor staff (add, update, or remove)
@@ -185,15 +187,27 @@ public class Administrator extends User {
     }
 
     // Add, Update, and Remove methods for Doctor
+    // private void addDoctor(Doctor doctor) {
+    //     if (!Doctor.getDoctorsList().contains(doctor)) {
+    //         Doctor.getDoctorsList().add(doctor);
+    //         System.out.println("Added Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+    //         updateCSV();
+    //     } else {
+    //         System.out.println("Doctor already exists.");
+    //     }
+      
+    // }
+
     private void addDoctor(Doctor doctor) {
         if (!Doctor.getDoctorsList().contains(doctor)) {
             Doctor.getDoctorsList().add(doctor);
             System.out.println("Added Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+            updateCSV(); // Update the CSV after adding the doctor
         } else {
-            System.out.println("Doctor already exists.");
+            System.out.println("Doctor already exists: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
         }
-        updateCSV();
     }
+    
 
     private void updateDoctor(Doctor updatedDoctor) {
         // Find existing doctor by ID
@@ -416,7 +430,6 @@ public class Administrator extends User {
 
         if (!inventory.getAllMedications().containsKey(name)) {
             inventory.addMedication(newMedication);
-            System.out.println("Added medication: " + name);
         } else {
             System.out.println("Medication " + name + " already exists in the inventory.");
         }
@@ -425,7 +438,6 @@ public class Administrator extends User {
     public void removeMedication(String name) {
         if (inventory.getAllMedications().containsKey(name)) {
             inventory.removeMedication(name);
-            System.out.println("Removed medication: " + name);
         } else {
             System.out.println("Medication " + name + " does not exist in the inventory.");
         }
@@ -435,7 +447,6 @@ public class Administrator extends User {
     public void updateMedicationStockLevel(String name, int newStockLevel) {
         if (inventory.getAllMedications().containsKey(name)) {
             inventory.updateStockLevel(name, newStockLevel);
-            System.out.println("Updated stock level of " + name + " to " + newStockLevel);
         } else {
             System.out.println("Medication " + name + " does not exist in the inventory.");
         }
@@ -445,7 +456,6 @@ public class Administrator extends User {
     public void updateLowStockAlertLevel(String name, int newLowStockLevelAlert) {
         if (inventory.getAllMedications().containsKey(name)) {
             inventory.updateLowStockLevelAlert(name, newLowStockLevelAlert);
-            // System.out.println("Updated low stock alert level of " + name + " to " + newLowStockLevelAlert);
         } else {
             System.out.println("Medication " + name + " does not exist in the inventory.");
         }

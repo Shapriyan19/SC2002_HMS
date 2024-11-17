@@ -11,6 +11,8 @@ import appointment.AppointmentOutcomeRecord;
 import appointment.AppointmentStatus;
 import appointment.MedicationRecord;
 import appointment.TimeSlot;
+import inventory.Inventory;
+import inventory.Medication;
 
 public class PharmacistUI {
 
@@ -63,7 +65,313 @@ public class PharmacistUI {
         // Delegate the responsibility to the Pharmacist class
         pharmacist.viewAppointmentOutcomeRecord();
     }
+
+    public void viewAndUpdatePrescriptionStatus() {
+        // Create an instance of the Inventory class
+        Inventory inventory = new Inventory(); // Ensure this instance is initialized properly
     
+        // Get the list of doctors to retrieve their appointments
+        List<Doctor> doctorsList = Doctor.getDoctorsList(); // Assuming this method exists to get all doctors
+    
+        if (doctorsList.isEmpty()) {
+            System.out.println("No doctors available to view appointment outcomes.");
+            return;
+        }
+    
+        System.out.println("--- All Doctors' Appointment Outcome Records ---");
+    
+        // Loop through doctors to display their appointment outcome records
+        for (Doctor doctor : doctorsList) {
+            List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor); // Get appointments for each doctor
+            System.out.println("Appointment Outcomes for Dr. " + doctor.getName() + ":");
+    
+            if (doctorAppointments.isEmpty()) {
+                System.out.println("  No appointments scheduled for this doctor.");
+            } else {
+                // Create a list to hold appointments with outcome records for easier selection
+                List<Appointment> appointmentsWithOutcome = new ArrayList<>();
+                for (Appointment app : doctorAppointments) {
+                    AppointmentOutcomeRecord outcomeRecord = app.getOutcomeRecord(); // Get the outcome record for each appointment
+    
+                    if (outcomeRecord == null) {
+                        System.out.println("  Appointment ID: " + app.getAppointmentID() + " | No outcome recorded yet.");
+                    } else {
+                        // Display outcome record details
+                        System.out.println("  Appointment ID: " + app.getAppointmentID() +
+                                           " | Patient: " + app.getPatient().getName() +
+                                           " | Date: " + app.getDate() +
+                                           " | Outcome Service Type: " + outcomeRecord.getServiceType() +
+                                           " | Prescription Status: " + outcomeRecord.getPrescriptionStatus());
+                        System.out.println("    Prescribed Medications: ");
+                        for (MedicationRecord medication : outcomeRecord.getPrescribedMedications()) {
+                            System.out.println("      - " + medication.getMedicationName() + 
+                                               " | Dosage: " + medication.getDosage() + 
+                                               " | Price per unit: $" + medication.getPrice());
+                        }
+                        System.out.println("    Consultation Notes: " + outcomeRecord.getConsultationNotes());
+    
+                        // Add the appointment to the list for further selection
+                        appointmentsWithOutcome.add(app);
+                    }
+                }
+    
+                // If there are appointments with outcome records, let the pharmacist select one to update
+                if (!appointmentsWithOutcome.isEmpty()) {
+                    boolean keepUpdating = true;
+                    while (keepUpdating) {
+                        System.out.println("Options:");
+                        System.out.println("1. Enter Appointment ID to update prescription status.");
+                        System.out.println("2. Exit the program.");
+                        System.out.print("Select an option: ");
+                        int userChoice = scanner.nextInt();
+                        scanner.nextLine(); // Clear buffer
+    
+                        if (userChoice == 2) {
+                            System.out.println("Exiting prescription update process...");
+                            return;
+                        } else if (userChoice == 1) {
+                            System.out.print("Enter Appointment ID: ");
+                            int appointmentId = scanner.nextInt();
+                            scanner.nextLine(); // Clear buffer
+    
+                            // Find the selected appointment
+                            Appointment selectedAppointment = null;
+                            for (Appointment app : appointmentsWithOutcome) {
+                                if (app.getAppointmentID() == appointmentId) {
+                                    selectedAppointment = app;
+                                    break;
+                                }
+                            }
+    
+                            if (selectedAppointment != null) {
+                                // Get the appointment outcome record and update prescription status
+                                AppointmentOutcomeRecord selectedOutcomeRecord = selectedAppointment.getOutcomeRecord();
+                                if (selectedOutcomeRecord.getPrescriptionStatus().equalsIgnoreCase("dispensed")) {
+                                    System.out.println("Prescription is already marked as dispensed.");
+                                    continue;
+                                }
+    
+                                pharmacist.updatePrescriptionStatus(selectedOutcomeRecord);
+    
+                                // Reduce stock levels for dispensed medications using the Inventory instance
+                                for (MedicationRecord medication : selectedOutcomeRecord.getPrescribedMedications()) {
+                                    Medication inventoryMedication = inventory.getMedicationByName(medication.getMedicationName());
+                                    if (inventoryMedication != null) {
+                                        int currentStock = inventoryMedication.getStockLevel();
+                                        int newStock = currentStock - medication.getDosage(); // Assuming getDosage() gives the quantity to deduct
+                                        if (newStock >= 0) {
+                                            inventoryMedication.setStockLevel(newStock); // Update stock level
+                                            System.out.println("Stock level of " + medication.getMedicationName() + 
+                                                               " reduced to " + newStock + 
+                                                               " | Dosage deducted: " + medication.getDosage());
+                                        } else {
+                                            System.out.println("ALERT: Not enough stock for " + medication.getMedicationName() + ". Current stock: " + currentStock);
+                                        }
+                                    } else {
+                                        System.out.println("Medication " + medication.getMedicationName() + " not found in inventory.");
+                                    }
+                                }
+                                inventory.updateCSV(); // Save changes to the CSV file
+                            } else {
+                                System.out.println("Invalid Appointment ID.");
+                            }
+                        } else {
+                            System.out.println("Invalid choice. Please try again.");
+                        }
+    
+                        // Ask if the user wants to continue
+                        System.out.println("Do you want to update another appointment? (yes/no): ");
+                        String continueResponse = scanner.nextLine().trim().toLowerCase();
+                        if (!continueResponse.equals("yes")) {
+                            keepUpdating = false;
+                            System.out.println("Returning to the main menu...");
+                        }
+                    }
+                } else {
+                    System.out.println("No completed appointments with outcome records for this doctor.");
+                }
+            }
+    
+            System.out.println(); // Add a line break between doctors
+        }
+    }
+    
+    
+
+    // public void viewAndUpdatePrescriptionStatus() {
+    //     // Create an instance of the Inventory class
+    //     Inventory inventory = new Inventory(); // Ensure this instance is initialized properly
+    
+    //     // Get the list of doctors to retrieve their appointments
+    //     List<Doctor> doctorsList = Doctor.getDoctorsList(); // Assuming this method exists to get all doctors
+    
+    //     if (doctorsList.isEmpty()) {
+    //         System.out.println("No doctors available to view appointment outcomes.");
+    //         return;
+    //     }
+    
+    //     System.out.println("--- All Doctors' Appointment Outcome Records ---");
+    
+    //     // Loop through doctors to display their appointment outcome records
+    //     for (Doctor doctor : doctorsList) {
+    //         List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor); // Get appointments for each doctor
+    //         System.out.println("Appointment Outcomes for Dr. " + doctor.getName() + ":");
+    
+    //         if (doctorAppointments.isEmpty()) {
+    //             System.out.println("  No appointments scheduled for this doctor.");
+    //         } else {
+    //             // Create a list to hold appointments with outcome records for easier selection
+    //             List<Appointment> appointmentsWithOutcome = new ArrayList<>();
+    //             for (Appointment app : doctorAppointments) {
+    //                 AppointmentOutcomeRecord outcomeRecord = app.getOutcomeRecord(); // Get the outcome record for each appointment
+    
+    //                 if (outcomeRecord == null) {
+    //                     System.out.println("  Appointment ID: " + app.getAppointmentID() + " | No outcome recorded yet.");
+    //                 } else {
+    //                     // Display outcome record details
+    //                     System.out.println("  Appointment ID: " + app.getAppointmentID() +
+    //                                        " | Patient: " + app.getPatient().getName() +
+    //                                        " | Date: " + app.getDate() +
+    //                                        " | Outcome Service Type: " + outcomeRecord.getServiceType() +
+    //                                        " | Prescription Status: " + outcomeRecord.getPrescriptionStatus());
+    //                     System.out.println("    Prescribed Medications: ");
+    //                     for (MedicationRecord medication : outcomeRecord.getPrescribedMedications()) {
+    //                         System.out.println("      - " + medication.getMedicationName());
+    //                     }
+    //                     System.out.println("    Consultation Notes: " + outcomeRecord.getConsultationNotes());
+    
+    //                     // Add the appointment to the list for further selection
+    //                     appointmentsWithOutcome.add(app);
+    //                 }
+    //             }
+    
+    //             // If there are appointments with outcome records, let the pharmacist select one to update
+    //             if (!appointmentsWithOutcome.isEmpty()) {
+    //                 boolean keepUpdating = true;
+    //                 while (keepUpdating) {
+    //                     System.out.println("Options:");
+    //                     System.out.println("1. Enter Appointment ID to update prescription status.");
+    //                     System.out.println("2. Exit the program.");
+    //                     System.out.print("Select an option: ");
+    //                     int userChoice = scanner.nextInt();
+    //                     scanner.nextLine(); // Clear buffer
+    
+    //                     if (userChoice == 2) {
+    //                         System.out.println("Exiting prescription update process...");
+    //                         return;
+    //                     } else if (userChoice == 1) {
+    //                         System.out.print("Enter Appointment ID: ");
+    //                         int appointmentId = scanner.nextInt();
+    //                         scanner.nextLine(); // Clear buffer
+    
+    //                         // Find the selected appointment
+    //                         Appointment selectedAppointment = null;
+    //                         for (Appointment app : appointmentsWithOutcome) {
+    //                             if (app.getAppointmentID() == appointmentId) {
+    //                                 selectedAppointment = app;
+    //                                 break;
+    //                             }
+    //                         }
+    
+    //                         if (selectedAppointment != null) {
+    //                             // Get the appointment outcome record and update prescription status
+    //                             AppointmentOutcomeRecord selectedOutcomeRecord = selectedAppointment.getOutcomeRecord();
+    //                             if (selectedOutcomeRecord.getPrescriptionStatus().equalsIgnoreCase("dispensed")) {
+    //                                 System.out.println("Prescription is already marked as dispensed.");
+    //                                 continue;
+    //                             }
+    
+    //                             pharmacist.updatePrescriptionStatus(selectedOutcomeRecord);
+    
+    //                             // Reduce stock levels for dispensed medications using the Inventory instance
+    //                             for (MedicationRecord medication : selectedOutcomeRecord.getPrescribedMedications()) {
+    //                                 Medication inventoryMedication = inventory.getMedicationByName(medication.getMedicationName());
+    //                                 if (inventoryMedication != null) {
+    //                                     int currentStock = inventoryMedication.getStockLevel();
+    //                                     int newStock = currentStock - medication.getDosage(); // Assuming getDosage() gives the quantity to deduct
+    //                                     if (newStock >= 0) {
+    //                                         inventoryMedication.setStockLevel(newStock); // Update stock level
+    //                                         System.out.println("Stock level of " + medication.getMedicationName() + " reduced to " + newStock);
+    //                                     } else {
+    //                                         System.out.println("ALERT: Not enough stock for " + medication.getMedicationName() + ". Current stock: " + currentStock);
+    //                                     }
+    //                                 } else {
+    //                                     System.out.println("Medication " + medication.getMedicationName() + " not found in inventory.");
+    //                                 }
+    //                             }
+    //                             inventory.updateCSV(); // Save changes to the CSV file
+    //                         } else {
+    //                             System.out.println("Invalid Appointment ID.");
+    //                         }
+    //                     } else {
+    //                         System.out.println("Invalid choice. Please try again.");
+    //                     }
+    
+    //                     // Ask if the user wants to continue
+    //                     System.out.println("Do you want to update another appointment? (yes/no): ");
+    //                     String continueResponse = scanner.nextLine().trim().toLowerCase();
+    //                     if (!continueResponse.equals("yes")) {
+    //                         keepUpdating = false;
+    //                         System.out.println("Returning to the main menu...");
+    //                     }
+    //                 }
+    //             } else {
+    //                 System.out.println("No completed appointments with outcome records for this doctor.");
+    //             }
+    //         }
+    
+    //         System.out.println(); // Add a line break between doctors
+    //     }
+    // }
+    
+
+
+
+
+    private void viewMedicationInventory() {
+        System.out.println("\n--- View Medication Inventory ---");
+        pharmacist.viewMedicationInventory();
+    }
+
+    private void submitReplenishmentRequest() {
+        System.out.println("\n--- Submit Replenishment Request ---");
+        System.out.print("Enter Medication Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Quantity to Replenish: ");
+        int quantity = scanner.nextInt();
+        scanner.nextLine();
+        Administrator admin = new Administrator(Role.ADMINISTRATOR, "John Doe", "Male", 35);// Placeholder; replace with actual administrator reference
+        pharmacist.sendReplenishmentRequest(name, quantity);
+    }
+
+    private void logout() {
+        pharmacist.logout();
+        System.out.println("\nLogging out. Goodbye, " + pharmacist.getName() + "!");
+    }
+
+    private Patient getPatientById(String patientId) {
+        
+        
+        // Loop through the list and find a patient with the matching hospital ID
+        for (Patient patient : patientsList) {
+            if (patient.getHospitalID().equals(patientId)) {
+                return patient; // Return the matching patient
+            }
+        }
+        
+        // Return null if no matching patient is found
+        return null;
+    }
+    
+
+    public static void main(String[] args) {
+        Pharmacist pharmacist = new Pharmacist(Role.PHARMACIST, "Pharmacist User", "Female", 30);
+        PharmacistUI ui = new PharmacistUI(pharmacist);
+        ui.showMenu();
+    }
+}
+
+
 
 //     private void viewAppointmentOutcomeRecord() {
 //     // Create example patients with appointment data
@@ -112,119 +420,177 @@ public class PharmacistUI {
 // }
 
 
-    public void viewAndUpdatePrescriptionStatus() {
-    // Get the list of doctors to retrieve their appointments
-    List<Doctor> doctorsList = Doctor.getDoctorsList(); // Assuming this method exists to get all doctors
+
+
+    // public void viewAndUpdatePrescriptionStatus() {
+    //     // Get the list of doctors to retrieve their appointments
+    //     List<Doctor> doctorsList = Doctor.getDoctorsList(); // Assuming this method exists to get all doctors
+
+    //     if (doctorsList.isEmpty()) {
+    //         System.out.println("No doctors available to view appointment outcomes.");
+    //         return;
+    //     }
+
+    //     System.out.println("--- All Doctors' Appointment Outcome Records ---");
+
+    //     // Loop through doctors to display their appointment outcome records
+    //     for (Doctor doctor : doctorsList) {
+    //         List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor); // Get appointments for each doctor
+    //         System.out.println("Appointment Outcomes for Dr. " + doctor.getName() + ":");
+
+    //         if (doctorAppointments.isEmpty()) {
+    //             System.out.println("  No appointments scheduled for this doctor.");
+    //         } else {
+    //             // Create a list to hold appointments with outcome records for easier selection
+    //             List<Appointment> appointmentsWithOutcome = new ArrayList<>();
+    //             for (Appointment app : doctorAppointments) {
+    //                 AppointmentOutcomeRecord outcomeRecord = app.getOutcomeRecord(); // Get the outcome record for each appointment
+
+    //                 if (outcomeRecord == null) {
+    //                     System.out.println("  Appointment ID: " + app.getAppointmentID() + " | No outcome recorded yet.");
+    //                 } else {
+    //                     // Display outcome record details
+    //                     System.out.println("  Appointment ID: " + app.getAppointmentID() +
+    //                                     " | Patient: " + app.getPatient().getName() +
+    //                                     " | Date: " + app.getDate() +
+    //                                     " | Outcome Service Type: " + outcomeRecord.getServiceType() +
+    //                                     " | Prescription Status: " + outcomeRecord.getPrescriptionStatus());
+    //                     System.out.println("    Prescribed Medications: ");
+    //                     for (MedicationRecord medication : outcomeRecord.getPrescribedMedications()) {
+    //                         System.out.println("      - " + medication.getMedicationName());
+    //                     }
+    //                     System.out.println("    Consultation Notes: " + outcomeRecord.getConsultationNotes());
+
+    //                     // Add the appointment to the list for further selection
+    //                     appointmentsWithOutcome.add(app);
+    //                 }
+    //             }
+
+    //             // If there are appointments with outcome records, let the pharmacist select one to update
+    //             if (!appointmentsWithOutcome.isEmpty()) {
+    //                 boolean keepUpdating = true;
+    //                 while (keepUpdating) {
+    //                     System.out.println("Options:");
+    //                     System.out.println("1. Enter Appointment ID to update prescription status.");
+    //                     System.out.println("2. Exit the program.");
+    //                     System.out.print("Select an option: ");
+    //                     int userChoice = scanner.nextInt();
+    //                     scanner.nextLine(); // Clear buffer
+
+    //                     if (userChoice == 2) {
+    //                         System.out.println("Exiting prescription update process...");
+    //                         return;
+    //                     } else if (userChoice == 1) {
+    //                         System.out.print("Enter Appointment ID: ");
+    //                         int appointmentId = scanner.nextInt();
+    //                         scanner.nextLine(); // Clear buffer
+
+    //                         // Find the selected appointment
+    //                         Appointment selectedAppointment = null;
+    //                         for (Appointment app : appointmentsWithOutcome) {
+    //                             if (app.getAppointmentID() == appointmentId) {
+    //                                 selectedAppointment = app;
+    //                                 break;
+    //                             }
+    //                         }
+
+    //                         if (selectedAppointment != null) {
+    //                             // Get the appointment outcome record and update prescription status
+    //                             AppointmentOutcomeRecord selectedOutcomeRecord = selectedAppointment.getOutcomeRecord();
+    //                             pharmacist.updatePrescriptionStatus(selectedOutcomeRecord);
+    //                         } else {
+    //                             System.out.println("Invalid Appointment ID.");
+    //                         }
+    //                     } else {
+    //                         System.out.println("Invalid choice. Please try again.");
+    //                     }
+
+    //                     // Ask if the user wants to continue
+    //                     System.out.println("Do you want to update another appointment? (yes/no): ");
+    //                     String continueResponse = scanner.nextLine().trim().toLowerCase();
+    //                     if (!continueResponse.equals("yes")) {
+    //                         keepUpdating = false;
+    //                         System.out.println("Returning to the main menu...");
+    //                     }
+    //                 }
+    //             } else {
+    //                 System.out.println("No completed appointments with outcome records for this doctor.");
+    //             }
+    //         }
+
+    //         System.out.println(); // Add a line break between doctors
+    //     }
+    // }
+
+//     public void viewAndUpdatePrescriptionStatus() {
+//     // Get the list of doctors to retrieve their appointments
+//     List<Doctor> doctorsList = Doctor.getDoctorsList(); // Assuming this method exists to get all doctors
     
-    if (doctorsList.isEmpty()) {
-        System.out.println("No doctors available to view appointment outcomes.");
-        return;
-    }
+//     if (doctorsList.isEmpty()) {
+//         System.out.println("No doctors available to view appointment outcomes.");
+//         return;
+//     }
 
-    System.out.println("--- All Doctors' Appointment Outcome Records ---");
+//     System.out.println("--- All Doctors' Appointment Outcome Records ---");
 
-    // Loop through each doctor to display the appointment outcome records
-    for (Doctor doctor : doctorsList) {
-        List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor); // Get appointments for each doctor
-        System.out.println("Appointment Outcomes for Dr. " + doctor.getName() + ":");
+//     // Loop through each doctor to display the appointment outcome records
+//     for (Doctor doctor : doctorsList) {
+//         List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor); // Get appointments for each doctor
+//         System.out.println("Appointment Outcomes for Dr. " + doctor.getName() + ":");
 
-        if (doctorAppointments.isEmpty()) {
-            System.out.println("  No appointments scheduled for this doctor.");
-        } else {
-            // Create a list to hold appointments with outcome records for easier selection
-            List<Appointment> appointmentsWithOutcome = new ArrayList<>();
-            for (Appointment app : doctorAppointments) {
-                AppointmentOutcomeRecord outcomeRecord = app.getOutcomeRecord(); // Get the outcome record for each appointment
+//         if (doctorAppointments.isEmpty()) {
+//             System.out.println("  No appointments scheduled for this doctor.");
+//         } else {
+//             // Create a list to hold appointments with outcome records for easier selection
+//             List<Appointment> appointmentsWithOutcome = new ArrayList<>();
+//             for (Appointment app : doctorAppointments) {
+//                 AppointmentOutcomeRecord outcomeRecord = app.getOutcomeRecord(); // Get the outcome record for each appointment
 
-                if (outcomeRecord == null) {
-                    System.out.println("  Appointment ID: " + app.getAppointmentID() + " | No outcome recorded yet.");
-                } else {
-                    // Display outcome record details
-                    System.out.println("  Appointment ID: " + app.getAppointmentID() +
-                                       " | Patient: " + app.getPatient().getName() +
-                                       " | Date: " + app.getDate() +
-                                       " | Outcome Service Type: " + outcomeRecord.getServiceType() +
-                                       " | Prescription Status: " + outcomeRecord.getPrescriptionStatus());
-                    System.out.println("    Prescribed Medications: ");
-                    for (MedicationRecord medication : outcomeRecord.getPrescribedMedications()) {
-                        System.out.println("      - " + medication.getMedicationName());
-                    }
-                    System.out.println("    Consultation Notes: " + outcomeRecord.getConsultationNotes());
+//                 if (outcomeRecord == null) {
+//                     System.out.println("  Appointment ID: " + app.getAppointmentID() + " | No outcome recorded yet.");
+//                 } else {
+//                     // Display outcome record details
+//                     System.out.println("  Appointment ID: " + app.getAppointmentID() +
+//                                        " | Patient: " + app.getPatient().getName() +
+//                                        " | Date: " + app.getDate() +
+//                                        " | Outcome Service Type: " + outcomeRecord.getServiceType() +
+//                                        " | Prescription Status: " + outcomeRecord.getPrescriptionStatus());
+//                     System.out.println("    Prescribed Medications: ");
+//                     for (MedicationRecord medication : outcomeRecord.getPrescribedMedications()) {
+//                         System.out.println("      - " + medication.getMedicationName());
+//                     }
+//                     System.out.println("    Consultation Notes: " + outcomeRecord.getConsultationNotes());
 
-                    // Add the appointment to the list for further selection
-                    appointmentsWithOutcome.add(app);
-                }
-            }
+//                     // Add the appointment to the list for further selection
+//                     appointmentsWithOutcome.add(app);
+//                 }
+//             }
 
-            // If there are appointments with outcome records, let the pharmacist select one to update
-            if (!appointmentsWithOutcome.isEmpty()) {
-                System.out.print("Enter Appointment ID to update prescription status: ");
-                int appointmentId = scanner.nextInt();
+//             // If there are appointments with outcome records, let the pharmacist select one to update
+//             if (!appointmentsWithOutcome.isEmpty()) {
+//                 System.out.print("Enter Appointment ID to update prescription status: ");
+//                 int appointmentId = scanner.nextInt();
                 
-                // Find the selected appointment
-                Appointment selectedAppointment = null;
-                for (Appointment app : appointmentsWithOutcome) {
-                    if (app.getAppointmentID()==appointmentId) {
-                        selectedAppointment = app;
-                        break;
-                    }
-                }
+//                 // Find the selected appointment
+//                 Appointment selectedAppointment = null;
+//                 for (Appointment app : appointmentsWithOutcome) {
+//                     if (app.getAppointmentID()==appointmentId) {
+//                         selectedAppointment = app;
+//                         break;
+//                     }
+//                 }
 
-                if (selectedAppointment != null) {
-                    // Get the appointment outcome record and update prescription status
-                    AppointmentOutcomeRecord selectedOutcomeRecord = selectedAppointment.getOutcomeRecord();
-                    pharmacist.updatePrescriptionStatus(selectedOutcomeRecord);
-                } else {
-                    System.out.println("Invalid Appointment ID.");
-                }
-            } else {
-                System.out.println("No completed appointments with outcome records for this doctor.");
-            }
-        }
-        System.out.println(); // Add a line break between doctors
-    }
-}
-
-
-    private void viewMedicationInventory() {
-        System.out.println("\n--- View Medication Inventory ---");
-        pharmacist.viewMedicationInventory();
-    }
-
-    private void submitReplenishmentRequest() {
-        System.out.println("\n--- Submit Replenishment Request ---");
-        System.out.print("Enter Medication Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter Quantity to Replenish: ");
-        int quantity = scanner.nextInt();
-        scanner.nextLine();
-        Administrator admin = new Administrator(Role.ADMINISTRATOR, "John Doe", "Male", 35);// Placeholder; replace with actual administrator reference
-        pharmacist.sendReplenishmentRequest(name, quantity);
-    }
-
-    private void logout() {
-        pharmacist.logout();
-        System.out.println("\nLogging out. Goodbye, " + pharmacist.getName() + "!");
-    }
-
-    private Patient getPatientById(String patientId) {
-        
-        
-        // Loop through the list and find a patient with the matching hospital ID
-        for (Patient patient : patientsList) {
-            if (patient.getHospitalID().equals(patientId)) {
-                return patient; // Return the matching patient
-            }
-        }
-        
-        // Return null if no matching patient is found
-        return null;
-    }
-    
-
-    public static void main(String[] args) {
-        Pharmacist pharmacist = new Pharmacist(Role.PHARMACIST, "Pharmacist User", "Female", 30);
-        PharmacistUI ui = new PharmacistUI(pharmacist);
-        ui.showMenu();
-    }
-}
+//                 if (selectedAppointment != null) {
+//                     // Get the appointment outcome record and update prescription status
+//                     AppointmentOutcomeRecord selectedOutcomeRecord = selectedAppointment.getOutcomeRecord();
+//                     pharmacist.updatePrescriptionStatus(selectedOutcomeRecord);
+//                 } else {
+//                     System.out.println("Invalid Appointment ID.");
+//                 }
+//             } else {
+//                 System.out.println("No completed appointments with outcome records for this doctor.");
+//             }
+//         }
+//         System.out.println(); // Add a line break between doctors
+//     }
+// }
