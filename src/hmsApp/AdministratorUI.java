@@ -1,12 +1,16 @@
 package hmsApp;
 
-import inventory.ReplenishmentRequest;
-import java.util.List;
-import java.util.Scanner;
 import user.Administrator;
 import user.Doctor;
+import user.Patient;
 import user.Pharmacist;
 import user.Role;
+import inventory.Medication;
+import inventory.ReplenishmentRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class AdministratorUI {
 
@@ -25,8 +29,6 @@ public class AdministratorUI {
             System.out.println("2. View Appointments Details");
             System.out.println("3. View and Manage Medication Inventory");
             System.out.println("4. Approve Replenishment Requests");
-            System.out.println("5. Change Password");
-            System.out.println("6. Logout");
             System.out.println("5. Change Password");
             System.out.println("6. Logout");
             System.out.print("Select an option: ");
@@ -370,180 +372,20 @@ public class AdministratorUI {
         admin.removeMedication(name);
     }
 
-    // private void approveReplenishmentRequests(List<ReplenishmentRequest> requests) {
-    //     System.out.println("\n--- Approve Replenishment Requests ---");
-    
-    //     // Check if there are pending requests
-    //     if (requests.isEmpty()) {
-    //         System.out.println("No replenishment requests to approve.");
-    //         return;
-    //     }
-    
-    //     // Display all pending requests
-    //     for (int i = 0; i < requests.size(); i++) {
-    //         ReplenishmentRequest request = requests.get(i);
-    //         System.out.println((i + 1) + ". Medication Name: " + request.getMedicationName());
-    //         System.out.println("   Requested Quantity: " + request.getRequestedQuantity());
-    //         System.out.println("   Requested by Pharmacist: " + request.getPharmacistName());
-    //         System.out.println("-----------------------------------");
-    //     }
-    
-    //     // Prompt the administrator to select a request
-    //     System.out.print("Select a request to approve (1-" + requests.size() + ", or 0 to cancel): ");
-    //     int choice = scanner.nextInt();
-    //     scanner.nextLine(); // Consume the newline
-    
-    //     if (choice == 0) {
-    //         System.out.println("Operation canceled.");
-    //         return;
-    //     }
-    
-    //     if (choice < 1 || choice > requests.size()) {
-    //         System.out.println("Invalid choice. Operation canceled.");
-    //         return;
-    //     }
-    
-    //     // Get the selected request
-    //     ReplenishmentRequest selectedRequest = requests.get(choice - 1);
-    
-    //     // Display the selected request for confirmation
-    //     System.out.println("\nYou selected:");
-    //     System.out.println("Medication Name: " + selectedRequest.getMedicationName());
-    //     System.out.println("Requested Quantity: " + selectedRequest.getRequestedQuantity());
-    //     System.out.println("Requested by Pharmacist: " + selectedRequest.getPharmacistName());
-    //     System.out.print("Do you want to approve this request? (yes/no): ");
-    //     String decision = scanner.nextLine().trim().toLowerCase();
-    
-    //     if ("yes".equals(decision)) {
-    //         // Call the Administrator's method to approve the request
-    //         admin.approveReplenishmentRequest(selectedRequest);
-    //         requests.remove(selectedRequest); // Remove the approved request from the list
-    //         System.out.println("Replenishment request approved.");
-    //     } else {
-    //         System.out.println("Replenishment request was not approved.");
-    //     }
-    // }
-    // private void approveReplenishmentRequests() {
-    //     System.out.println("\n--- Approve Replenishment Requests ---");
-    
-    //     List<ReplenishmentRequest> requests = Administrator.getPendingRequests(); // Fetch pending requests
-    
-    //     if (requests.isEmpty()) {
-    //         System.out.println("No replenishment requests to approve.");
-    //         return;
-    //     }
-    
-    //     // Display all pending requests
-    //     for (int i = 0; i < requests.size(); i++) {
-    //         ReplenishmentRequest request = requests.get(i);
-    //         System.out.println((i + 1) + ". Medication Name: " + request.getMedicationName());
-    //         System.out.println("   Requested Quantity: " + request.getRequestedQuantity());
-    //         System.out.println("   Requested by Pharmacist: " + request.getPharmacistName());
-    //         System.out.println("-----------------------------------");
-    //     }
-    
-    //     // Prompt the administrator to select a request
-    //     System.out.print("Select a request to approve (1-" + requests.size() + ", or 0 to cancel): ");
-    //     int choice = scanner.nextInt();
-    //     scanner.nextLine(); // Consume the newline
-    
-    //     if (choice == 0) {
-    //         System.out.println("Operation canceled.");
-    //         return;
-    //     }
-    
-    //     if (choice < 1 || choice > requests.size()) {
-    //         System.out.println("Invalid choice. Operation canceled.");
-    //         return;
-    //     }
-    
-    //     // Get the selected request
-    //     ReplenishmentRequest selectedRequest = requests.get(choice - 1);
-    
-    //     // Display the selected request for confirmation
-    //     System.out.println("\nYou selected:");
-    //     System.out.println("Medication Name: " + selectedRequest.getMedicationName());
-    //     System.out.println("Requested Quantity: " + selectedRequest.getRequestedQuantity());
-    //     System.out.println("Requested by Pharmacist: " + selectedRequest.getPharmacistName());
-    //     System.out.print("Do you want to approve this request? (yes/no): ");
-    //     String decision = scanner.nextLine().trim().toLowerCase();
-    
-    //     if ("yes".equals(decision)) {
-    //         admin.approveReplenishmentRequest(selectedRequest); // Approve the request
-    //         System.out.println("Replenishment request approved.");
-    //     } else {
-    //         System.out.println("Replenishment request was not approved.");
-    //     }
-    // }
-    
-    
+    private void changePassword() {
+        System.out.println("\n--- Change Password ---");
+        System.out.print("Enter Current Password: ");
+        String currentPassword = scanner.nextLine();
+        System.out.print("Enter New Password: ");
+        String newPassword = scanner.nextLine();
 
-    // private void approveReplenishmentRequests() {
-    //     System.out.println("\n--- Approve Replenishment Requests ---");
-    //     System.out.println("Feature not implemented for this demo.");
-    // }
-
-    // private void approveReplenishmentRequests() {
-    //     System.out.println("\n--- Approve Replenishment Requests ---");
-    
-    //     System.out.print("Enter Medication Name: ");
-    //     String medicationName = scanner.nextLine();
-    
-    //     System.out.print("Enter Requested Quantity: ");
-    //     int requestedQuantity = scanner.nextInt();
-    //     scanner.nextLine(); // Consume the newline
-    
-    //     admin.approveReplenishmentRequest(medicationName, requestedQuantity);
-    // }
-
-    // private void approveReplenishmentRequests(List<ReplenishmentRequest> requests) {
-    //     System.out.println("\n--- Approve Replenishment Requests ---");
-    
-    //     if (requests.isEmpty()) {
-    //         System.out.println("No replenishment requests to approve.");
-    //         return;
-    //     }
-    
-    //     for (int i = 0; i < requests.size(); i++) {
-    //         ReplenishmentRequest request = requests.get(i);
-    //         System.out.println((i + 1) + ". Medication Name: " + request.getMedicationName());
-    //         System.out.println("   Requested Quantity: " + request.getRequestedQuantity());
-    //         System.out.println("   Requested by Pharmacist: " + request.getPharmacistName());
-    //         System.out.println("-----------------------------------");
-    //     }
-    
-    //     System.out.print("Select a request to approve (1-" + requests.size() + ", or 0 to cancel): ");
-    //     int choice = scanner.nextInt();
-    //     scanner.nextLine(); // Consume the newline
-    
-    //     if (choice == 0) {
-    //         System.out.println("Operation canceled.");
-    //         return;
-    //     }
-    
-    //     if (choice < 1 || choice > requests.size()) {
-    //         System.out.println("Invalid choice. Operation canceled.");
-    //         return;
-    //     }
-    
-    //     ReplenishmentRequest selectedRequest = requests.get(choice - 1);
-    
-    //     System.out.println("\nYou selected:");
-    //     System.out.println("Medication Name: " + selectedRequest.getMedicationName());
-    //     System.out.println("Requested Quantity: " + selectedRequest.getRequestedQuantity());
-    //     System.out.println("Requested by Pharmacist: " + selectedRequest.getPharmacistName());
-    //     System.out.print("Do you want to approve this request? (yes/no): ");
-    //     String decision = scanner.nextLine().trim().toLowerCase();
-    
-    //     if ("yes".equals(decision)) {
-    //         admin.approveReplenishmentRequest(selectedRequest);
-    //         requests.remove(selectedRequest); // Remove the approved request
-    //     } else {
-    //         System.out.println("Replenishment request was not approved.");
-    //     }
-    // }
-
-    
+        boolean result = admin.changePassword(currentPassword, newPassword);
+        if (result) {
+            System.out.println("Password changed successfully.");
+        } else {
+            System.out.println("Password change failed. Please try again.");
+        }
+    }
 
     private void logout() {
         System.out.println("\nLogging out. Goodbye, " + admin.getName() + "!");

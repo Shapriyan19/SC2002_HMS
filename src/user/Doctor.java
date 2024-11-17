@@ -6,7 +6,7 @@ import medical.LabTest;
 import medical.MedicalRecord;
 import medical.Prescription;
 import medical.Treatment;
-// import user.Patient;
+import user.Patient;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -411,7 +411,6 @@ public class Doctor extends User {
     // public List<Patient> getPatientList() { 
     //     return patientList; 
     // }
-    
     // public void addPatient(int patientID) {
     //     patientList.add(patientID);
     //     System.out.println("Added patient with ID: " + patientID);

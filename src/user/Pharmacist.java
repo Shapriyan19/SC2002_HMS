@@ -50,92 +50,103 @@ public class Pharmacist extends User {
         pharmacistsList.add(this);
     }
 
-    public void viewLatestAppointmentOutcomeRecord(Patient patient) {
-            if (patient == null || patient.getAppointments().isEmpty()) {
-                System.out.println("No appointments available for the patient.");
-                return;
-            }
 
-            // Find the latest completed appointment
-            Appointment latestCompletedAppointment = null;
-            for (Appointment appointment : patient.getAppointments()) {
-                if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
-                    if (latestCompletedAppointment == null || 
-                        appointment.getDate().compareTo(latestCompletedAppointment.getDate()) > 0) {
-                        latestCompletedAppointment = appointment;
+    public void viewAppointmentOutcomeRecord() {
+        // Get the list of doctors to retrieve their appointments
+        List<Doctor> doctorsList = Doctor.getDoctorsList(); // Assuming this method exists to get all doctors
+        
+        if (doctorsList.isEmpty()) {
+            System.out.println("No doctors available to view appointment outcomes.");
+            return;
+        }
+
+        System.out.println("--- All Doctors' Appointment Outcome Records ---");
+
+        // Loop through each doctor to display the appointment outcome records
+        for (Doctor doctor : doctorsList) {
+            List<Appointment> doctorAppointments = doctor.getCalendar().getAppointmentsForDoctor(doctor); // Get appointments for each doctor
+            System.out.println("Appointment Outcomes for Dr. " + doctor.getName() + ":");
+
+            if (doctorAppointments.isEmpty()) {
+                System.out.println("  No appointments scheduled for this doctor.");
+            } else {
+                for (Appointment app : doctorAppointments) {
+                    AppointmentOutcomeRecord outcomeRecord = app.getOutcomeRecord(); // Get the outcome record for each appointment
+
+                    if (outcomeRecord == null) {
+                        System.out.println("  Appointment ID: " + app.getAppointmentID() + " | No outcome recorded yet.");
+                    } else {
+                        // Display outcome record details
+                        System.out.println("  Appointment ID: " + app.getAppointmentID() +
+                                           " | Patient: " + app.getPatient().getName() +
+                                           " | Date: " + app.getDate() +
+                                           " | Outcome Service Type: " + outcomeRecord.getServiceType() +
+                                           " | Prescription Status: " + outcomeRecord.getPrescriptionStatus());
+                        System.out.println("    Prescribed Medications: ");
+                        for (MedicationRecord medication : outcomeRecord.getPrescribedMedications()) {
+                            System.out.println("      - " + medication.getMedicationName());
+                        }
+                        System.out.println("    Consultation Notes: " + outcomeRecord.getConsultationNotes());
                     }
                 }
             }
-
-            if (latestCompletedAppointment == null) {
-                System.out.println("No completed appointments found for the patient.");
-                return;
-            }
-
-            // Fetch the outcome record of the latest completed appointment
-            AppointmentOutcomeRecord outcomeRecord = latestCompletedAppointment.getOutcomeRecord();
-            if (outcomeRecord == null) {
-                System.out.println("No outcome record available for the latest completed appointment.");
-                return;
-            }
-
-            // Print the outcome record
-            System.out.println("Latest Appointment Outcome Record:");
-            System.out.println("Appointment Date: " + outcomeRecord.getAppointmentDate());
-            System.out.println("Service Type: " + outcomeRecord.getServiceType());
-            System.out.println("Consultation Notes: " + outcomeRecord.getConsultationNotes());
-            System.out.println("Prescription Status: " + outcomeRecord.getPrescriptionStatus());
-
-            // Print prescribed medications if available
-            List<MedicationRecord> medications = outcomeRecord.getPrescribedMedications();
-            if (medications == null || medications.isEmpty()) {
-                System.out.println("No medications prescribed.");
-            } else {
-                System.out.println("Prescribed Medications:");
-                for (MedicationRecord medication : medications) {
-                    System.out.println(" - " + medication.getMedicationName() + " (" + medication.getDosage() + ")");
-                }
-            }
-            System.out.println("-----------------------------------");
+            System.out.println(); // Add a line break between doctors
         }
+    }
 
-
-    public void updatePrescriptionStatus(Patient patient) {
-        if (patient == null || patient.getAppointments().isEmpty()) {
-            System.out.println("No appointments available for the patient.");
-            return;
-        }
-
-        // Find the latest appointment with a prescription
-        Appointment latestCompletedAppointment = null;
-        for (Appointment appointment : patient.getAppointments()) {
-            if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
-                if (latestCompletedAppointment == null || 
-                    appointment.getDate().compareTo(latestCompletedAppointment.getDate()) > 0) {
-                    latestCompletedAppointment = appointment;
-                }
-            }
-        }
-
-        if (latestCompletedAppointment == null) {
-            System.out.println("No completed appointments found with a prescription for the patient.");
-            return;
-        }
-
-        // Update the prescription status
-        AppointmentOutcomeRecord outcomeRecord = latestCompletedAppointment.getOutcomeRecord();
+    // newly added method to updatePrescriptionStatus with ApptOutcomeRecord
+    public void updatePrescriptionStatus(AppointmentOutcomeRecord outcomeRecord) {
         if (outcomeRecord == null) {
-            System.out.println("No outcome record available for the latest completed appointment.");
+            System.out.println("No outcome record provided.");
             return;
         }
-
+    
+        // Check the prescription status and update if necessary
         if ("pending".equals(outcomeRecord.getPrescriptionStatus())) {
-            outcomeRecord.setPrescriptionStatus("approved");
-            System.out.println("Prescription status updated to 'approved' for the latest completed appointment.");
+            outcomeRecord.setPrescriptionStatus("DISPENSED");
+            System.out.println("Prescription status updated to 'DISPENSED'.");
         } else {
             System.out.println("Prescription status is already updated to: " + outcomeRecord.getPrescriptionStatus());
         }
-    } 
+    }
+    
+
+    // public void updatePrescriptionStatus(Patient patient) {
+    //     if (patient == null || patient.getAppointments().isEmpty()) {
+    //         System.out.println("No appointments available for the patient.");
+    //         return;
+        
+
+    //     // Find the latest appointment with a prescription
+    //     Appointment latestCompletedAppointment = null;
+    //     for (Appointment appointment : patient.getAppointments()) {
+    //         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+    //             if (latestCompletedAppointment == null || 
+    //                 appointment.getDate().compareTo(latestCompletedAppointment.getDate()) > 0) {
+    //                 latestCompletedAppointment = appointment;
+    //             }
+    //         }
+    //     }
+
+    //     if (latestCompletedAppointment == null) {
+    //         System.out.println("No completed appointments found with a prescription for the patient.");
+    //         return;
+    //     }
+
+    //     // Update the prescription status
+    //     AppointmentOutcomeRecord outcomeRecord = latestCompletedAppointment.getOutcomeRecord();
+    //     if (outcomeRecord == null) {
+    //         System.out.println("No outcome record available for the latest completed appointment.");
+    //         return;
+    //     }
+
+    //     if ("pending".equals(outcomeRecord.getPrescriptionStatus())) {
+    //         outcomeRecord.setPrescriptionStatus("approved");
+    //         System.out.println("Prescription status updated to 'approved' for the latest completed appointment.");
+    //     } else {
+    //         System.out.println("Prescription status is already updated to: " + outcomeRecord.getPrescriptionStatus());
+    //     }
+    // } 
 
 
     public void viewMedicationInventory() {

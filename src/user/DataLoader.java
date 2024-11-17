@@ -4,6 +4,8 @@ import appointment.TimeSlot;
 import appointment.Appointment;
 import appointment.AppointmentScheduler;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DataLoader {
@@ -129,23 +131,23 @@ public class DataLoader {
             // Randomly choose a day in November
             int day = random.nextInt(30) + 1;  // Random day between 1 and 30
     
-            // Format the day to always have two digits
-            String formattedDay = String.format("%02d", day);
+            // Construct the LocalDate for November 2024
+            LocalDate appointmentDate = LocalDate.of(2024, 11, day);
     
-            // Construct the date string as "2024-11-xx" with a properly formatted day
-            String date = "2024-11-" + formattedDay;
+            // Convert LocalDate to String (yyyy-MM-dd format)
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = appointmentDate.format(formatter);
     
-            // Randomly choose a time slot
-            String startTime = "10:00 AM";
-            String endTime = "10:30 AM";  // Example of a 30-minute appointment slot
-            TimeSlot timeSlot = new TimeSlot(startTime, endTime);
+            // Construct a time slot, using String for times
+            TimeSlot timeSlot = new TimeSlot("10:00", "10:30");
     
-            // Create an Appointment and AppointmentScheduler
-            Appointment appointment = new Appointment(patient, doctor, date, timeSlot);
+            // Create an Appointment with the formatted date
+            Appointment appointment = new Appointment(patient, doctor, formattedDate, timeSlot);
+    
             AppointmentScheduler scheduler = new AppointmentScheduler(appointment);
     
             // Try to schedule the appointment
-            System.out.println("Scheduling appointment for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + date);
+            System.out.println("Scheduling appointment for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + formattedDate);
             scheduler.scheduleAppointment();  // This will schedule the appointment and print whether it was successful or not
     
             // Add the appointment to the doctor's calendar

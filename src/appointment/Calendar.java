@@ -154,16 +154,22 @@ public class Calendar {
         List<Appointment> appointmentsInMonth = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
+        // Ensure current year and month is set correctly (fallback to current date if not)
+        YearMonth currentYearMonth = this.yearMonth != null ? this.yearMonth : YearMonth.now();
+    
         for (Appointment app : appointments) {
             // Ensure the date is formatted correctly
             String formattedDate = app.getDate();
-            if (formattedDate.length() == 10 && formattedDate.charAt(5) == '-') {
+            // System.out.print("formatted Date: " +formattedDate+"length:"+formattedDate.length());
+            if (formattedDate.length() == 10 && formattedDate.charAt(4) == '-') {
                 try {
                     // Try to parse the date with the proper format
                     LocalDate parsedDate = LocalDate.parse(formattedDate, formatter);
                     YearMonth appointmentYearMonth = YearMonth.from(parsedDate);
     
-                    if (appointmentYearMonth.getYear() == this.yearMonth.getYear() && appointmentYearMonth.getMonth() == this.yearMonth.getMonth()) {
+                    // Compare year and month
+                    if (appointmentYearMonth.getYear() == currentYearMonth.getYear() && 
+                        appointmentYearMonth.getMonth() == currentYearMonth.getMonth()) {
                         appointmentsInMonth.add(app);
                     }
                 } catch (Exception e) {
@@ -175,6 +181,7 @@ public class Calendar {
         }
         return appointmentsInMonth;
     }
+    
 
     public void displayAppointments() {
         List<Appointment> appointmentsForMonth = getAppointmentsForMonth();
