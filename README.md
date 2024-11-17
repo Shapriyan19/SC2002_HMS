@@ -105,8 +105,6 @@ Access features based on your assigned role:
 - Murugappan Venkatesh
 - Srishakti Nedunchelian
 
-## License
-This project is released under the MIT License.
 
 ## Acknowledgments
 - SC2002 course instructors and teaching assistants
