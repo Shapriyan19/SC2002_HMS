@@ -55,6 +55,25 @@ public class Doctor extends User {
         updateCSV();
     }
 
+    // public Doctor(Role role, String name, String gender,List<Patient> patientList, int age,int fromadmin) {
+    //     super(generateNewHospitalID(role), role);
+    //     this.name = name;
+    //     this.patientList = new ArrayList<>();
+    //     this.gender = gender;
+    //     this.age = age;
+    //     this.calendar = new Calendar("November");
+    // }
+
+    public Doctor(Role role, String name, String gender, List<Patient> patientList, int age, int fromAdmin) {
+        super(generateNewHospitalID(role), role);
+        this.name = name;
+        this.patientList = patientList != null ? patientList : new ArrayList<>(); // Handle null
+        System.out.println("Doctor constructor called for: " + name);
+        this.gender = gender;
+        this.age = age;
+        this.calendar = new Calendar("November");
+    }
+    
     //Constructor to get from CSV Files
     public Doctor(String hospitalID,String name,String password,Role role,String gender,int age){
         super(hospitalID, role,password);
@@ -65,6 +84,8 @@ public class Doctor extends User {
         this.patientList = patientList != null ? patientList : new ArrayList<>(); // Ensure it's never null
         doctorsList.add(this);
     }
+
+
     
     // View Patient Medical Records
     public void viewAllPatientMedicalRecords() {
@@ -123,6 +144,14 @@ public class Doctor extends User {
 
     //methods for appointments 
 
+    public void addAppointmentToCalendar(Appointment appointment) {
+        calendar.addAppointment(appointment);
+    }
+
+    // public void addAppointment(Appointment appointment) {
+    //     this.appointments.add(appointment);
+    // }
+    
     public List<Appointment> getAppointments() {
         return calendar.getAppointmentsForMonth();
     }
@@ -320,6 +349,8 @@ public class Doctor extends User {
     }
     
     public static List<Doctor> getDoctorsList() {
+        // System.out.print(doctorsList.size());
+        // Thread.dumpStack();
         return doctorsList;
     }
 

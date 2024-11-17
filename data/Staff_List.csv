@@ -1,2 +1,4 @@
 Staff ID,Name,Password,Role,Gender,Age
-AD0000,Alice,password,ADMINISTRATOR,female,23
+DC0000,Murthi,password,DOCTOR,M,37
+AD0000,Adam,12345678,ADMINISTRATOR,M,23
+PH0000,Pearl,12345678,PHARMACIST,M,28

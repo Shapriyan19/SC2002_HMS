@@ -48,7 +48,7 @@ public class Appointment {
         this.date = newDate;
         this.timeSlot.setAvailability(true);
         this.timeSlot = newTimeSlot;
-        this.status = AppointmentStatus.RESCHEDULED;
+        this.status = AppointmentStatus.PENDING;
         newTimeSlot.setAvailability(false);
     }
 

@@ -17,7 +17,6 @@ public class DataLoader {
         createRandomAppointments();  // New method to schedule random appointments after loading data
     }
 
-    // Load doctors from CSV and store in Doctor's static list
     private static void loadDoctors() {
         File file = new File("Data/Staff_List.csv");
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -33,10 +32,14 @@ public class DataLoader {
                     Role role = Role.valueOf(data[3]);
                     if (role == Role.DOCTOR) {
                         Doctor doctor = new Doctor(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
-                        Doctor.getDoctorsList().add(doctor);
                         
-                        // Print confirmation that a doctor has been loaded
-                        System.out.println("Loaded Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+                        // Check for duplicates
+                        if (!Doctor.getDoctorsList().contains(doctor)) {
+                            Doctor.getDoctorsList().add(doctor);
+                            System.out.println("Loaded Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+                        } else {
+                            System.out.println("Duplicate Doctor Ignored: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+                        }
                     }
                 }
             }
@@ -44,6 +47,36 @@ public class DataLoader {
             e.printStackTrace();
         }
     }
+    
+
+    // Load doctors from CSV and store in Doctor's static list
+    // private static void loadDoctors() {
+    //     Doctor.getDoctorsList().clear();
+    //     File file = new File("Data/Staff_List.csv");
+    //     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    //         String line;
+    //         boolean isFirstLine = true; // Skip header
+    //         while ((line = reader.readLine()) != null) {
+    //             if (isFirstLine) {
+    //                 isFirstLine = false;
+    //                 continue;
+    //             }
+    //             String[] data = line.split(",");
+    //             if (data.length == 6) { // Assuming 6 columns: Staff ID, Name, Password, Role, Gender, Age
+    //                 Role role = Role.valueOf(data[3]);
+    //                 if (role == Role.DOCTOR) {
+    //                     Doctor doctor = new Doctor(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
+    //                     Doctor.getDoctorsList().add(doctor);
+                        
+    //                     // Print confirmation that a doctor has been loaded
+    //                     System.out.println("Loaded Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+    //                 }
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     // Load patients from CSV and store in Patient's static list
     public static void loadPatients() {
@@ -123,18 +156,8 @@ public class DataLoader {
                 doctor.getPatientList().add(patient);
             }
         }
-    
-        //Optionally display doctor appointments for verification
-        // for (Doctor doctor : doctors) {
-        //     //doctor.displayAppointments();
-        //     //System.out.printf("No of patients: %d",doctor.getPatientListSize());
-        //     //doctor.viewAllPatientMedicalRecords();
-        // }
-
-        
     }
-    
-    // Load administrators from CSV and store in Administrator's static list (implement similarly)
+
     private static void loadAdministrators() {
         File file = new File("Data/Staff_List.csv");
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -150,10 +173,14 @@ public class DataLoader {
                     Role role = Role.valueOf(data[3]);
                     if (role == Role.ADMINISTRATOR) {
                         Administrator administrator = new Administrator(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
-                        Administrator.getAdministratorsList().add(administrator);
                         
-                        // Print confirmation that an administrator has been loaded
-                        System.out.println("Loaded Administrator: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
+                        // Check if this administrator already exists
+                        if (!Administrator.getAdministratorsList().contains(administrator)) {
+                            Administrator.getAdministratorsList().add(administrator);
+                            System.out.println("Loaded Administrator: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
+                        } else {
+                            System.out.println("Duplicate Administrator Ignored: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
+                        }
                     }
                 }
             }
@@ -161,8 +188,7 @@ public class DataLoader {
             e.printStackTrace();
         }
     }
-
-    // Load pharmacists from CSV and store in Pharmacist's static list (implement similarly)
+    
     private static void loadPharmacists() {
         File file = new File("Data/Staff_List.csv");
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -178,15 +204,85 @@ public class DataLoader {
                     Role role = Role.valueOf(data[3]);
                     if (role == Role.PHARMACIST) {
                         Pharmacist pharmacist = new Pharmacist(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
-                        Pharmacist.getPharmacistsList().add(pharmacist);
                         
-                        // Print confirmation that a pharmacist has been loaded
-                        System.out.println("Loaded Pharmacist: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
+                        // Check if this pharmacist already exists
+                        if (!Pharmacist.getPharmacistsList().contains(pharmacist)) {
+                            Pharmacist.getPharmacistsList().add(pharmacist);
+                            System.out.println("Loaded Pharmacist: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
+                        } else {
+                            System.out.println("Duplicate Pharmacist Ignored: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
+                        }
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }   
+    }
 }
+    
+    
+    
+        //Optionally display doctor appointments for verification
+        // for (Doctor doctor : doctors) {
+        //     //doctor.displayAppointments();
+        //     //System.out.printf("No of patients: %d",doctor.getPatientListSize());
+        //     //doctor.viewAllPatientMedicalRecords();
+        // }
+    
+    // Load administrators from CSV and store in Administrator's static list (implement similarly)
+//     private static void loadAdministrators() {
+//         File file = new File("Data/Staff_List.csv");
+//         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+//             String line;
+//             boolean isFirstLine = true; // Skip header
+//             while ((line = reader.readLine()) != null) {
+//                 if (isFirstLine) {
+//                     isFirstLine = false;
+//                     continue;
+//                 }
+//                 String[] data = line.split(",");
+//                 if (data.length == 6) { // Assuming 6 columns: Staff ID, Name, Password, Role, Gender, Age
+//                     Role role = Role.valueOf(data[3]);
+//                     if (role == Role.ADMINISTRATOR) {
+//                         Administrator administrator = new Administrator(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
+//                         Administrator.getAdministratorsList().add(administrator);
+                        
+//                         // Print confirmation that an administrator has been loaded
+//                         System.out.println("Loaded Administrator: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
+//                     }
+//                 }
+//             }
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+//     }
+
+//     // Load pharmacists from CSV and store in Pharmacist's static list (implement similarly)
+//     private static void loadPharmacists() {
+//         File file = new File("Data/Staff_List.csv");
+//         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+//             String line;
+//             boolean isFirstLine = true; // Skip header
+//             while ((line = reader.readLine()) != null) {
+//                 if (isFirstLine) {
+//                     isFirstLine = false;
+//                     continue;
+//                 }
+//                 String[] data = line.split(",");
+//                 if (data.length == 6) { // Assuming 6 columns: Staff ID, Name, Password, Role, Gender, Age
+//                     Role role = Role.valueOf(data[3]);
+//                     if (role == Role.PHARMACIST) {
+//                         Pharmacist pharmacist = new Pharmacist(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
+//                         Pharmacist.getPharmacistsList().add(pharmacist);
+                        
+//                         // Print confirmation that a pharmacist has been loaded
+//                         System.out.println("Loaded Pharmacist: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
+//                     }
+//                 }
+//             }
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+//     }   
+// }

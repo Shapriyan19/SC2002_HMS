@@ -112,7 +112,7 @@ public class Inventory {
     }
     
     // Update the CSV file with the current inventory data
-    private void updateCSV() {
+    public void updateCSV() {
         try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(CSV_FILE_PATH))) {
             // Writing the header to the CSV file
             String header = "medicationName,stockLevel,lowStockLevelAlert,price";

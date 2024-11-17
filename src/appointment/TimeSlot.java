@@ -1,5 +1,7 @@
 package appointment;
 
+import java.util.Objects;
+
 public class TimeSlot {
     private String startTime;
     private String endTime;
@@ -32,6 +34,24 @@ public class TimeSlot {
     public String toString() {
         return "From: " + startTime + " To: " + endTime;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        TimeSlot timeSlot = (TimeSlot) obj;
+        return startTime.equals(timeSlot.startTime) && endTime.equals(timeSlot.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startTime, endTime);
+    }
+
 }
 
 

@@ -149,45 +149,20 @@ public class Pharmacist extends User {
     }
     }
 
-
-
-
-    // public void sendReplenishmentRequest(String medicationName, int requestedQuantity, List<Administrator> administratorsList) {
+    // public void sendReplenishmentRequest(String medicationName, int requestedQuantity) {
     //     Medication medication = inventory.getAllMedications().get(medicationName);
     
     //     if (medication != null) {
-    //         // Check if stock level is below the alert threshold
     //         if (medication.getStockLevel() < medication.getLowStockLevelAlert()) {
-    //             // Display available administrators
-    //             if (administratorsList.isEmpty()) {
-    //                 System.out.println("No administrators available to handle the replenishment request.");
-    //                 return;
-    //             }
-    
-    //             System.out.println("Available Administrators:");
-    //             for (int i = 0; i < administratorsList.size(); i++) {
-    //                 System.out.println((i + 1) + ". " + administratorsList.get(i).getName());
-    //             }
-    
-    //             // Prompt the pharmacist to select an administrator
-    //             System.out.print("Select an Administrator to send the replenishment request to (1-" + administratorsList.size() + "): ");
-    //             Scanner scanner = new Scanner(System.in);
-    //             int choice = scanner.nextInt();
-    
-    //             if (choice < 1 || choice > administratorsList.size()) {
-    //                 System.out.println("Invalid choice. Replenishment request not sent.");
-    //                 return;
-    //             }
-    
-    //             // Get the selected administrator
-    //             Administrator selectedAdministrator = administratorsList.get(choice - 1);
-    
     //             // Create a replenishment request object
     //             ReplenishmentRequest request = new ReplenishmentRequest(medicationName, requestedQuantity, this.getName());
-                
-    //             // Send the replenishment request to the selected administrator
-    //             System.out.println("Submitting replenishment request to Administrator: " + selectedAdministrator.getName());
-    //             selectedAdministrator.approveReplenishmentRequest(request);
+    
+    //             // Add the request to the shared list
+    //             ReplenishmentRequest.addReplenishmentRequest(request);
+    
+    //             System.out.println("Replenishment request submitted for approval.");
+    //             System.out.println("Medication: " + medicationName);
+    //             System.out.println("Requested Quantity: " + requestedQuantity);
     //         } else {
     //             System.out.println("Stock level for " + medicationName + " is sufficient. No replenishment needed.");
     //         }
@@ -195,6 +170,7 @@ public class Pharmacist extends User {
     //         System.out.println("Medication " + medicationName + " does not exist in the inventory.");
     //     }
     // }
+    
     public void sendReplenishmentRequest(String medicationName, int requestedQuantity) {
         Medication medication = inventory.getAllMedications().get(medicationName);
     

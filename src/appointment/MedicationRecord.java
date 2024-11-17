@@ -6,7 +6,7 @@ import inventory.MedicationInventory;
 public class MedicationRecord {
     private String medicationName;
     private String status;  // Default to "Pending"
-    private double dosage;
+    private int dosage;
     private double price;   // Automatically fetched from Medication inventory
 
     public MedicationRecord(String medicationName, int dosage) {
@@ -37,11 +37,11 @@ public class MedicationRecord {
         this.price = fetchMedicationPrice(medicationName); // Update price when name changes
     }
 
-    public double getDosage() {
+    public int getDosage() {
         return dosage;
     }
 
-    public void setDosage(double dosage) {
+    public void setDosage(int dosage) {
         this.dosage = dosage;
     }
 
