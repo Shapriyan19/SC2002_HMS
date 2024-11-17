@@ -130,45 +130,51 @@ public class PatientUI {
             System.out.println("Enter the doctor's name you want to schedule with:");
             scanner.nextLine();  // Consume newline left-over
             String doctorName = scanner.nextLine();
-    
+        
             Doctor doctor = Doctor.getDoctorsList().stream()
                                   .filter(d -> d.getName().equals(doctorName))
                                   .findFirst()
                                   .orElse(null);
-    
+        
             if (doctor == null) {
                 System.out.println("Doctor not found.");
                 return;
             }
-    
+        
             System.out.print("Enter the date for the appointment (YYYY-MM-DD): ");
             String date = scanner.nextLine();
             List<TimeSlot> availableSlots = doctor.getAvailableTimeSlots(date);
-    
+        
             if (availableSlots.isEmpty()) {
                 System.out.println("No available slots on " + date);
                 return;
             }
-    
+        
             System.out.println("Available slots:");
             for (TimeSlot slot : availableSlots) {
                 System.out.println(slot.getStartTime() + " to " + slot.getEndTime());
             }
-    
+        
             System.out.print("Select a time slot (enter the start time): ");
             String startTime = scanner.nextLine();
             TimeSlot selectedSlot = availableSlots.stream()
                                                   .filter(slot -> slot.getStartTime().equals(startTime))
                                                   .findFirst()
                                                   .orElse(null);
-    
+        
             if (selectedSlot == null) {
                 System.out.println("Invalid time slot.");
                 return;
             }
-    
-            patient.scheduleAppointment(doctor, date, selectedSlot);
+        
+            // Create a new appointment and add it to the doctor's calendar
+            Appointment appointment = new Appointment(patient, doctor, date, selectedSlot);
+            doctor.addAppointmentToCalendar(appointment); // Ensure this adds to doctor's calendar
+            patient.scheduleAppointment(appointment); // Ensure the patient knows about this appointment
+        
+            System.out.println("Appointment scheduled with Dr. " + doctor.getName() + " on " + date + " at " + selectedSlot.getStartTime());
         }
+        
     
         private void cancelAnAppointment() {
             System.out.println("Select an appointment to cancel:");
