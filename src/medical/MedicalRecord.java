@@ -26,7 +26,8 @@ public class MedicalRecord {
         System.out.println("Name: " + patient.getName());
         System.out.println("Date of Birth: " + patient.getDateOfBirth());
         System.out.println("Gender: " + patient.getGender());
-        System.out.println("Contact Number: " + patient.getPhoneNumber());
+        String phoneNumber = String.format("%.0f", patient.getPhoneNumber());
+        System.out.println("Contact Number: " + phoneNumber);
         System.out.println("Email Address: " + patient.getEmail());
         System.out.println("Blood Type: " + patient.getBloodType());
 

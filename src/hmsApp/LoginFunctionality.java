@@ -1,52 +1,66 @@
 package hmsApp;
 
 import user.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import user.Patient;
 
 public class LoginFunctionality {
 
     public static void main(String[] args) {
-        
+
         // Load sample users or data for testing
         DataLoader.loadAllData();
 
         Scanner scanner = new Scanner(System.in);
-        boolean continueLogin = true;  // Control variable for the loop
+        boolean continueLogin = true; // Control variable for the loop
 
         System.out.println("Welcome to the HMS Login System!");
 
         while (continueLogin) {
-            // Prompt user for login credentials
-            System.out.print("Enter your Staff/Patient ID: ");
-            String id = scanner.nextLine();
+            // Main menu
+            System.out.println("\nPlease choose an option:");
+            System.out.println("1. Login");
+            System.out.println("2. Register as a new Patient");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
 
-            System.out.print("Enter your password: ");
-            String password = scanner.nextLine();
+            String choice = scanner.nextLine();
 
-            // Validate login
-            User loggedInUser = authenticateUser(id, password);
+            switch (choice) {
+                case "1":
+                    // Prompt user for login credentials
+                    System.out.print("Enter your Staff/Patient ID: ");
+                    String id = scanner.nextLine();
 
-            if (loggedInUser != null) {
-                System.out.println("Login successful!");
-                System.out.println("Welcome, " + loggedInUser.getRole() + " " + loggedInUser.getHospitalID() + "!");
+                    System.out.print("Enter your password: ");
+                    String password = scanner.nextLine();
 
-                // Navigate to the corresponding UI
-                navigateToRoleUI(loggedInUser);
-            } else {
-                System.out.println("Invalid credentials. Please try again.");
-            }
+                    // Validate login
+                    User loggedInUser = authenticateUser(id, password);
 
-            // Ask the user if they want to continue or exit
-            System.out.print("Do you want to try logging in again? (yes to continue, no to exit): ");
-            String userChoice = scanner.nextLine();
+                    if (loggedInUser != null) {
+                        System.out.println("Login successful!");
+                        System.out.println("Welcome, " + loggedInUser.getRole() + " " + loggedInUser.getHospitalID() + "!");
+                        navigateToRoleUI(loggedInUser);
+                    } else {
+                        System.out.println("Invalid credentials. Please try again.");
+                    }
+                    break;
 
-            if (userChoice.equalsIgnoreCase("no")) {
-                continueLogin = false;  // Exit the loop
-                System.out.println("Exiting the login system. Goodbye!");
-            } else if (!userChoice.equalsIgnoreCase("yes")) {
-                System.out.println("Invalid input. Exiting the login system by default.");
-                continueLogin = false;  // Exit if the user provides any input other than 'yes' or 'no'
+                case "2":
+                    registerNewPatient(scanner);
+                    break;
+
+                case "3":
+                    continueLogin = false;
+                    System.out.println("Exiting the system. Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid input. Please try again.");
+                    break;
             }
         }
 
@@ -60,7 +74,6 @@ public class LoginFunctionality {
         List<Patient> patientList = Patient.getPatientsList();
         List<Pharmacist> pharmacistList = Pharmacist.getPharmacistsList();
 
-        // Check each list for the given credentials
         if (adminList != null) {
             for (Administrator admin : adminList) {
                 if (admin.getHospitalID().equals(id) && admin.login(password)) {
@@ -102,40 +115,58 @@ public class LoginFunctionality {
 
         switch (role) {
             case ADMINISTRATOR:
-                try {
-                    AdministratorUI adminUI = new AdministratorUI((Administrator) user);
-                    adminUI.showMenu();
-                } catch (Exception e) {
-                    System.out.println("Error navigating to Administrator UI: " + e.getMessage());
-                }
+                new AdministratorUI((Administrator) user).showMenu();
                 break;
             case DOCTOR:
-                try {
-                    DoctorUI doctorUI = new DoctorUI((Doctor) user);
-                    doctorUI.showMenu();
-                } catch (Exception e) {
-                    System.out.println("Error navigating to Doctor UI: " + e.getMessage());
-                }
+                new DoctorUI((Doctor) user).showMenu();
                 break;
             case PATIENT:
-                try {
-                    PatientUI patientUI = new PatientUI((Patient) user);
-                    patientUI.showMenu();
-                } catch (Exception e) {
-                    System.out.println("Error navigating to Patient UI: " + e.getMessage());
-                }
+                new PatientUI((Patient) user).showMenu();
                 break;
             case PHARMACIST:
-                try {
-                    PharmacistUI pharmacistUI = new PharmacistUI((Pharmacist) user);
-                    pharmacistUI.showMenu();
-                } catch (Exception e) {
-                    System.out.println("Error navigating to Pharmacist UI: " + e.getMessage());
-                }
+                new PharmacistUI((Pharmacist) user).showMenu();
                 break;
             default:
                 System.out.println("Role not recognized. Cannot proceed to UI.");
                 break;
         }
     }
+
+    // Method for registering a new patient
+    private static void registerNewPatient(Scanner scanner) {
+        // System.out.println("\n--- New Patient Registration ---");
+
+        // System.out.print("Enter your full name: ");
+        // String name = scanner.nextLine();
+
+        // System.out.print("Enter your age: ");
+        // int age = Integer.parseInt(scanner.nextLine());
+
+        // System.out.print("Enter your gender (M/F/Other): ");
+        // String gender = scanner.nextLine();
+
+        // System.out.print("Enter your contact number: ");
+        // String contactNumber = scanner.nextLine();
+
+        // System.out.print("Set a password for your account: ");
+        // String password = scanner.nextLine();
+
+        // // Generate a unique patient ID
+        // String patientID = "P" + (Patient.getPatientsList().size() + 1);
+
+        // // Create a new patient
+        // Patient newPatient = new Patient(Role.PATIENT,name, dateOfBirth, gender , bloodType, contactNumber, email, NULL);
+
+        // // Add the patient to the list
+        // List<Patient> patientList = Patient.getPatientsList();
+        // if (patientList == null) {
+        //     patientList = new ArrayList<>();
+        // }
+        // patientList.add(newPatient);
+
+        // // Confirm registration
+        // System.out.println("\nRegistration successful!");
+        // System.out.println("Your Patient ID is: " + patientID);
+        // System.out.println("You can now log in using your Patient ID and password.");
+     }
 }
