@@ -4,7 +4,8 @@ import user.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import user.Patient;
+
+import medical.MedicalRecord;
 
 public class LoginFunctionality {
 
@@ -132,41 +133,37 @@ public class LoginFunctionality {
         }
     }
 
-    // Method for registering a new patient
     private static void registerNewPatient(Scanner scanner) {
-        // System.out.println("\n--- New Patient Registration ---");
+        // Prompt the user for patient details
 
-        // System.out.print("Enter your full name: ");
-        // String name = scanner.nextLine();
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
 
-        // System.out.print("Enter your age: ");
-        // int age = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter Date of Birth (dd-mm-yyyy): ");
+        String dateOfBirth = scanner.nextLine();
 
-        // System.out.print("Enter your gender (M/F/Other): ");
-        // String gender = scanner.nextLine();
+        System.out.print("Enter Gender: ");
+        String gender = scanner.nextLine();
 
-        // System.out.print("Enter your contact number: ");
-        // String contactNumber = scanner.nextLine();
+        System.out.print("Enter Blood Type: ");
+        String bloodType = scanner.nextLine();
 
-        // System.out.print("Set a password for your account: ");
-        // String password = scanner.nextLine();
+        System.out.print("Enter Phone Number: ");
+        long phoneNumber = scanner.nextLong();
 
-        // // Generate a unique patient ID
-        // String patientID = "P" + (Patient.getPatientsList().size() + 1);
+        scanner.nextLine();  // Consume the leftover newline character
 
-        // // Create a new patient
-        // Patient newPatient = new Patient(Role.PATIENT,name, dateOfBirth, gender , bloodType, contactNumber, email, NULL);
+        System.out.print("Enter Email: ");
+        String email = scanner.nextLine();
 
-        // // Add the patient to the list
-        // List<Patient> patientList = Patient.getPatientsList();
-        // if (patientList == null) {
-        //     patientList = new ArrayList<>();
-        // }
-        // patientList.add(newPatient);
+        // Create a new Patient object
+        Patient newPatient = new Patient(Role.PATIENT, name,dateOfBirth, gender, bloodType, phoneNumber, email, null);
 
-        // // Confirm registration
-        // System.out.println("\nRegistration successful!");
-        // System.out.println("Your Patient ID is: " + patientID);
-        // System.out.println("You can now log in using your Patient ID and password.");
-     }
+        // Add patient to list and update CSV
+        //Patient.getPatientsList().add(newPatient);
+        //Patient.updateCSV();  // Updates the CSV file after registering a new patient
+        
+        // Output confirmation
+        System.out.println("New patient registered successfully: " + newPatient.getName());
+    }
 }

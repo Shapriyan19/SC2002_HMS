@@ -1,6 +1,7 @@
 package user;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 //accessing appointment package
 import appointment.*;
@@ -20,7 +22,7 @@ import medical.Treatment;
 
 public class Patient extends User {
 
-    private static List<Patient> patientsList = new ArrayList<>(); // Store all patients
+    public static List<Patient> patientsList = new ArrayList<>(); // Store all patients
     // Attributes
     // private String patientID;    to be removed
     
@@ -48,11 +50,11 @@ public class Patient extends User {
         this.email = email;
         this.appointments=new ArrayList<>();
         this.calendar=new Calendar("November");  // Initialize with a default or specific month
-        this.medicalRecord = medicalRecord; //medical records
+        this.medicalRecord = medicalRecord != null ? medicalRecord : new MedicalRecord(); //medical records
         // this.appointmentHistory = new ArrayList<>();
         //this.medicalRecord = medicalRecord; //medical records
-        patientsList.add(this); //add new patient to list
-        updateCSV(); 
+        //patientsList.add(this); //add new patient to list
+        //updateCSV(); 
     }
 
     // Constructor to get from CSV files
@@ -181,25 +183,22 @@ public class Patient extends User {
     }
 
     public static void updateCSV() {
-        Map<String, Patient> uniquePatients = new HashMap<>();
-        for (Patient patient : patientsList) {
-            uniquePatients.put(patient.getHospitalID(), patient);  // This assumes getHospitalID() method exists and returns a unique identifier
-        }
-
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("Data/Patient_List.csv"));
-            writer.write("Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email");
+        File file = new File("Data/Patient_List.csv");  // Update to Patient_List.csv
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("Patient ID,Name,Password,Date of Birth,Gender,Blood Type,Phone Number,Email");  // CSV header
             writer.newLine();
-            for (Patient patient : uniquePatients.values()) {
-                writer.write(patient.toCSVFormat());
+    
+            for (Patient patient : patientsList) {
+                writer.write(patient.toCSVFormat());  // Format the patient data for CSV
                 writer.newLine();
             }
-            writer.close();
             System.out.println("Patient data updated in Patient_List.csv.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error updating Patient_List.csv: " + e.getMessage());
         }
     }
+    
+
 
     private String toCSVFormat() {
         // Formatting the patient data for CSV output

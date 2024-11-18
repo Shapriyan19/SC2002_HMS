@@ -9,7 +9,11 @@ public class MedicalRecord {
     private ArrayList<LabTest> labTests;
     private ArrayList<Prescription> prescriptions;
     private ArrayList<Treatment> treatments;
+    
+    public MedicalRecord(){
 
+    }
+    
     public MedicalRecord(ArrayList<Diagnosis> diagnoses, ArrayList<LabTest> labTests,
                          ArrayList<Prescription> prescriptions, ArrayList<Treatment> treatments) {
         //this.patient = patient;
@@ -27,7 +31,7 @@ public class MedicalRecord {
         System.out.println("Date of Birth: " + patient.getDateOfBirth());
         System.out.println("Gender: " + patient.getGender());
         String phoneNumber = String.format("%.0f", patient.getPhoneNumber());
-        System.out.println("Contact Number: " + phoneNumber);
+    System.out.println("Contact Number: " + phoneNumber);
         System.out.println("Email Address: " + patient.getEmail());
         System.out.println("Blood Type: " + patient.getBloodType());
 
