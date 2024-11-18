@@ -42,7 +42,8 @@ public class DoctorUI {
             System.out.println("6. View Upcoming Appointments");
             System.out.println("7. Complete Appointment");
             System.out.println("8. Record Appointment Outcome");
-            System.out.println("9. Logout");
+            System.out.println("9. Change password");
+            System.out.println("10. Logout");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
@@ -71,13 +72,13 @@ public class DoctorUI {
                 case 8:
                     recordAppointmentOutcome();
                     break;
-                case 9:
+                case 10:
                     System.out.println("Logging out...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice !=9);
+        } while (choice !=10);
     }
 
     // 1. View Patient Medical Records

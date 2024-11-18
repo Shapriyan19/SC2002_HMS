@@ -31,7 +31,8 @@ public class PatientUI {
             System.out.println("6. Cancel An Appointment");
             System.out.println("7. View and Pay for Appointment");
             System.out.println("8. View Past Appointment Outcome Records");
-            System.out.println("9. Logout");
+            System.out.println("9. Change pasword");
+            System.out.println("10. Logout");
     
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -61,14 +62,14 @@ public class PatientUI {
                 case 8:
                     viewPastAppointmentOutcomeRecords();
                     break;
-                case 9:
+                case 10:
                     System.out.println("Logging out...");
                     patient.logout();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 9);
+        } while (choice != 10);
     }
     
 
