@@ -36,12 +36,12 @@ public class DataLoader {
                         Doctor doctor = new Doctor(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
                         
                         // Check for duplicates
-                        if (!Doctor.getDoctorsList().contains(doctor)) {
-                            Doctor.getDoctorsList().add(doctor);
-                            System.out.println("Loaded Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
-                        } else {
-                            System.out.println("Duplicate Doctor Ignored: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
-                        }
+                        // if (!Doctor.getDoctorsList().contains(doctor)) {
+                        //     Doctor.getDoctorsList().add(doctor);
+                        //     System.out.println("Loaded Doctor: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+                        // } else {
+                        //     System.out.println("Duplicate Doctor Ignored: " + doctor.getName() + ", ID: " + doctor.getHospitalID());
+                        // }
                     }
                 }
             }
@@ -109,7 +109,7 @@ public class DataLoader {
                     Patient.getPatientsList().add(patient);
 
                     // Print confirmation that a patient has been loaded
-                    System.out.println("Loaded Patient: " + patient.getName() + ", ID: " + patient.getHospitalID());
+                    // System.out.println("Loaded Patient: " + patient.getName() + ", ID: " + patient.getHospitalID());
                 }
             }
         } catch (IOException e) {
@@ -147,7 +147,7 @@ public class DataLoader {
             AppointmentScheduler scheduler = new AppointmentScheduler(appointment);
     
             // Try to schedule the appointment
-            System.out.println("Scheduling appointment for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + formattedDate);
+            // System.out.println("Scheduling appointment for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + formattedDate);
             scheduler.scheduleAppointment();  // This will schedule the appointment and print whether it was successful or not
     
             // Add the appointment to the doctor's calendar
@@ -177,12 +177,12 @@ public class DataLoader {
                         Administrator administrator = new Administrator(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
                         
                         // Check if this administrator already exists
-                        if (!Administrator.getAdministratorsList().contains(administrator)) {
-                            Administrator.getAdministratorsList().add(administrator);
-                            System.out.println("Loaded Administrator: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
-                        } else {
-                            System.out.println("Duplicate Administrator Ignored: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
-                        }
+                        // if (!Administrator.getAdministratorsList().contains(administrator)) {
+                        //     Administrator.getAdministratorsList().add(administrator);
+                        //     System.out.println("Loaded Administrator: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
+                        // } else {
+                        //     System.out.println("Duplicate Administrator Ignored: " + administrator.getName() + ", ID: " + administrator.getHospitalID());
+                        // }
                     }
                 }
             }
@@ -208,12 +208,12 @@ public class DataLoader {
                         Pharmacist pharmacist = new Pharmacist(data[0], data[1], data[2], role, data[4], Integer.parseInt(data[5]));
                         
                         // Check if this pharmacist already exists
-                        if (!Pharmacist.getPharmacistsList().contains(pharmacist)) {
-                            Pharmacist.getPharmacistsList().add(pharmacist);
-                            System.out.println("Loaded Pharmacist: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
-                        } else {
-                            System.out.println("Duplicate Pharmacist Ignored: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
-                        }
+                        // if (!Pharmacist.getPharmacistsList().contains(pharmacist)) {
+                        //     Pharmacist.getPharmacistsList().add(pharmacist);
+                        //     System.out.println("Loaded Pharmacist: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
+                        // } else {
+                        //     System.out.println("Duplicate Pharmacist Ignored: " + pharmacist.getName() + ", ID: " + pharmacist.getHospitalID());
+                        // }
                     }
                 }
             }

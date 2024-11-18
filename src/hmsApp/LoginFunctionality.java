@@ -157,13 +157,13 @@ public class LoginFunctionality {
         String email = scanner.nextLine();
 
         // Create a new Patient object
-        Patient newPatient = new Patient(Role.PATIENT, name,dateOfBirth, gender, bloodType, phoneNumber, email, null);
+        //Patient newPatient = new Patient(Role.PATIENT, name,dateOfBirth, gender, bloodType, phoneNumber, email, null);
 
         // Add patient to list and update CSV
         //Patient.getPatientsList().add(newPatient);
         //Patient.updateCSV();  // Updates the CSV file after registering a new patient
         
         // Output confirmation
-        System.out.println("New patient registered successfully: " + newPatient.getName());
+        System.out.println("New patient registered successfully ");
     }
 }
